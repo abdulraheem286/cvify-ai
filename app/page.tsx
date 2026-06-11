@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { SiteHeader } from "./components/SiteHeader";
 import { SiteFooter } from "./components/SiteFooter";
-import { CvDocument } from "./components/CvDocument";
+import { ModernTemplate } from "./templates/ModernTemplate";
 import { Reveal } from "./components/Reveal";
 import type { CVResult } from "./types";
 
@@ -154,7 +154,7 @@ export default function Home() {
           {/* Product preview — the real CV template */}
           <Reveal y={40} className="relative mx-auto mt-16 max-w-3xl px-6">
             <div className="max-h-[620px] overflow-hidden rounded-2xl">
-              <CvDocument cv={sampleCv} />
+              <ModernTemplate cv={sampleCv} />
             </div>
             <div className="pointer-events-none absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-white to-transparent" />
           </Reveal>

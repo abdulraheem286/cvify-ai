@@ -2,8 +2,9 @@
 
 import { useState, type FormEvent } from "react";
 import Link from "next/link";
-import { CvDocument } from "@/app/components/CvDocument";
 import type { CVResult } from "@/app/types";
+import { TemplatePicker } from "@/app/components/TemplatePicker";
+import { getTemplateComponent, type TemplateId } from "@/app/templates";
 import { downloadCvPdf } from "@/app/lib/pdf";
 import { Reveal } from "@/app/components/Reveal";
 import { SiteHeader } from "@/app/components/SiteHeader";
@@ -74,6 +75,7 @@ export default function BuildClient() {
   const [downloading, setDownloading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<CVResult | null>(null);
+  const [template, setTemplate] = useState<TemplateId>("modern");
 
   const onField = (key: keyof CVForm) => (value: string) => {
     const v = key === "phone" ? sanitizePhone(value) : value;
@@ -127,6 +129,8 @@ export default function BuildClient() {
       setDownloading(false);
     }
   }
+
+  const Template = getTemplateComponent(template);
 
   return (
     <div className="flex min-h-full flex-col bg-zinc-50 text-zinc-900 print:bg-white">
@@ -209,6 +213,9 @@ export default function BuildClient() {
 
         {result && (
           <div className="mt-12 w-full max-w-[820px] print:mt-0">
+            <div className="mb-6 rounded-xl border border-zinc-200 bg-white p-4 shadow-sm print:hidden">
+              <TemplatePicker value={template} onChange={setTemplate} />
+            </div>
             <div className="mb-4 flex justify-end print:hidden">
               <button
                 onClick={handleDownload}
@@ -219,7 +226,7 @@ export default function BuildClient() {
                 {downloading ? "Preparing PDF…" : "Download PDF"}
               </button>
             </div>
-            <CvDocument cv={result} />
+            <Template cv={result} />
           </div>
         )}
       </main>
