@@ -1,7 +1,10 @@
+import type { CSSProperties } from "react";
 import type { CVResult } from "@/app/types";
 
-// Aurora: gradient header with photo, two-tone two-column body.
-export function AuroraTemplate({ cv, domId = "cv-document" }: { cv: CVResult; domId?: string }) {
+type Props = { cv: CVResult; domId?: string; accent?: string };
+
+// Aurora: bold accent header with photo, two-tone two-column body.
+export function AuroraTemplate({ cv, domId = "cv-document", accent = "#2563eb" }: Props) {
   const contactLine = [
     cv.contact?.email,
     cv.contact?.phone,
@@ -15,21 +18,18 @@ export function AuroraTemplate({ cv, domId = "cv-document" }: { cv: CVResult; do
   return (
     <div
       id={domId}
+      style={{ "--accent": accent } as CSSProperties}
       className="mx-auto w-full max-w-[800px] overflow-hidden bg-white text-zinc-800 shadow-xl ring-1 ring-zinc-200"
     >
-      <header className="flex items-center gap-6 bg-gradient-to-r from-blue-600 to-indigo-600 p-8 text-white sm:p-10">
+      <header className="flex items-center gap-6 bg-[var(--accent)] p-8 text-white sm:p-10">
         {cv.photo && (
           // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={cv.photo}
-            alt=""
-            className="h-24 w-24 shrink-0 rounded-full object-cover ring-4 ring-white/30"
-          />
+          <img src={cv.photo} alt="" className="h-24 w-24 shrink-0 rounded-full object-cover ring-4 ring-white/30" />
         )}
         <div>
           <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">{cv.fullName}</h1>
-          <p className="mt-1 text-lg text-blue-100">{cv.jobTitle}</p>
-          {contactLine && <p className="mt-2 text-xs text-blue-100">{contactLine}</p>}
+          <p className="mt-1 text-lg text-white/80">{cv.jobTitle}</p>
+          {contactLine && <p className="mt-2 text-xs text-white/80">{contactLine}</p>}
         </div>
       </header>
 
@@ -45,7 +45,7 @@ export function AuroraTemplate({ cv, domId = "cv-document" }: { cv: CVResult; do
                     <h3 className="font-semibold text-zinc-900">{job.role}</h3>
                     {job.period && <span className="shrink-0 text-xs text-zinc-500">{job.period}</span>}
                   </div>
-                  {job.company && <p className="text-sm text-blue-600">{job.company}</p>}
+                  {job.company && <p className="text-sm text-[var(--accent)]">{job.company}</p>}
                   <ul className="mt-1.5 list-disc space-y-1 pl-5 text-sm text-zinc-700">
                     {job.bullets?.map((b, j) => <li key={j}>{b}</li>)}
                   </ul>
@@ -81,13 +81,13 @@ export function AuroraTemplate({ cv, domId = "cv-document" }: { cv: CVResult; do
           )}
         </main>
 
-        <aside className="col-span-1 bg-blue-50 p-6">
+        <aside className="col-span-1 bg-[var(--accent)]/10 p-6">
           {cv.skills?.length > 0 && (
             <div>
-              <h2 className="text-xs font-bold uppercase tracking-widest text-blue-700">Skills</h2>
+              <h2 className="text-xs font-bold uppercase tracking-widest text-[var(--accent)]">Skills</h2>
               <div className="mt-2 flex flex-wrap gap-1.5">
                 {cv.skills.map((s, i) => (
-                  <span key={i} className="rounded bg-white px-2 py-1 text-xs text-zinc-700 ring-1 ring-blue-200">
+                  <span key={i} className="rounded bg-white px-2 py-1 text-xs text-zinc-700 ring-1 ring-[var(--accent)]/20">
                     {s}
                   </span>
                 ))}
@@ -97,7 +97,7 @@ export function AuroraTemplate({ cv, domId = "cv-document" }: { cv: CVResult; do
 
           {cv.languages && cv.languages.length > 0 && (
             <div className="mt-6">
-              <h2 className="text-xs font-bold uppercase tracking-widest text-blue-700">Languages</h2>
+              <h2 className="text-xs font-bold uppercase tracking-widest text-[var(--accent)]">Languages</h2>
               <ul className="mt-2 space-y-1 text-sm text-zinc-700">
                 {cv.languages.map((l, i) => (
                   <li key={i}>
@@ -117,7 +117,7 @@ export function AuroraTemplate({ cv, domId = "cv-document" }: { cv: CVResult; do
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section className="mt-6 first:mt-0">
-      <h2 className="mb-3 text-xs font-bold uppercase tracking-widest text-blue-600">{title}</h2>
+      <h2 className="mb-3 text-xs font-bold uppercase tracking-widest text-[var(--accent)]">{title}</h2>
       {children}
     </section>
   );

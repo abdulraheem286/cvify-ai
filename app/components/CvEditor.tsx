@@ -4,11 +4,8 @@ import { useState, type ChangeEvent, type ReactNode } from "react";
 import type { CVResult } from "@/app/types";
 import { ScaledPreview } from "./ScaledPreview";
 import { TemplatePicker } from "./TemplatePicker";
-import {
-  getTemplateComponent,
-  DEFAULT_TEMPLATE,
-  type TemplateId,
-} from "@/app/templates";
+import { DEFAULT_TEMPLATE, type TemplateId } from "@/app/templates";
+import { TemplateView } from "@/app/templates/TemplateView";
 import { downloadCvPdf } from "@/app/lib/pdf";
 import {
   IconField,
@@ -201,7 +198,6 @@ export function CvEditor({
 
   const exportCv = formToCv(form, hidden); // clean — used for the PDF
   const previewCv = formToCv(form, hidden, true); // with placeholders — preview only
-  const Template = getTemplateComponent(template);
 
   const set = (key: keyof EditorForm) => (v: string) =>
     setForm((prev) => ({ ...prev, [key]: v }));
@@ -270,7 +266,7 @@ export function CvEditor({
     <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-8 sm:px-6 print:p-0">
       {/* Off-screen full-size render for crisp PDF export */}
       <div aria-hidden className="pointer-events-none fixed left-[-9999px] top-0 print:static print:left-0">
-        <Template cv={exportCv} domId="cv-document" />
+        <TemplateView id={template} cv={exportCv} domId="cv-document" />
       </div>
 
       <button
@@ -412,7 +408,7 @@ export function CvEditor({
 
             <div className="mt-4">
               <ScaledPreview>
-                <Template cv={previewCv} domId="live-cv" />
+                <TemplateView id={template} cv={previewCv} domId="live-cv" />
               </ScaledPreview>
             </div>
           </div>

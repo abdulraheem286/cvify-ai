@@ -1,7 +1,10 @@
+import type { CSSProperties } from "react";
 import type { CVResult } from "@/app/types";
 
-// Onyx: bold dark header band, accent line, clean body. Premium and striking.
-export function OnyxTemplate({ cv, domId = "cv-document" }: { cv: CVResult; domId?: string }) {
+type Props = { cv: CVResult; domId?: string; accent?: string };
+
+// Onyx: bold dark header band with accent, clean body.
+export function OnyxTemplate({ cv, domId = "cv-document", accent = "#2563eb" }: Props) {
   const contactLine = [
     cv.contact?.email,
     cv.contact?.phone,
@@ -15,21 +18,18 @@ export function OnyxTemplate({ cv, domId = "cv-document" }: { cv: CVResult; domI
   return (
     <div
       id={domId}
+      style={{ "--accent": accent } as CSSProperties}
       className="mx-auto w-full max-w-[800px] overflow-hidden bg-white text-zinc-800 shadow-xl ring-1 ring-zinc-200"
     >
       <header className="bg-zinc-900 px-10 py-10 text-white sm:px-14">
         <div className="flex items-center justify-between gap-6">
           <div>
             <h1 className="text-4xl font-bold tracking-tight">{cv.fullName}</h1>
-            <p className="mt-1 text-lg font-medium text-blue-400">{cv.jobTitle}</p>
+            <p className="mt-1 text-lg font-medium text-[var(--accent)]">{cv.jobTitle}</p>
           </div>
           {cv.photo && (
             // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={cv.photo}
-              alt=""
-              className="h-20 w-20 shrink-0 rounded-full object-cover ring-2 ring-white/20"
-            />
+            <img src={cv.photo} alt="" className="h-20 w-20 shrink-0 rounded-full object-cover ring-2 ring-white/20" />
           )}
         </div>
         {contactLine && <p className="mt-4 text-xs text-zinc-400">{contactLine}</p>}
@@ -75,10 +75,7 @@ export function OnyxTemplate({ cv, domId = "cv-document" }: { cv: CVResult; domI
           <Section title="Skills">
             <div className="flex flex-wrap gap-2">
               {cv.skills.map((s, i) => (
-                <span
-                  key={i}
-                  className="rounded-md bg-zinc-100 px-2.5 py-1 text-xs font-medium text-zinc-700 ring-1 ring-zinc-200"
-                >
+                <span key={i} className="rounded-md bg-zinc-100 px-2.5 py-1 text-xs font-medium text-zinc-700 ring-1 ring-zinc-200">
                   {s}
                 </span>
               ))}
@@ -89,10 +86,7 @@ export function OnyxTemplate({ cv, domId = "cv-document" }: { cv: CVResult; domI
         {cv.languages && cv.languages.length > 0 && (
           <Section title="Languages">
             <p className="text-sm text-zinc-700">
-              {cv.languages
-                .map((l) => (l.level ? `${l.name} (${l.level})` : l.name))
-                .filter(Boolean)
-                .join("  ·  ")}
+              {cv.languages.map((l) => (l.level ? `${l.name} (${l.level})` : l.name)).filter(Boolean).join("  ·  ")}
             </p>
           </Section>
         )}
@@ -117,7 +111,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   return (
     <section className="mt-6">
       <h2 className="mb-3 flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-zinc-900">
-        <span className="h-3.5 w-1 rounded bg-blue-500" />
+        <span className="h-3.5 w-1 rounded bg-[var(--accent)]" />
         {title}
       </h2>
       {children}

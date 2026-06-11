@@ -1,7 +1,10 @@
+import type { CSSProperties } from "react";
 import type { CVResult } from "@/app/types";
 
-// Minimal: centered, monochrome, elegant.
-export function MinimalTemplate({ cv, domId = "cv-document" }: { cv: CVResult; domId?: string }) {
+type Props = { cv: CVResult; domId?: string; accent?: string };
+
+// Minimal: centered, mostly monochrome with a subtle accent.
+export function MinimalTemplate({ cv, domId = "cv-document", accent = "#2563eb" }: Props) {
   const contactLine = [
     cv.contact?.email,
     cv.contact?.phone,
@@ -15,23 +18,20 @@ export function MinimalTemplate({ cv, domId = "cv-document" }: { cv: CVResult; d
   return (
     <div
       id={domId}
+      style={{ "--accent": accent } as CSSProperties}
       className="mx-auto w-full max-w-[800px] bg-white text-zinc-800 shadow-xl ring-1 ring-zinc-200"
     >
       <div className="p-10 sm:p-14">
         <header className="text-center">
-          <h1 className="text-3xl font-semibold uppercase tracking-[0.18em] text-zinc-900">
-            {cv.fullName}
-          </h1>
-          <p className="mt-1.5 text-sm uppercase tracking-[0.2em] text-zinc-500">{cv.jobTitle}</p>
+          <h1 className="text-3xl font-semibold uppercase tracking-[0.18em] text-zinc-900">{cv.fullName}</h1>
+          <p className="mt-1.5 text-sm uppercase tracking-[0.2em] text-[var(--accent)]">{cv.jobTitle}</p>
           {contactLine && <p className="mt-3 text-xs text-zinc-500">{contactLine}</p>}
         </header>
 
-        <hr className="my-6 border-zinc-300" />
+        <hr className="my-6 border-[var(--accent)]/40" />
 
         {cv.summary && (
-          <p className="mx-auto max-w-prose text-center text-sm leading-relaxed text-zinc-700">
-            {cv.summary}
-          </p>
+          <p className="mx-auto max-w-prose text-center text-sm leading-relaxed text-zinc-700">{cv.summary}</p>
         )}
 
         {cv.experience?.length > 0 && (
@@ -76,10 +76,7 @@ export function MinimalTemplate({ cv, domId = "cv-document" }: { cv: CVResult; d
         {cv.languages && cv.languages.length > 0 && (
           <Section title="Languages">
             <p className="text-center text-sm text-zinc-700">
-              {cv.languages
-                .map((l) => (l.level ? `${l.name} (${l.level})` : l.name))
-                .filter(Boolean)
-                .join("  ·  ")}
+              {cv.languages.map((l) => (l.level ? `${l.name} (${l.level})` : l.name)).filter(Boolean).join("  ·  ")}
             </p>
           </Section>
         )}
@@ -103,7 +100,7 @@ export function MinimalTemplate({ cv, domId = "cv-document" }: { cv: CVResult; d
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section className="mt-7">
-      <h2 className="mb-3 text-center text-xs font-semibold uppercase tracking-[0.2em] text-zinc-900">
+      <h2 className="mb-3 text-center text-xs font-semibold uppercase tracking-[0.2em] text-[var(--accent)]">
         {title}
       </h2>
       {children}

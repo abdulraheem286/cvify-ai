@@ -1,26 +1,25 @@
+import type { CSSProperties } from "react";
 import type { CVResult } from "@/app/types";
 
-// Sidebar: two columns — coloured left rail with photo, contact, skills, languages.
-export function SidebarTemplate({ cv, domId = "cv-document" }: { cv: CVResult; domId?: string }) {
+type Props = { cv: CVResult; domId?: string; accent?: string };
+
+// Sidebar: two columns — accent left rail with photo, contact, skills, languages.
+export function SidebarTemplate({ cv, domId = "cv-document", accent = "#2563eb" }: Props) {
   return (
     <div
       id={domId}
+      style={{ "--accent": accent } as CSSProperties}
       className="mx-auto flex w-full max-w-[800px] bg-white text-zinc-800 shadow-xl ring-1 ring-zinc-200"
     >
-      {/* Left rail */}
-      <aside className="w-[34%] bg-blue-600 p-6 text-blue-50">
+      <aside className="w-[34%] bg-[var(--accent)] p-6 text-white">
         {cv.photo && (
           // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={cv.photo}
-            alt=""
-            className="mb-4 h-24 w-24 rounded-full object-cover ring-4 ring-white/30"
-          />
+          <img src={cv.photo} alt="" className="mb-4 h-24 w-24 rounded-full object-cover ring-4 ring-white/30" />
         )}
         <h1 className="text-2xl font-bold leading-tight text-white">{cv.fullName}</h1>
-        <p className="mt-1 text-sm text-blue-100">{cv.jobTitle}</p>
+        <p className="mt-1 text-sm text-white/80">{cv.jobTitle}</p>
 
-        <div className="mt-6 space-y-1.5 text-xs leading-relaxed">
+        <div className="mt-6 space-y-1.5 text-xs leading-relaxed text-white/90">
           {cv.contact?.location && <p>{cv.contact.location}</p>}
           {cv.contact?.email && <p className="break-words">{cv.contact.email}</p>}
           {cv.contact?.phone && <p>{cv.contact.phone}</p>}
@@ -31,10 +30,8 @@ export function SidebarTemplate({ cv, domId = "cv-document" }: { cv: CVResult; d
         {cv.skills?.length > 0 && (
           <div className="mt-6">
             <h2 className="text-xs font-bold uppercase tracking-widest text-white">Skills</h2>
-            <ul className="mt-2 space-y-1 text-xs">
-              {cv.skills.map((s, i) => (
-                <li key={i}>{s}</li>
-              ))}
+            <ul className="mt-2 space-y-1 text-xs text-white/90">
+              {cv.skills.map((s, i) => <li key={i}>{s}</li>)}
             </ul>
           </div>
         )}
@@ -42,11 +39,11 @@ export function SidebarTemplate({ cv, domId = "cv-document" }: { cv: CVResult; d
         {cv.languages && cv.languages.length > 0 && (
           <div className="mt-6">
             <h2 className="text-xs font-bold uppercase tracking-widest text-white">Languages</h2>
-            <ul className="mt-2 space-y-1 text-xs">
+            <ul className="mt-2 space-y-1 text-xs text-white/90">
               {cv.languages.map((l, i) => (
                 <li key={i}>
                   {l.name}
-                  {l.level && <span className="text-blue-200"> — {l.level}</span>}
+                  {l.level && <span className="text-white/60"> — {l.level}</span>}
                 </li>
               ))}
             </ul>
@@ -54,7 +51,6 @@ export function SidebarTemplate({ cv, domId = "cv-document" }: { cv: CVResult; d
         )}
       </aside>
 
-      {/* Main */}
       <main className="w-[66%] p-7">
         {cv.summary && <p className="text-sm leading-relaxed text-zinc-700">{cv.summary}</p>}
 
@@ -66,7 +62,7 @@ export function SidebarTemplate({ cv, domId = "cv-document" }: { cv: CVResult; d
                   <h3 className="font-semibold text-zinc-900">{job.role}</h3>
                   {job.period && <span className="shrink-0 text-xs text-zinc-500">{job.period}</span>}
                 </div>
-                {job.company && <p className="text-sm text-blue-600">{job.company}</p>}
+                {job.company && <p className="text-sm text-[var(--accent)]">{job.company}</p>}
                 <ul className="mt-1.5 list-disc space-y-1 pl-5 text-sm text-zinc-700">
                   {job.bullets?.map((b, j) => <li key={j}>{b}</li>)}
                 </ul>
@@ -108,7 +104,7 @@ export function SidebarTemplate({ cv, domId = "cv-document" }: { cv: CVResult; d
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section className="mt-6 first:mt-0">
-      <h2 className="mb-3 text-xs font-bold uppercase tracking-widest text-blue-600">{title}</h2>
+      <h2 className="mb-3 text-xs font-bold uppercase tracking-widest text-[var(--accent)]">{title}</h2>
       {children}
     </section>
   );
