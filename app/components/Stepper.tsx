@@ -1,36 +1,36 @@
-export function Stepper({ current }: { current: 1 | 2 }) {
-  return (
-    <div className="mx-auto mb-8 flex max-w-md items-center">
-      <StepDot n={1} label="Your details" active={current === 1} done={current > 1} />
-      <div className={`mx-3 h-0.5 flex-1 rounded ${current > 1 ? "bg-blue-600" : "bg-zinc-200"}`} />
-      <StepDot n={2} label="Template" active={current === 2} done={false} />
-    </div>
-  );
-}
+import { Fragment } from "react";
 
-function StepDot({
-  n,
-  label,
-  active,
-  done,
-}: {
-  n: number;
-  label: string;
-  active: boolean;
-  done: boolean;
-}) {
+// Generic step indicator. `current` is the 0-based index of the active step.
+export function Stepper({ steps, current }: { steps: string[]; current: number }) {
   return (
-    <div className="flex items-center gap-2">
-      <span
-        className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold ${
-          active || done ? "bg-blue-600 text-white" : "bg-zinc-200 text-zinc-500"
-        }`}
-      >
-        {done ? "✓" : n}
-      </span>
-      <span className={`text-sm font-medium ${active ? "text-zinc-900" : "text-zinc-500"}`}>
-        {label}
-      </span>
+    <div className="mx-auto mb-8 flex max-w-xl items-center">
+      {steps.map((label, i) => (
+        <Fragment key={label}>
+          {i > 0 && (
+            <div
+              className={`mx-2 h-0.5 flex-1 rounded sm:mx-3 ${
+                i <= current ? "bg-blue-600" : "bg-zinc-200"
+              }`}
+            />
+          )}
+          <div className="flex items-center gap-2">
+            <span
+              className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
+                i === current || i < current ? "bg-blue-600 text-white" : "bg-zinc-200 text-zinc-500"
+              }`}
+            >
+              {i < current ? "✓" : i + 1}
+            </span>
+            <span
+              className={`hidden text-sm font-medium sm:inline ${
+                i === current ? "text-zinc-900" : "text-zinc-500"
+              }`}
+            >
+              {label}
+            </span>
+          </div>
+        </Fragment>
+      ))}
     </div>
   );
 }

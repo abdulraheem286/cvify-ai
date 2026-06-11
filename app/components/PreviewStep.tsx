@@ -6,7 +6,7 @@ import { Stepper } from "./Stepper";
 import { getTemplateComponent, type TemplateId } from "@/app/templates";
 import { IconDownload, IconArrowLeft } from "./icons";
 
-// Step 2 of the builder: full-width two-pane — sticky controls on the left,
+// Final step of the builder: full-width two-pane — sticky controls on the left,
 // large live CV preview on the right.
 export function PreviewStep({
   cv,
@@ -15,6 +15,7 @@ export function PreviewStep({
   onBack,
   onDownload,
   downloading,
+  steps,
 }: {
   cv: CVResult;
   template: TemplateId;
@@ -22,17 +23,17 @@ export function PreviewStep({
   onBack: () => void;
   onDownload: () => void;
   downloading: boolean;
+  steps: string[];
 }) {
   const Template = getTemplateComponent(template);
 
   return (
     <div className="mx-auto w-full max-w-7xl px-6 py-10 print:p-0">
       <div className="print:hidden">
-        <Stepper current={2} />
+        <Stepper steps={steps} current={steps.length - 1} />
       </div>
 
       <div className="grid gap-8 lg:grid-cols-[300px_1fr]">
-        {/* Controls */}
         <aside className="space-y-4 print:hidden lg:sticky lg:top-24 lg:self-start">
           <button
             type="button"
@@ -57,7 +58,6 @@ export function PreviewStep({
           </button>
         </aside>
 
-        {/* Preview */}
         <div className="flex justify-center">
           <Template cv={cv} />
         </div>
