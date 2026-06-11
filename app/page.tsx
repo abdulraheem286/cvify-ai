@@ -1,43 +1,53 @@
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
 import Link from "next/link";
 import { SiteHeader } from "./components/SiteHeader";
 import { SiteFooter } from "./components/SiteFooter";
-import { ModernTemplate } from "./templates/ModernTemplate";
 import { Reveal } from "./components/Reveal";
+import { ModernTemplate } from "./templates/ModernTemplate";
+import { MinimalTemplate } from "./templates/MinimalTemplate";
+import { SidebarTemplate } from "./templates/SidebarTemplate";
+import {
+  IconSparkles,
+  IconText,
+  IconGlobe,
+  IconTools,
+  IconGraduation,
+  IconDownload,
+} from "./components/icons";
 import type { CVResult } from "./types";
 
-// On-page SEO for the home page.
 export const metadata: Metadata = {
   title: "CVify AI — Free AI Resume & CV Builder | Build a Pro CV in Minutes",
   description:
-    "CVify AI is a free AI resume builder. Turn rough notes into a polished, professional CV in minutes, pick a beautiful template, and download a clean PDF instantly. No sign-up needed to start.",
+    "CVify AI is a free AI resume builder. Turn rough notes into a polished, professional CV in minutes, choose from clean templates, edit everything, and download a PDF instantly. No sign-up needed.",
   alternates: { canonical: "/" },
 };
 
 const faqs = [
   {
     q: "Is CVify AI free?",
-    a: "Yes. CVify AI is free to use. You can create a CV, generate professional content with AI, and download a PDF without paying or entering a credit card.",
+    a: "Yes. You can create a CV, generate professional content with AI, edit it, and download a PDF without paying or entering a credit card.",
   },
   {
-    q: "How does the AI resume builder work?",
-    a: "You paste your rough notes or an old CV, and CVify AI rewrites them into clear, professional wording — a strong summary, achievement-focused bullet points, and a clean structure — in about ten seconds.",
-  },
-  {
-    q: "Can I write my CV myself instead of using AI?",
-    a: "Yes. Alongside the AI builder, CVify AI lets you fill in every section yourself, so you keep full control over the wording while still getting a beautifully formatted result.",
+    q: "Can I edit the AI-generated content?",
+    a: "Absolutely. The AI gives you a starting point, but every word is yours to change. Add anything you want, rewrite sections, or remove them — you have full control in the editor.",
   },
   {
     q: "Will my CV work with applicant tracking systems (ATS)?",
     a: "CVify AI uses clean, single-column formatting and standard section headings, which read clearly both in most applicant tracking systems and for human recruiters.",
   },
   {
-    q: "Do I need to create an account?",
-    a: "No account is needed to build and download a CV. A free account is optional and simply lets you save your CVs and edit them again later.",
+    q: "How do I export my resume?",
+    a: "One click. Download your finished CV as a standard PDF — the format employers and job boards expect — ready to send or upload anywhere.",
   },
   {
-    q: "What file format do I get?",
-    a: "You download your finished CV as a standard PDF — the format employers and job boards expect — ready to send or upload anywhere.",
+    q: "Do I need to create an account?",
+    a: "No account is needed to build and download a CV. You can start straight away.",
+  },
+  {
+    q: "Can I make more than one CV?",
+    a: "Yes. Create as many CVs as you like and tailor each one to a specific job, industry, or template.",
   },
 ];
 
@@ -73,11 +83,7 @@ const sampleCv: CVResult = {
     },
   ],
   education: [
-    {
-      degree: "BA, Interaction Design",
-      institution: "London College of Communication",
-      period: "2014 — 2018",
-    },
+    { degree: "BA, Interaction Design", institution: "London College of Communication", period: "2014 — 2018" },
   ],
   skills: ["Figma", "Prototyping", "Design Systems", "UX Research", "UI Design"],
 };
@@ -109,147 +115,203 @@ export default function Home() {
 
   return (
     <div className="flex min-h-full flex-col bg-white text-zinc-900">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <SiteHeader />
 
       <main className="flex-1">
         {/* Hero */}
-        <section className="relative overflow-hidden">
-          <div
-            aria-hidden
-            className="pointer-events-none absolute left-1/2 top-[-8rem] h-[26rem] w-[40rem] -translate-x-1/2 rounded-full bg-blue-200/40 blur-[120px]"
-          />
-          <Reveal stagger className="relative mx-auto max-w-3xl px-6 pt-20 text-center sm:pt-28">
-            <span className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700">
-              Free • AI-powered • No sign-up to start
-            </span>
-            <h1 className="mt-6 text-5xl font-bold leading-[1.1] tracking-tight text-zinc-900 sm:text-6xl">
-              Build a professional CV in minutes — with{" "}
-              <span className="text-blue-600">AI</span>
-            </h1>
-            <p className="mx-auto mt-6 max-w-xl text-lg text-zinc-600">
-              CVify AI turns your rough notes into a polished, recruiter-ready
-              resume. Pick a clean template and download a PDF instantly.
-            </p>
-            <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
-              <Link
-                href="/build"
-                className="w-full rounded-lg bg-blue-600 px-6 py-3 text-base font-semibold text-white shadow-sm transition-colors hover:bg-blue-700 sm:w-auto"
-              >
-                Create my CV free →
-              </Link>
-              <a
-                href="#how"
-                className="w-full rounded-lg border border-zinc-300 bg-white px-6 py-3 text-base font-semibold text-zinc-700 transition-colors hover:bg-zinc-50 sm:w-auto"
-              >
-                See how it works
-              </a>
-            </div>
-          </Reveal>
+        <section className="border-b border-zinc-200 bg-gradient-to-b from-blue-50 to-white">
+          <div className="mx-auto grid max-w-6xl items-center gap-10 px-6 py-16 lg:grid-cols-2 lg:py-24">
+            <Reveal stagger>
+              <p className="text-sm font-semibold uppercase tracking-wide text-blue-600">
+                Free AI resume builder
+              </p>
+              <h1 className="mt-3 text-5xl font-bold leading-[1.05] tracking-tight sm:text-6xl">
+                Build your resume in minutes with <span className="text-blue-600">AI</span>
+              </h1>
+              <p className="mt-5 max-w-md text-lg text-zinc-600">
+                CVify AI turns simple notes into a professional resume. Edit every detail, choose a
+                clean template, and land more interviews.
+              </p>
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                <Link href="/build" className="rounded-lg bg-blue-600 px-6 py-3 text-center text-base font-semibold text-white shadow-sm transition-colors hover:bg-blue-700">
+                  Create my CV free →
+                </Link>
+                <a href="#templates" className="rounded-lg border border-zinc-300 bg-white px-6 py-3 text-center text-base font-semibold text-zinc-700 transition-colors hover:bg-zinc-50">
+                  Browse templates
+                </a>
+              </div>
+            </Reveal>
 
-          {/* Product preview — the real CV template */}
-          <Reveal y={40} className="relative mx-auto mt-16 max-w-3xl px-6">
-            <div className="max-h-[620px] overflow-hidden rounded-2xl">
-              <ModernTemplate cv={sampleCv} />
+            <div className="flex justify-center lg:justify-end">
+              <ScaledPreview scale={0.5} height={520}>
+                <ModernTemplate cv={sampleCv} domId="hero-preview" />
+              </ScaledPreview>
             </div>
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-white to-transparent" />
-          </Reveal>
+          </div>
         </section>
 
-        {/* Trust strip */}
-        <section className="border-y border-zinc-200 bg-zinc-50">
-          <div className="mx-auto grid max-w-4xl gap-6 px-6 py-8 text-center text-sm font-medium text-zinc-600 sm:grid-cols-3">
-            <div>Written by AI in ~10 seconds</div>
-            <div>Clean, recruiter-ready templates</div>
-            <div>Instant PDF download</div>
+        {/* Honest highlights */}
+        <section className="border-b border-zinc-200 bg-white">
+          <div className="mx-auto grid max-w-5xl gap-4 px-6 py-10 sm:grid-cols-2 lg:grid-cols-4">
+            <Stat value="100%" label="Free to use" />
+            <Stat value="~10s" label="AI writes your draft" />
+            <Stat value="3" label="Clean templates" />
+            <Stat value="1-click" label="PDF download" />
           </div>
         </section>
 
         {/* Features */}
-        <section id="features" className="mx-auto max-w-6xl px-6 py-24">
-          <h2 className="text-center text-3xl font-bold tracking-tight sm:text-4xl">
-            Everything you need to land the interview
-          </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-center text-zinc-600">
-            CVify AI handles the hard parts — strong wording, clean structure,
-            and professional design — so you can apply with confidence.
-          </p>
-          <Reveal stagger className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            <Feature
-              icon={<IconSparkles />}
-              title="AI writing"
-              text="Describe yourself in plain words and get strong, achievement-focused bullet points and a polished summary."
+        <section id="features" className="bg-zinc-50">
+          <div className="mx-auto max-w-6xl px-6 py-20">
+            <SectionHead
+              eyebrow="Features"
+              title="Everything you need to land the interview"
+              subtitle="CVify AI handles the hard parts — strong wording, clean structure, and professional design."
             />
-            <Feature
-              icon={<IconSplit />}
-              title="Two ways to build"
-              text="Let AI write it for you, or fill in every section yourself for full control — your choice."
-            />
-            <Feature
-              icon={<IconLayout />}
-              title="Beautiful templates"
-              text="Clean, modern designs that look great to recruiters and read clearly in applicant tracking systems."
-            />
-            <Feature
-              icon={<IconDownload />}
-              title="Instant PDF"
-              text="Download a print-ready PDF in one click, formatted exactly the way employers expect."
-            />
-          </Reveal>
-        </section>
-
-        {/* How it works */}
-        <section id="how" className="border-t border-zinc-200 bg-zinc-50">
-          <div className="mx-auto max-w-5xl px-6 py-24">
-            <h2 className="text-center text-3xl font-bold tracking-tight sm:text-4xl">
-              How to make a CV with CVify AI
-            </h2>
-            <Reveal stagger className="mt-16 grid gap-10 sm:grid-cols-3">
-              <Step n={1} title="Add your details" text="Paste your old CV or jot down your jobs, skills, and education. Rough notes are fine." />
-              <Step n={2} title="AI polishes it" text="CVify AI rewrites your input into clear, professional wording and a clean, organised layout." />
-              <Step n={3} title="Download your PDF" text="Preview your finished CV in a beautiful template and download a print-ready PDF instantly." />
+            <Reveal stagger className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              <Feature icon={<IconSparkles />} title="AI writing" text="Describe yourself in plain words and get a strong summary and achievement-focused bullet points." />
+              <Feature icon={<IconText />} title="Full editor" text="Every field is editable. Tweak the AI's draft or write it all yourself — your choice, your words." />
+              <Feature icon={<IconTools />} title="ATS-friendly" text="Clean, single-column formatting with standard headings that reads clearly in tracking systems." />
+              <Feature icon={<IconGraduation />} title="For any field" text="Students, career-changers, and senior pros — the editor adapts to your experience." />
+              <Feature icon={<IconGlobe />} title="Works anywhere" text="Runs in your browser on any device. Add location, website, and contact details with ease." />
+              <Feature icon={<IconDownload />} title="Instant PDF" text="Download a print-ready PDF in one click, formatted exactly the way employers expect." />
             </Reveal>
           </div>
         </section>
 
-        {/* FAQ */}
-        <section id="faq" className="mx-auto max-w-3xl px-6 py-24">
-          <h2 className="text-center text-3xl font-bold tracking-tight sm:text-4xl">
-            Frequently asked questions
-          </h2>
-          <Reveal stagger className="mt-12 divide-y divide-zinc-200 border-y border-zinc-200">
-            {faqs.map((f) => (
-              <details key={f.q} className="group py-5">
-                <summary className="flex cursor-pointer list-none items-center justify-between text-base font-medium text-zinc-900">
-                  {f.q}
-                  <span className="ml-4 text-blue-600 transition-transform group-open:rotate-45">+</span>
-                </summary>
-                <p className="mt-3 text-sm leading-relaxed text-zinc-600">{f.a}</p>
-              </details>
-            ))}
-          </Reveal>
+        {/* Templates showcase */}
+        <section id="templates" className="border-y border-zinc-200 bg-white">
+          <div className="mx-auto max-w-6xl px-6 py-20">
+            <SectionHead
+              eyebrow="Templates"
+              title="Choose from modern, minimal, and clean designs"
+              subtitle="Switch between styles anytime without losing your content. Every template exports to a crisp PDF."
+            />
+            <Reveal stagger className="mt-14 grid gap-8 lg:grid-cols-3">
+              <TemplateCard name="Modern" blurb="Bold accent header, single column.">
+                <ModernTemplate cv={sampleCv} domId="tpl-modern" />
+              </TemplateCard>
+              <TemplateCard name="Minimal" blurb="Centered, monochrome, elegant.">
+                <MinimalTemplate cv={sampleCv} domId="tpl-minimal" />
+              </TemplateCard>
+              <TemplateCard name="Sidebar" blurb="Two-column with a colour rail.">
+                <SidebarTemplate cv={sampleCv} domId="tpl-sidebar" />
+              </TemplateCard>
+            </Reveal>
+            <div className="mt-12 text-center">
+              <Link href="/build" className="inline-block rounded-lg bg-blue-600 px-6 py-3 font-semibold text-white shadow-sm transition-colors hover:bg-blue-700">
+                Start with a template →
+              </Link>
+            </div>
+          </div>
         </section>
 
-        {/* Final CTA */}
-        <section className="mx-auto max-w-6xl px-6 pb-24">
-          <Reveal y={40} className="rounded-3xl bg-blue-600 px-6 py-16 text-center text-white">
-            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-              Ready to build your CV?
-            </h2>
+        {/* How it works */}
+        <section id="how" className="bg-blue-50">
+          <div className="mx-auto max-w-6xl px-6 py-20">
+            <SectionHead eyebrow="Process" title="Four simple steps" subtitle="From a blank page to a polished resume in minutes." />
+            <Reveal stagger className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+              <Step n={1} title="Add your info" text="Paste rough notes or share a few details about your work history." />
+              <Step n={2} title="Generate or type" text="Let AI write a first draft, or fill the editor in yourself." />
+              <Step n={3} title="Edit & style" text="Refine the wording and pick a template — see it update live." />
+              <Step n={4} title="Download & apply" text="Export a clean PDF and start landing interviews." />
+            </Reveal>
+          </div>
+        </section>
+
+        {/* Feature row 1 — AI draft */}
+        <section className="border-t border-zinc-200 bg-white">
+          <div className="mx-auto grid max-w-6xl items-center gap-12 px-6 py-20 lg:grid-cols-2">
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-wide text-blue-600">AI draft</p>
+              <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
+                A professional first draft in seconds
+              </h2>
+              <p className="mt-4 text-zinc-600">
+                Paste your old CV or jot down rough notes. CVify AI writes a compelling summary and
+                turns your experience into clear, achievement-focused bullet points.
+              </p>
+              <ul className="mt-6 space-y-2 text-sm text-zinc-700">
+                <Check>Strong, recruiter-ready wording</Check>
+                <Check>Only uses the facts you provide</Check>
+                <Check>Editable down to every word</Check>
+              </ul>
+              <Link href="/build/ai" className="mt-8 inline-block rounded-lg bg-blue-600 px-5 py-2.5 font-semibold text-white shadow-sm transition-colors hover:bg-blue-700">
+                Try the AI builder →
+              </Link>
+            </div>
+            <div className="flex justify-center">
+              <ScaledPreview scale={0.5} height={460}>
+                <ModernTemplate cv={sampleCv} domId="row-modern" />
+              </ScaledPreview>
+            </div>
+          </div>
+        </section>
+
+        {/* Feature row 2 — edit & switch */}
+        <section className="border-t border-zinc-200 bg-zinc-50">
+          <div className="mx-auto grid max-w-6xl items-center gap-12 px-6 py-20 lg:grid-cols-2">
+            <div className="order-2 flex justify-center lg:order-1">
+              <ScaledPreview scale={0.5} height={460}>
+                <SidebarTemplate cv={sampleCv} domId="row-sidebar" />
+              </ScaledPreview>
+            </div>
+            <div className="order-1 lg:order-2">
+              <p className="text-sm font-semibold uppercase tracking-wide text-blue-600">Edit live</p>
+              <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
+                Edit everything, switch styles instantly
+              </h2>
+              <p className="mt-4 text-zinc-600">
+                Fine-tune every section in the editor, then flip between templates and watch your CV
+                update in real time — your content stays exactly where it is.
+              </p>
+              <ul className="mt-6 space-y-2 text-sm text-zinc-700">
+                <Check>Add or remove jobs and education</Check>
+                <Check>Live preview of the finished CV</Check>
+                <Check>Three templates, one click to switch</Check>
+              </ul>
+              <Link href="/build/manual" className="mt-8 inline-block rounded-lg bg-blue-600 px-5 py-2.5 font-semibold text-white shadow-sm transition-colors hover:bg-blue-700">
+                Build it manually →
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* FAQ */}
+        <section id="faq" className="border-t border-zinc-200 bg-white">
+          <div className="mx-auto max-w-3xl px-6 py-20">
+            <SectionHead eyebrow="FAQ" title="Frequently asked questions" subtitle="Answers to questions about building, optimizing, and exporting your resume." />
+            <div className="mt-12 divide-y divide-zinc-200 border-y border-zinc-200">
+              {faqs.map((f) => (
+                <details key={f.q} className="group py-5">
+                  <summary className="flex cursor-pointer list-none items-center justify-between text-base font-medium text-zinc-900">
+                    {f.q}
+                    <span className="ml-4 text-blue-600 transition-transform group-open:rotate-45">+</span>
+                  </summary>
+                  <p className="mt-3 text-sm leading-relaxed text-zinc-600">{f.a}</p>
+                </details>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* CTA */}
+        <section className="mx-auto max-w-6xl px-6 pb-20">
+          <div className="rounded-3xl bg-blue-600 px-6 py-16 text-center text-white">
+            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Start building your resume today</h2>
             <p className="mx-auto mt-4 max-w-md text-blue-100">
-              It is free, takes a few minutes, and you can download your PDF right away.
+              Join job seekers who land interviews with CVify AI — free, with a clean PDF in minutes.
             </p>
-            <Link
-              href="/build"
-              className="mt-8 inline-block rounded-lg bg-white px-6 py-3 text-base font-semibold text-blue-700 transition-colors hover:bg-blue-50"
-            >
-              Create my CV free →
-            </Link>
-          </Reveal>
+            <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+              <Link href="/build" className="rounded-lg bg-white px-6 py-3 font-semibold text-blue-700 transition-colors hover:bg-blue-50">
+                Build my resume →
+              </Link>
+              <a href="#templates" className="rounded-lg border border-blue-400 px-6 py-3 font-semibold text-white transition-colors hover:bg-blue-500">
+                Browse templates
+              </a>
+            </div>
+          </div>
         </section>
       </main>
 
@@ -258,7 +320,26 @@ export default function Home() {
   );
 }
 
-function Feature({ icon, title, text }: { icon: React.ReactNode; title: string; text: string }) {
+function SectionHead({ eyebrow, title, subtitle }: { eyebrow: string; title: string; subtitle: string }) {
+  return (
+    <div className="mx-auto max-w-2xl text-center">
+      <p className="text-sm font-semibold uppercase tracking-wide text-blue-600">{eyebrow}</p>
+      <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">{title}</h2>
+      <p className="mt-4 text-zinc-600">{subtitle}</p>
+    </div>
+  );
+}
+
+function Stat({ value, label }: { value: string; label: string }) {
+  return (
+    <div className="rounded-xl border border-zinc-200 bg-white p-5 text-center">
+      <p className="text-3xl font-bold text-zinc-900">{value}</p>
+      <p className="mt-1 text-sm text-zinc-500">{label}</p>
+    </div>
+  );
+}
+
+function Feature({ icon, title, text }: { icon: ReactNode; title: string; text: string }) {
   return (
     <div className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm">
       <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
@@ -272,44 +353,56 @@ function Feature({ icon, title, text }: { icon: React.ReactNode; title: string; 
 
 function Step({ n, title, text }: { n: number; title: string; text: string }) {
   return (
-    <div className="text-center">
-      <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-blue-600 text-lg font-bold text-white">
+    <div className="rounded-2xl border border-zinc-200 bg-white p-6">
+      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-600 text-sm font-bold text-white">
         {n}
       </div>
-      <h3 className="mt-5 font-semibold text-zinc-900">{title}</h3>
+      <h3 className="mt-4 font-semibold text-zinc-900">{title}</h3>
       <p className="mt-2 text-sm leading-relaxed text-zinc-600">{text}</p>
     </div>
   );
 }
 
-/* --- Simple inline line icons (no dependency) --- */
-function IconSparkles() {
+function Check({ children }: { children: ReactNode }) {
   return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2 2M16 16l2 2M18 6l-2 2M8 16l-2 2" />
-    </svg>
+    <li className="flex items-start gap-2">
+      <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-blue-100 text-[10px] font-bold text-blue-700">
+        ✓
+      </span>
+      {children}
+    </li>
   );
 }
-function IconSplit() {
+
+// Renders a full template scaled down into a fixed-size, clipped card.
+function ScaledPreview({ scale, height, children }: { scale: number; height: number; children: ReactNode }) {
   return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="3" y="4" width="7" height="16" rx="1.5" />
-      <rect x="14" y="4" width="7" height="16" rx="1.5" />
-    </svg>
+    <div
+      className="relative max-w-full overflow-hidden rounded-xl shadow-md ring-1 ring-zinc-200"
+      style={{ width: 800 * scale, height }}
+    >
+      <div
+        className="pointer-events-none absolute left-0 top-0 origin-top-left"
+        style={{ transform: `scale(${scale})`, width: 800 }}
+      >
+        {children}
+      </div>
+    </div>
   );
 }
-function IconLayout() {
+
+function TemplateCard({ name, blurb, children }: { name: string; blurb: string; children: ReactNode }) {
   return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="3" y="4" width="18" height="16" rx="2" />
-      <path d="M3 9h18M9 9v11" />
-    </svg>
-  );
-}
-function IconDownload() {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M12 3v12M7 10l5 5 5-5M5 21h14" />
-    </svg>
+    <div className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm">
+      <div className="mx-auto">
+        <ScaledPreview scale={0.46} height={460}>
+          {children}
+        </ScaledPreview>
+      </div>
+      <div className="mt-4 px-1">
+        <h3 className="font-semibold text-zinc-900">{name}</h3>
+        <p className="text-sm text-zinc-600">{blurb}</p>
+      </div>
+    </div>
   );
 }

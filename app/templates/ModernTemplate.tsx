@@ -1,10 +1,10 @@
 import type { CVResult } from "@/app/types";
 
 // Modern: blue accent header, single column, skill chips.
-export function ModernTemplate({ cv }: { cv: CVResult }) {
+export function ModernTemplate({ cv, domId = "cv-document" }: { cv: CVResult; domId?: string }) {
   return (
     <div
-      id="cv-document"
+      id={domId}
       className="mx-auto w-full max-w-[800px] bg-white text-zinc-800 shadow-xl ring-1 ring-zinc-200"
     >
       <div className="p-10 sm:p-14">
