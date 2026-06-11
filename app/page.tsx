@@ -1,203 +1,278 @@
-"use client";
+import type { Metadata } from "next";
+import Link from "next/link";
 
-import { useState, type ChangeEvent, type FormEvent } from "react";
-import { CvDocument } from "./components/CvDocument";
-import type { CVResult } from "./types";
-
-type CVForm = {
-  name: string;
-  title: string;
-  email: string;
-  phone: string;
-  experience: string;
+// On-page SEO for the home page.
+export const metadata: Metadata = {
+  title: "CVify AI — Free AI Resume & CV Builder | Build a Pro CV in Minutes",
+  description:
+    "CVify AI is a free AI resume builder. Turn rough notes into a polished, professional CV in minutes, pick a beautiful template, and download a clean PDF instantly. No sign-up needed to start.",
+  alternates: { canonical: "/" },
 };
 
-const EMPTY: CVForm = {
-  name: "",
-  title: "",
-  email: "",
-  phone: "",
-  experience: "",
-};
+// FAQ content — reused for the visible section AND the structured data below.
+const faqs = [
+  {
+    q: "Is CVify AI free?",
+    a: "Yes. CVify AI is free to use. You can create a CV, generate professional content with AI, and download a PDF without paying or entering a credit card.",
+  },
+  {
+    q: "How does the AI resume builder work?",
+    a: "You paste your rough notes or an old CV, and CVify AI rewrites them into clear, professional wording — a strong summary, achievement-focused bullet points, and a clean structure — in about ten seconds.",
+  },
+  {
+    q: "Can I write my CV myself instead of using AI?",
+    a: "Yes. Alongside the AI builder, CVify AI lets you fill in every section yourself, so you keep full control over the wording while still getting a beautifully formatted result.",
+  },
+  {
+    q: "Will my CV work with applicant tracking systems (ATS)?",
+    a: "CVify AI uses clean, single-column formatting and standard section headings, which read clearly both in most applicant tracking systems and for human recruiters.",
+  },
+  {
+    q: "Do I need to create an account?",
+    a: "No account is needed to build and download a CV. A free account is optional and simply lets you save your CVs and edit them again later.",
+  },
+  {
+    q: "What file format do I get?",
+    a: "You download your finished CV as a standard PDF — the format employers and job boards expect — ready to send or upload anywhere.",
+  },
+];
 
 export default function Home() {
-  const [form, setForm] = useState<CVForm>(EMPTY);
-  const [loading, setLoading] = useState(false);
-  const [downloading, setDownloading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [result, setResult] = useState<CVResult | null>(null);
-
-  function handleChange(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name as keyof CVForm]: value }));
-  }
-
-  async function handleSubmit(e: FormEvent) {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
-    setResult(null);
-    try {
-      const res = await fetch("/api/generate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "Something went wrong.");
-      setResult(data.cv as CVResult);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Something went wrong.");
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  // Turn the on-screen CV into a downloadable PDF file (one click).
-  async function handleDownload() {
-    const el = document.getElementById("cv-document");
-    if (!el) return;
-    setDownloading(true);
-    try {
-      // Load the PDF tools only when needed (keeps the app fast).
-      const [{ default: html2canvas }, { jsPDF }] = await Promise.all([
-        import("html2canvas-pro"),
-        import("jspdf"),
-      ]);
-
-      // 1) Take a high-res picture of the CV.
-      const canvas = await html2canvas(el, { scale: 2, backgroundColor: "#ffffff" });
-      const imgData = canvas.toDataURL("image/png");
-
-      // 2) Put that picture into an A4 PDF, adding pages if the CV is long.
-      const pdf = new jsPDF({ unit: "pt", format: "a4" });
-      const pageWidth = pdf.internal.pageSize.getWidth();
-      const pageHeight = pdf.internal.pageSize.getHeight();
-      const imgWidth = pageWidth;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-      let heightLeft = imgHeight;
-      let position = 0;
-      pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-      heightLeft -= pageHeight;
-      while (heightLeft > 0) {
-        position -= pageHeight;
-        pdf.addPage();
-        pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
-      }
-
-      // 3) Download it.
-      pdf.save(`${result?.fullName?.replace(/\s+/g, "-") || "cv"}.pdf`);
-    } catch (err) {
-      console.error("PDF export failed:", err);
-      setError("Could not create the PDF. Please try again.");
-    } finally {
-      setDownloading(false);
-    }
-  }
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        name: "CVify AI",
+        applicationCategory: "BusinessApplication",
+        operatingSystem: "Web",
+        url: "https://cvifyai.vercel.app",
+        description:
+          "Free AI resume builder that turns rough notes into a polished, professional CV with beautiful templates and instant PDF download.",
+        offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+      },
+      {
+        "@type": "FAQPage",
+        mainEntity: faqs.map((f) => ({
+          "@type": "Question",
+          name: f.q,
+          acceptedAnswer: { "@type": "Answer", text: f.a },
+        })),
+      },
+    ],
+  };
 
   return (
-    <main className="flex flex-1 flex-col items-center bg-zinc-950 px-6 py-16 text-white print:bg-white print:p-0">
-      <div className="w-full max-w-2xl print:hidden">
-        <h1 className="text-4xl font-bold tracking-tight">
-          CVify <span className="text-emerald-400">AI</span>
-        </h1>
-        <p className="mt-2 text-zinc-400">Tell us about yourself — AI does the rest.</p>
+    <div className="flex min-h-full flex-col bg-zinc-950 text-white">
+      {/* Structured data for Google + AI answer engines (GEO) */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
 
-        <form onSubmit={handleSubmit} className="mt-10 space-y-5">
-          <Field label="Full name" name="name" value={form.name} onChange={handleChange} placeholder="John Doe" />
-          <Field label="Professional title" name="title" value={form.title} onChange={handleChange} placeholder="Software Engineer" />
+      {/* Header */}
+      <header className="sticky top-0 z-50 border-b border-zinc-800/80 bg-zinc-950/80 backdrop-blur">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+          <Link href="/" className="text-xl font-bold tracking-tight">
+            CVify <span className="text-emerald-400">AI</span>
+          </Link>
+          <nav className="hidden items-center gap-8 text-sm text-zinc-400 sm:flex">
+            <a href="#features" className="transition-colors hover:text-white">Features</a>
+            <a href="#how" className="transition-colors hover:text-white">How it works</a>
+            <a href="#faq" className="transition-colors hover:text-white">FAQ</a>
+          </nav>
+          <Link
+            href="/build"
+            className="rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-zinc-950 transition-colors hover:bg-emerald-400"
+          >
+            Create my CV
+          </Link>
+        </div>
+      </header>
 
-          <div className="grid gap-5 sm:grid-cols-2">
-            <Field label="Email" name="email" value={form.email} onChange={handleChange} placeholder="you@example.com" />
-            <Field label="Phone" name="phone" value={form.phone} onChange={handleChange} placeholder="+1 (555) 123-4567" />
+      <main className="flex-1">
+        {/* Hero */}
+        <section className="relative overflow-hidden">
+          <div
+            aria-hidden
+            className="pointer-events-none absolute left-1/2 top-[-10rem] h-[28rem] w-[28rem] -translate-x-1/2 rounded-full bg-emerald-500/20 blur-[120px]"
+          />
+          <div className="mx-auto max-w-3xl px-6 py-24 text-center sm:py-32">
+            <span className="inline-block rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-300">
+              Free • AI-powered • No sign-up to start
+            </span>
+            <h1 className="mt-6 text-5xl font-bold leading-tight tracking-tight sm:text-6xl">
+              Build a professional CV in minutes — free, with{" "}
+              <span className="text-emerald-400">AI</span>
+            </h1>
+            <p className="mx-auto mt-6 max-w-xl text-lg text-zinc-400">
+              CVify AI turns your rough notes into a polished, recruiter-ready
+              resume. Pick a beautiful template and download a clean PDF
+              instantly.
+            </p>
+            <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
+              <Link
+                href="/build"
+                className="w-full rounded-lg bg-emerald-500 px-6 py-3 text-base font-semibold text-zinc-950 transition-colors hover:bg-emerald-400 sm:w-auto"
+              >
+                Create my CV free →
+              </Link>
+              <a
+                href="#how"
+                className="w-full rounded-lg border border-zinc-700 px-6 py-3 text-base font-semibold text-zinc-200 transition-colors hover:border-zinc-500 sm:w-auto"
+              >
+                See how it works
+              </a>
+            </div>
           </div>
+        </section>
 
-          <div>
-            <label className="mb-1.5 block text-sm font-medium text-zinc-300">
-              Your experience &amp; background
-            </label>
-            <textarea
-              name="experience"
-              value={form.experience}
-              onChange={handleChange}
-              rows={6}
-              placeholder="Paste your old CV, or jot down your jobs, skills, and education. Rough notes are fine — the AI will polish it."
-              className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-3 text-white placeholder-zinc-500 outline-none focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400"
+        {/* Trust strip */}
+        <section className="border-y border-zinc-800/80 bg-zinc-900/30">
+          <div className="mx-auto grid max-w-4xl gap-6 px-6 py-8 text-center text-sm text-zinc-400 sm:grid-cols-3">
+            <div>✨ Written by AI in ~10 seconds</div>
+            <div>🎨 Clean, recruiter-ready templates</div>
+            <div>📄 Instant PDF download</div>
+          </div>
+        </section>
+
+        {/* Features */}
+        <section id="features" className="mx-auto max-w-6xl px-6 py-24">
+          <h2 className="text-center text-3xl font-bold tracking-tight sm:text-4xl">
+            Everything you need to land the interview
+          </h2>
+          <p className="mx-auto mt-4 max-w-2xl text-center text-zinc-400">
+            CVify AI handles the hard parts — strong wording, clean structure,
+            and professional design — so you can apply with confidence.
+          </p>
+          <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            <Feature
+              icon="🤖"
+              title="AI writing"
+              text="Describe yourself in plain words and get strong, achievement-focused bullet points and a polished summary."
+            />
+            <Feature
+              icon="✍️"
+              title="Two ways to build"
+              text="Let AI write it for you, or fill in every section yourself for full control — your choice."
+            />
+            <Feature
+              icon="🎨"
+              title="Beautiful templates"
+              text="Clean, modern, single-column designs that look great to recruiters and read clearly in ATS."
+            />
+            <Feature
+              icon="📄"
+              title="Instant PDF"
+              text="Download a print-ready PDF in one click, named and formatted exactly the way employers expect."
             />
           </div>
+        </section>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full rounded-lg bg-emerald-500 px-5 py-3 font-semibold text-zinc-950 transition-colors hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            {loading ? (
-              <span className="flex items-center justify-center gap-2">
-                <Spinner /> Generating your CV…
-              </span>
-            ) : (
-              "Generate my CV with AI ✨"
-            )}
-          </button>
-        </form>
-
-        {error && (
-          <p className="mt-6 rounded-lg border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm text-red-300">
-            {error}
-          </p>
-        )}
-      </div>
-
-      {result && (
-        <div className="mt-12 w-full max-w-[820px] print:mt-0">
-          <div className="mb-4 flex justify-end print:hidden">
-            <button
-              onClick={handleDownload}
-              disabled={downloading}
-              className="rounded-lg bg-emerald-500 px-5 py-2.5 font-semibold text-zinc-950 transition-colors hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              {downloading ? "Preparing PDF…" : "Download PDF ⬇"}
-            </button>
+        {/* How it works */}
+        <section id="how" className="border-t border-zinc-800/80 bg-zinc-900/30">
+          <div className="mx-auto max-w-5xl px-6 py-24">
+            <h2 className="text-center text-3xl font-bold tracking-tight sm:text-4xl">
+              How to make a CV with CVify AI
+            </h2>
+            <div className="mt-16 grid gap-10 sm:grid-cols-3">
+              <Step
+                n={1}
+                title="Add your details"
+                text="Paste your old CV or jot down your jobs, skills, and education. Rough notes are fine."
+              />
+              <Step
+                n={2}
+                title="AI polishes it"
+                text="CVify AI rewrites your input into clear, professional wording and a clean, organised layout."
+              />
+              <Step
+                n={3}
+                title="Download your PDF"
+                text="Preview your finished CV in a beautiful template and download a print-ready PDF instantly."
+              />
+            </div>
           </div>
-          <CvDocument cv={result} />
-        </div>
-      )}
-    </main>
-  );
-}
+        </section>
 
-function Field({
-  label,
-  name,
-  value,
-  onChange,
-  placeholder,
-}: {
-  label: string;
-  name: string;
-  value: string;
-  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
-  placeholder?: string;
-}) {
-  return (
-    <div>
-      <label className="mb-1.5 block text-sm font-medium text-zinc-300">{label}</label>
-      <input
-        type="text"
-        name={name}
-        value={value}
-        onChange={onChange}
-        placeholder={placeholder}
-        className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-3 text-white placeholder-zinc-500 outline-none focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400"
-      />
+        {/* FAQ */}
+        <section id="faq" className="mx-auto max-w-3xl px-6 py-24">
+          <h2 className="text-center text-3xl font-bold tracking-tight sm:text-4xl">
+            Frequently asked questions
+          </h2>
+          <div className="mt-12 divide-y divide-zinc-800 border-y border-zinc-800">
+            {faqs.map((f) => (
+              <details key={f.q} className="group py-5">
+                <summary className="flex cursor-pointer list-none items-center justify-between text-base font-medium text-zinc-100">
+                  {f.q}
+                  <span className="ml-4 text-emerald-400 transition-transform group-open:rotate-45">
+                    +
+                  </span>
+                </summary>
+                <p className="mt-3 text-sm leading-relaxed text-zinc-400">{f.a}</p>
+              </details>
+            ))}
+          </div>
+        </section>
+
+        {/* Final CTA */}
+        <section className="border-t border-zinc-800/80">
+          <div className="mx-auto max-w-3xl px-6 py-24 text-center">
+            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+              Ready to build your CV?
+            </h2>
+            <p className="mt-4 text-zinc-400">
+              It is free, takes a few minutes, and you can download your PDF right away.
+            </p>
+            <Link
+              href="/build"
+              className="mt-8 inline-block rounded-lg bg-emerald-500 px-6 py-3 text-base font-semibold text-zinc-950 transition-colors hover:bg-emerald-400"
+            >
+              Create my CV free →
+            </Link>
+          </div>
+        </section>
+      </main>
+
+      {/* Footer */}
+      <footer className="border-t border-zinc-800/80 bg-zinc-950">
+        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-6 py-10 text-sm text-zinc-500 sm:flex-row">
+          <div>
+            <span className="font-bold text-zinc-300">
+              CVify <span className="text-emerald-400">AI</span>
+            </span>{" "}
+            — Free AI resume &amp; CV builder.
+          </div>
+          <nav className="flex gap-6">
+            <a href="#features" className="transition-colors hover:text-zinc-300">Features</a>
+            <a href="#faq" className="transition-colors hover:text-zinc-300">FAQ</a>
+            <Link href="/build" className="transition-colors hover:text-zinc-300">Build a CV</Link>
+          </nav>
+          <div>© 2026 CVify AI</div>
+        </div>
+      </footer>
     </div>
   );
 }
 
-function Spinner() {
+function Feature({ icon, title, text }: { icon: string; title: string; text: string }) {
   return (
-    <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-zinc-900/30 border-t-zinc-900" />
+    <div className="rounded-xl border border-zinc-800 bg-zinc-900/40 p-6">
+      <div className="text-2xl">{icon}</div>
+      <h3 className="mt-4 font-semibold text-white">{title}</h3>
+      <p className="mt-2 text-sm leading-relaxed text-zinc-400">{text}</p>
+    </div>
+  );
+}
+
+function Step({ n, title, text }: { n: number; title: string; text: string }) {
+  return (
+    <div className="text-center">
+      <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500 text-lg font-bold text-zinc-950">
+        {n}
+      </div>
+      <h3 className="mt-5 font-semibold text-white">{title}</h3>
+      <p className="mt-2 text-sm leading-relaxed text-zinc-400">{text}</p>
+    </div>
   );
 }
