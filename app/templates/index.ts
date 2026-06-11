@@ -12,6 +12,12 @@ import { GutterTemplate } from "./GutterTemplate";
 import { HairlineTemplate } from "./HairlineTemplate";
 import { GradientTemplate } from "./GradientTemplate";
 import { CardsTemplate } from "./CardsTemplate";
+import { BannerTemplate } from "./BannerTemplate";
+import { ColumnsTemplate } from "./ColumnsTemplate";
+import { UnderlineTemplate } from "./UnderlineTemplate";
+import { CompactTemplate } from "./CompactTemplate";
+import { ProfileTemplate } from "./ProfileTemplate";
+import { BoldTemplate } from "./BoldTemplate";
 import { DEFAULT_THEME, type Theme } from "./theme";
 
 // Re-export the theme model so consumers can import everything from "@/app/templates".
@@ -70,6 +76,20 @@ const LAYOUT_LIST: LayoutDef[] = [
     defaultTheme: theme({ primary: "#0d9488", secondary: "#134e4a" }),
   },
   {
+    id: "banner",
+    name: "Banner",
+    category: "Professional",
+    Component: BannerTemplate,
+    defaultTheme: theme({ primary: "#0369a1", secondary: "#0f172a" }),
+  },
+  {
+    id: "columns",
+    name: "Columns",
+    category: "Professional",
+    Component: ColumnsTemplate,
+    defaultTheme: theme({ primary: "#1d4ed8", secondary: "#0f172a" }),
+  },
+  {
     id: "classic",
     name: "Classic",
     category: "Minimal",
@@ -104,6 +124,20 @@ const LAYOUT_LIST: LayoutDef[] = [
     defaultTheme: theme({ primary: "#44403c", secondary: "#1c1917", bg: "#fdfbf6", fontHeading: "var(--font-lora)" }),
   },
   {
+    id: "underline",
+    name: "Underline",
+    category: "Minimal",
+    Component: UnderlineTemplate,
+    defaultTheme: theme({ primary: "#0f766e", secondary: "#0f172a" }),
+  },
+  {
+    id: "compact",
+    name: "Compact",
+    category: "Minimal",
+    Component: CompactTemplate,
+    defaultTheme: theme({ primary: "#475569", secondary: "#0f172a" }),
+  },
+  {
     id: "aurora",
     name: "Aurora",
     category: "Creative",
@@ -130,6 +164,20 @@ const LAYOUT_LIST: LayoutDef[] = [
     category: "Creative",
     Component: CardsTemplate,
     defaultTheme: theme({ primary: "#2563eb", secondary: "#1e3a8a", bg: "#f8fafc", fontHeading: "var(--font-poppins)" }),
+  },
+  {
+    id: "profile",
+    name: "Profile",
+    category: "Creative",
+    Component: ProfileTemplate,
+    defaultTheme: theme({ primary: "#db2777", secondary: "#831843", fontHeading: "var(--font-poppins)" }),
+  },
+  {
+    id: "bold",
+    name: "Bold",
+    category: "Creative",
+    Component: BoldTemplate,
+    defaultTheme: theme({ primary: "#ea580c", secondary: "#1c1917", fontHeading: "var(--font-poppins)" }),
   },
 ];
 
