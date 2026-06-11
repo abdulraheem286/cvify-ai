@@ -1,56 +1,25 @@
-"use client";
-
-import { useRef, type ReactNode } from "react";
-import { gsap } from "gsap";
-import { useGSAP } from "@gsap/react";
-
-gsap.registerPlugin(useGSAP);
+import type { CSSProperties, ReactNode } from "react";
 
 type RevealProps = {
   children: ReactNode;
   className?: string;
-  /** distance (px) to slide up from */
-  y?: number;
-  /** delay before animating (s) */
+  /** delay before animating (s) — applies to non-stagger blocks */
   delay?: number;
   /** animate direct children one-by-one instead of the whole block */
   stagger?: boolean;
+  /** kept for API compatibility; CSS uses a fixed slide distance */
+  y?: number;
 };
 
-// Fades + slides content up on mount.
-// Animating on mount (not on scroll) guarantees content always ends up visible —
-// a scroll-trigger that fails to fire would leave content stuck hidden.
-export function Reveal({
-  children,
-  className,
-  y = 24,
-  delay = 0,
-  stagger = false,
-}: RevealProps) {
-  const ref = useRef<HTMLDivElement>(null);
-
-  useGSAP(
-    () => {
-      const el = ref.current;
-      if (!el) return;
-      // Respect users who prefer reduced motion — leave everything visible.
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-      const targets = stagger ? Array.from(el.children) : el;
-      gsap.from(targets, {
-        opacity: 0,
-        y,
-        duration: 0.6,
-        ease: "power2.out",
-        delay,
-        stagger: stagger ? 0.1 : 0,
-      });
-    },
-    { scope: ref },
-  );
+// Pure-CSS entrance reveal (fade + slide up). No JavaScript, so it can never
+// get stuck hidden — the animation always finishes at the visible state.
+export function Reveal({ children, className, delay = 0, stagger = false }: RevealProps) {
+  const cls = `${stagger ? "cvify-reveal" : "cvify-reveal-self"}${className ? ` ${className}` : ""}`;
+  const style: CSSProperties | undefined =
+    !stagger && delay ? { animationDelay: `${delay}s` } : undefined;
 
   return (
-    <div ref={ref} className={className}>
+    <div className={cls} style={style}>
       {children}
     </div>
   );
