@@ -14,13 +14,7 @@ type CVForm = {
   experience: string;
 };
 
-const EMPTY: CVForm = {
-  name: "",
-  title: "",
-  email: "",
-  phone: "",
-  experience: "",
-};
+const EMPTY: CVForm = { name: "", title: "", email: "", phone: "", experience: "" };
 
 export default function BuildClient() {
   const [form, setForm] = useState<CVForm>(EMPTY);
@@ -68,17 +62,14 @@ export default function BuildClient() {
   }
 
   return (
-    <main className="flex flex-1 flex-col items-center bg-zinc-950 px-6 py-12 text-white print:bg-white print:p-0">
+    <main className="flex flex-1 flex-col items-center bg-white px-6 py-12 text-zinc-900 print:p-0">
       <div className="w-full max-w-2xl print:hidden">
-        <Link
-          href="/build"
-          className="text-sm text-zinc-500 transition-colors hover:text-emerald-400"
-        >
+        <Link href="/build" className="text-sm text-zinc-500 transition-colors hover:text-blue-600">
           ← Back to build options
         </Link>
 
         <h1 className="mt-6 text-4xl font-bold tracking-tight">AI CV Builder</h1>
-        <p className="mt-2 text-zinc-400">Tell us about yourself — AI does the rest.</p>
+        <p className="mt-2 text-zinc-600">Tell us about yourself — AI does the rest.</p>
 
         <form onSubmit={handleSubmit} className="mt-10 space-y-5">
           <Field label="Full name" name="name" value={form.name} onChange={handleChange} placeholder="John Doe" />
@@ -90,7 +81,7 @@ export default function BuildClient() {
           </div>
 
           <div>
-            <label className="mb-1.5 block text-sm font-medium text-zinc-300">
+            <label className="mb-1.5 block text-sm font-medium text-zinc-700">
               Your experience &amp; background
             </label>
             <textarea
@@ -99,14 +90,14 @@ export default function BuildClient() {
               onChange={handleChange}
               rows={6}
               placeholder="Paste your old CV, or jot down your jobs, skills, and education. Rough notes are fine — the AI will polish it."
-              className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-3 text-white placeholder-zinc-500 outline-none focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400"
+              className="w-full rounded-lg border border-zinc-300 bg-white px-4 py-3 text-zinc-900 placeholder-zinc-400 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
             />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-lg bg-emerald-500 px-5 py-3 font-semibold text-zinc-950 transition-colors hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-60"
+            className="w-full rounded-lg bg-blue-600 px-5 py-3 font-semibold text-white shadow-sm transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {loading ? (
               <span className="flex items-center justify-center gap-2">
@@ -119,7 +110,7 @@ export default function BuildClient() {
         </form>
 
         {error && (
-          <p className="mt-6 rounded-lg border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm text-red-300">
+          <p className="mt-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
             {error}
           </p>
         )}
@@ -131,7 +122,7 @@ export default function BuildClient() {
             <button
               onClick={handleDownload}
               disabled={downloading}
-              className="rounded-lg bg-emerald-500 px-5 py-2.5 font-semibold text-zinc-950 transition-colors hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-60"
+              className="rounded-lg bg-blue-600 px-5 py-2.5 font-semibold text-white shadow-sm transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
             >
               {downloading ? "Preparing PDF…" : "Download PDF ⬇"}
             </button>
@@ -158,14 +149,14 @@ function Field({
 }) {
   return (
     <div>
-      <label className="mb-1.5 block text-sm font-medium text-zinc-300">{label}</label>
+      <label className="mb-1.5 block text-sm font-medium text-zinc-700">{label}</label>
       <input
         type="text"
         name={name}
         value={value}
         onChange={onChange}
         placeholder={placeholder}
-        className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-3 text-white placeholder-zinc-500 outline-none focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400"
+        className="w-full rounded-lg border border-zinc-300 bg-white px-4 py-3 text-zinc-900 placeholder-zinc-400 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
       />
     </div>
   );
@@ -173,6 +164,6 @@ function Field({
 
 function Spinner() {
   return (
-    <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-zinc-900/30 border-t-zinc-900" />
+    <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />
   );
 }

@@ -36,7 +36,6 @@ export default function ManualClient() {
   const [result, setResult] = useState<CVResult | null>(null);
   const [downloading, setDownloading] = useState(false);
 
-  // --- experience helpers ---
   function updateExp(i: number, key: keyof ExpEntry, value: string) {
     setForm((prev) => {
       const experience = [...prev.experience];
@@ -54,7 +53,6 @@ export default function ManualClient() {
     setForm((prev) => ({ ...prev, experience: prev.experience.filter((_, idx) => idx !== i) }));
   }
 
-  // --- education helpers ---
   function updateEdu(i: number, key: keyof EduEntry, value: string) {
     setForm((prev) => {
       const education = [...prev.education];
@@ -72,7 +70,6 @@ export default function ManualClient() {
     setForm((prev) => ({ ...prev, education: prev.education.filter((_, idx) => idx !== i) }));
   }
 
-  // Turn the form into the shared CV shape and show the preview.
   function handlePreview(e: FormEvent) {
     e.preventDefault();
     const cv: CVResult = {
@@ -106,14 +103,14 @@ export default function ManualClient() {
   }
 
   return (
-    <main className="flex flex-1 flex-col items-center bg-zinc-950 px-6 py-12 text-white print:bg-white print:p-0">
+    <main className="flex flex-1 flex-col items-center bg-white px-6 py-12 text-zinc-900 print:p-0">
       <div className="w-full max-w-2xl print:hidden">
-        <Link href="/build" className="text-sm text-zinc-500 transition-colors hover:text-emerald-400">
+        <Link href="/build" className="text-sm text-zinc-500 transition-colors hover:text-blue-600">
           ← Back to build options
         </Link>
 
         <h1 className="mt-6 text-4xl font-bold tracking-tight">Manual CV Builder</h1>
-        <p className="mt-2 text-zinc-400">Fill in each section yourself — full control over every word.</p>
+        <p className="mt-2 text-zinc-600">Fill in each section yourself — full control over every word.</p>
 
         <form onSubmit={handlePreview} className="mt-10 space-y-8">
           {/* Personal info */}
@@ -142,7 +139,7 @@ export default function ManualClient() {
           <section className="space-y-4">
             <SectionTitle>Experience</SectionTitle>
             {form.experience.map((exp, i) => (
-              <div key={i} className="space-y-3 rounded-xl border border-zinc-800 bg-zinc-900/40 p-4">
+              <div key={i} className="space-y-3 rounded-xl border border-zinc-200 bg-zinc-50 p-4">
                 <div className="grid gap-3 sm:grid-cols-2">
                   <Input label="Role" value={exp.role} onChange={(v) => updateExp(i, "role", v)} placeholder="Frontend Developer" />
                   <Input label="Company" value={exp.company} onChange={(v) => updateExp(i, "company", v)} placeholder="TechCorp" />
@@ -156,13 +153,13 @@ export default function ManualClient() {
                   placeholder={"Built and shipped the new dashboard\nImproved page speed by 40%"}
                 />
                 {form.experience.length > 1 && (
-                  <button type="button" onClick={() => removeExp(i)} className="text-xs text-red-400 hover:text-red-300">
+                  <button type="button" onClick={() => removeExp(i)} className="text-xs font-medium text-red-600 hover:text-red-700">
                     Remove this job
                   </button>
                 )}
               </div>
             ))}
-            <button type="button" onClick={addExp} className="text-sm font-medium text-emerald-400 hover:text-emerald-300">
+            <button type="button" onClick={addExp} className="text-sm font-semibold text-blue-600 hover:text-blue-700">
               + Add another job
             </button>
           </section>
@@ -171,20 +168,20 @@ export default function ManualClient() {
           <section className="space-y-4">
             <SectionTitle>Education</SectionTitle>
             {form.education.map((ed, i) => (
-              <div key={i} className="space-y-3 rounded-xl border border-zinc-800 bg-zinc-900/40 p-4">
+              <div key={i} className="space-y-3 rounded-xl border border-zinc-200 bg-zinc-50 p-4">
                 <Input label="Degree" value={ed.degree} onChange={(v) => updateEdu(i, "degree", v)} placeholder="BS Computer Science" />
                 <div className="grid gap-3 sm:grid-cols-2">
                   <Input label="Institution" value={ed.institution} onChange={(v) => updateEdu(i, "institution", v)} placeholder="State University" />
                   <Input label="Period" value={ed.period} onChange={(v) => updateEdu(i, "period", v)} placeholder="2014 – 2018" />
                 </div>
                 {form.education.length > 1 && (
-                  <button type="button" onClick={() => removeEdu(i)} className="text-xs text-red-400 hover:text-red-300">
+                  <button type="button" onClick={() => removeEdu(i)} className="text-xs font-medium text-red-600 hover:text-red-700">
                     Remove this entry
                   </button>
                 )}
               </div>
             ))}
-            <button type="button" onClick={addEdu} className="text-sm font-medium text-emerald-400 hover:text-emerald-300">
+            <button type="button" onClick={addEdu} className="text-sm font-semibold text-blue-600 hover:text-blue-700">
               + Add more education
             </button>
           </section>
@@ -202,7 +199,7 @@ export default function ManualClient() {
 
           <button
             type="submit"
-            className="w-full rounded-lg bg-emerald-500 px-5 py-3 font-semibold text-zinc-950 transition-colors hover:bg-emerald-400"
+            className="w-full rounded-lg bg-blue-600 px-5 py-3 font-semibold text-white shadow-sm transition-colors hover:bg-blue-700"
           >
             Preview my CV →
           </button>
@@ -215,7 +212,7 @@ export default function ManualClient() {
             <button
               onClick={handleDownload}
               disabled={downloading}
-              className="rounded-lg bg-emerald-500 px-5 py-2.5 font-semibold text-zinc-950 transition-colors hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-60"
+              className="rounded-lg bg-blue-600 px-5 py-2.5 font-semibold text-white shadow-sm transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
             >
               {downloading ? "Preparing PDF…" : "Download PDF ⬇"}
             </button>
@@ -228,7 +225,7 @@ export default function ManualClient() {
 }
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
-  return <h2 className="text-sm font-semibold uppercase tracking-wide text-emerald-400">{children}</h2>;
+  return <h2 className="text-sm font-semibold uppercase tracking-wide text-blue-600">{children}</h2>;
 }
 
 function Input({
@@ -244,13 +241,13 @@ function Input({
 }) {
   return (
     <div>
-      <label className="mb-1.5 block text-sm font-medium text-zinc-300">{label}</label>
+      <label className="mb-1.5 block text-sm font-medium text-zinc-700">{label}</label>
       <input
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-2.5 text-white placeholder-zinc-500 outline-none focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400"
+        className="w-full rounded-lg border border-zinc-300 bg-white px-4 py-2.5 text-zinc-900 placeholder-zinc-400 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
       />
     </div>
   );
@@ -271,13 +268,13 @@ function Textarea({
 }) {
   return (
     <div>
-      {label && <label className="mb-1.5 block text-sm font-medium text-zinc-300">{label}</label>}
+      {label && <label className="mb-1.5 block text-sm font-medium text-zinc-700">{label}</label>}
       <textarea
         value={value}
         onChange={(e) => onChange(e.target.value)}
         rows={rows}
         placeholder={placeholder}
-        className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-3 text-white placeholder-zinc-500 outline-none focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400"
+        className="w-full rounded-lg border border-zinc-300 bg-white px-4 py-3 text-zinc-900 placeholder-zinc-400 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
       />
     </div>
   );
