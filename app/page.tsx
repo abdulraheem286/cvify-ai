@@ -4,8 +4,9 @@ import Link from "next/link";
 import { SiteHeader } from "./components/SiteHeader";
 import { SiteFooter } from "./components/SiteFooter";
 import { Reveal } from "./components/Reveal";
+import { ScaledPreview } from "./components/ScaledPreview";
+import { TemplateShowcase } from "./components/TemplateShowcase";
 import { ModernTemplate } from "./templates/ModernTemplate";
-import { MinimalTemplate } from "./templates/MinimalTemplate";
 import { SidebarTemplate } from "./templates/SidebarTemplate";
 import {
   IconSparkles,
@@ -143,8 +144,8 @@ export default function Home() {
               </div>
             </Reveal>
 
-            <div className="flex justify-center lg:justify-end">
-              <ScaledPreview scale={0.5} height={520}>
+            <div className="w-full">
+              <ScaledPreview>
                 <ModernTemplate cv={sampleCv} domId="hero-preview" />
               </ScaledPreview>
             </div>
@@ -180,25 +181,15 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Templates showcase */}
+        {/* Templates showcase — single tabbed preview */}
         <section id="templates" className="border-y border-zinc-200 bg-white">
-          <div className="mx-auto max-w-6xl px-6 py-20">
+          <div className="mx-auto max-w-5xl px-6 py-20">
             <SectionHead
               eyebrow="Templates"
               title="Choose from modern, minimal, and clean designs"
               subtitle="Switch between styles anytime without losing your content. Every template exports to a crisp PDF."
             />
-            <Reveal stagger className="mt-14 grid gap-8 lg:grid-cols-3">
-              <TemplateCard name="Modern" blurb="Bold accent header, single column.">
-                <ModernTemplate cv={sampleCv} domId="tpl-modern" />
-              </TemplateCard>
-              <TemplateCard name="Minimal" blurb="Centered, monochrome, elegant.">
-                <MinimalTemplate cv={sampleCv} domId="tpl-minimal" />
-              </TemplateCard>
-              <TemplateCard name="Sidebar" blurb="Two-column with a colour rail.">
-                <SidebarTemplate cv={sampleCv} domId="tpl-sidebar" />
-              </TemplateCard>
-            </Reveal>
+            <TemplateShowcase cv={sampleCv} />
             <div className="mt-12 text-center">
               <Link href="/build" className="inline-block rounded-lg bg-blue-600 px-6 py-3 font-semibold text-white shadow-sm transition-colors hover:bg-blue-700">
                 Start with a template →
@@ -241,8 +232,8 @@ export default function Home() {
                 Try the AI builder →
               </Link>
             </div>
-            <div className="flex justify-center">
-              <ScaledPreview scale={0.5} height={460}>
+            <div className="w-full">
+              <ScaledPreview>
                 <ModernTemplate cv={sampleCv} domId="row-modern" />
               </ScaledPreview>
             </div>
@@ -252,8 +243,8 @@ export default function Home() {
         {/* Feature row 2 — edit & switch */}
         <section className="border-t border-zinc-200 bg-zinc-50">
           <div className="mx-auto grid max-w-6xl items-center gap-12 px-6 py-20 lg:grid-cols-2">
-            <div className="order-2 flex justify-center lg:order-1">
-              <ScaledPreview scale={0.5} height={460}>
+            <div className="order-2 w-full lg:order-1">
+              <ScaledPreview>
                 <SidebarTemplate cv={sampleCv} domId="row-sidebar" />
               </ScaledPreview>
             </div>
@@ -371,38 +362,5 @@ function Check({ children }: { children: ReactNode }) {
       </span>
       {children}
     </li>
-  );
-}
-
-// Renders a full template scaled down into a fixed-size, clipped card.
-function ScaledPreview({ scale, height, children }: { scale: number; height: number; children: ReactNode }) {
-  return (
-    <div
-      className="relative max-w-full overflow-hidden rounded-xl shadow-md ring-1 ring-zinc-200"
-      style={{ width: 800 * scale, height }}
-    >
-      <div
-        className="pointer-events-none absolute left-0 top-0 origin-top-left"
-        style={{ transform: `scale(${scale})`, width: 800 }}
-      >
-        {children}
-      </div>
-    </div>
-  );
-}
-
-function TemplateCard({ name, blurb, children }: { name: string; blurb: string; children: ReactNode }) {
-  return (
-    <div className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm">
-      <div className="mx-auto">
-        <ScaledPreview scale={0.46} height={460}>
-          {children}
-        </ScaledPreview>
-      </div>
-      <div className="mt-4 px-1">
-        <h3 className="font-semibold text-zinc-900">{name}</h3>
-        <p className="text-sm text-zinc-600">{blurb}</p>
-      </div>
-    </div>
   );
 }
