@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, type ElementType, type ReactNode } from "react";
+import { useRef, type ReactNode } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
@@ -10,7 +10,6 @@ gsap.registerPlugin(ScrollTrigger, useGSAP);
 type RevealProps = {
   children: ReactNode;
   className?: string;
-  as?: ElementType;
   /** distance (px) to slide up from */
   y?: number;
   /** delay before animating (s) */
@@ -24,13 +23,11 @@ type RevealProps = {
 export function Reveal({
   children,
   className,
-  as,
   y = 24,
   delay = 0,
   stagger = false,
 }: RevealProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const Tag = (as ?? "div") as ElementType;
 
   useGSAP(
     () => {
@@ -54,8 +51,8 @@ export function Reveal({
   );
 
   return (
-    <Tag ref={ref} className={className}>
+    <div ref={ref} className={className}>
       {children}
-    </Tag>
+    </div>
   );
 }
