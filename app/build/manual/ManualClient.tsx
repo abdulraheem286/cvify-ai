@@ -3,12 +3,13 @@
 import { useState, type FormEvent, type ReactNode } from "react";
 import Link from "next/link";
 import type { CVResult } from "@/app/types";
-import { TemplatePicker } from "@/app/components/TemplatePicker";
-import { getTemplateComponent, type TemplateId } from "@/app/templates";
 import { downloadCvPdf } from "@/app/lib/pdf";
 import { Reveal } from "@/app/components/Reveal";
 import { SiteHeader } from "@/app/components/SiteHeader";
 import { SiteFooter } from "@/app/components/SiteFooter";
+import { Stepper } from "@/app/components/Stepper";
+import { PreviewStep } from "@/app/components/PreviewStep";
+import { type TemplateId } from "@/app/templates";
 import {
   IconField,
   FieldTextarea,
@@ -29,7 +30,6 @@ import {
   IconText,
   IconGraduation,
   IconTools,
-  IconDownload,
   IconArrowLeft,
   IconPlus,
   IconTrash,
@@ -97,6 +97,7 @@ export default function ManualClient() {
   const [result, setResult] = useState<CVResult | null>(null);
   const [template, setTemplate] = useState<TemplateId>("modern");
   const [downloading, setDownloading] = useState(false);
+  const [step, setStep] = useState<"edit" | "preview">("edit");
 
   const onField = (key: StringKey) => (value: string) => {
     const v = key === "phone" ? sanitizePhone(value) : value;
@@ -180,6 +181,7 @@ export default function ManualClient() {
       skills: form.skills.split(",").map((s) => s.trim()).filter(Boolean),
     };
     setResult(cv);
+    setStep("preview");
   }
 
   async function handleDownload() {
@@ -193,160 +195,151 @@ export default function ManualClient() {
     }
   }
 
-  const Template = getTemplateComponent(template);
-
   return (
     <div className="flex min-h-full flex-col bg-zinc-50 text-zinc-900 print:bg-white">
       <div className="print:hidden">
         <SiteHeader />
       </div>
 
-      <main className="flex flex-1 flex-col items-center px-6 py-12 print:p-0">
-        <div className="w-full max-w-2xl print:hidden">
-          <Link
-            href="/build"
-            className="inline-flex items-center gap-1.5 text-sm text-zinc-500 transition-colors hover:text-blue-600"
-          >
-            <IconArrowLeft className="h-4 w-4" /> Back to build options
-          </Link>
-
-          <Reveal stagger>
-            <div className="mt-6 flex items-center gap-3">
-              <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
-                <IconText className="h-6 w-6" />
-              </span>
-              <div>
-                <h1 className="text-3xl font-bold tracking-tight">Manual CV Builder</h1>
-                <p className="text-sm text-zinc-600">
-                  Fill in each section yourself — full control over every word.
-                </p>
-              </div>
-            </div>
-
-            <form
-              onSubmit={handlePreview}
-              noValidate
-              className="mt-8 space-y-8 rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm sm:p-8"
+      {step === "preview" && result ? (
+        <main className="flex-1 print:p-0">
+          <PreviewStep
+            cv={result}
+            template={template}
+            onTemplateChange={setTemplate}
+            onBack={() => setStep("edit")}
+            onDownload={handleDownload}
+            downloading={downloading}
+          />
+        </main>
+      ) : (
+        <main className="flex flex-1 flex-col items-center px-6 py-10">
+          <div className="w-full max-w-2xl">
+            <Link
+              href="/build"
+              className="inline-flex items-center gap-1.5 text-sm text-zinc-500 transition-colors hover:text-blue-600"
             >
-              {/* Personal */}
-              <section className="space-y-4">
-                <SectionHeader icon={<IconUser className="h-[18px] w-[18px]" />}>Personal details</SectionHeader>
-                <IconField label="Full name" icon={<IconUser />} value={form.fullName} onChange={onField("fullName")} onBlur={onBlurField("fullName")} placeholder="John Doe" error={errors.fullName} />
-                <IconField label="Professional title" icon={<IconBriefcase />} value={form.jobTitle} onChange={onField("jobTitle")} onBlur={onBlurField("jobTitle")} placeholder="Software Engineer" error={errors.jobTitle} />
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <IconField label="Email" icon={<IconMail />} value={form.email} onChange={onField("email")} onBlur={onBlurField("email")} placeholder="you@example.com" error={errors.email} type="email" inputMode="email" />
-                  <IconField label="Phone" icon={<IconPhone />} value={form.phone} onChange={onField("phone")} onBlur={onBlurField("phone")} placeholder="+1 (555) 123-4567" error={errors.phone} type="tel" inputMode="tel" />
-                </div>
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <IconField label="Location" icon={<IconMapPin />} value={form.location} onChange={onField("location")} placeholder="London, UK" />
-                  <IconField label="Website / portfolio" icon={<IconGlobe />} value={form.website} onChange={onField("website")} onBlur={onBlurField("website")} placeholder="yoursite.com" error={errors.website} inputMode="url" />
-                </div>
-              </section>
+              <IconArrowLeft className="h-4 w-4" /> Back to build options
+            </Link>
 
-              {/* Summary */}
-              <section className="space-y-4">
-                <SectionHeader icon={<IconText className="h-[18px] w-[18px]" />}>Professional summary</SectionHeader>
-                <FieldTextarea
-                  label="Summary"
-                  value={form.summary}
-                  onChange={onField("summary")}
-                  rows={3}
-                  placeholder="A short 2–3 sentence summary of who you are and what you do."
-                />
-              </section>
-
-              {/* Experience */}
-              <section className="space-y-4">
-                <SectionHeader icon={<IconBriefcase className="h-[18px] w-[18px]" />}>Experience</SectionHeader>
-                {form.experience.map((exp, i) => (
-                  <div key={i} className="space-y-3 rounded-xl border border-zinc-200 bg-zinc-50 p-4">
-                    <div className="grid gap-3 sm:grid-cols-2">
-                      <PlainInput label="Role" value={exp.role} onChange={(v) => updateExp(i, "role", v)} placeholder="Frontend Developer" />
-                      <PlainInput label="Company" value={exp.company} onChange={(v) => updateExp(i, "company", v)} placeholder="TechCorp" />
-                    </div>
-                    <PlainInput label="Period" value={exp.period} onChange={(v) => updateExp(i, "period", v)} placeholder="2022 – Present" />
-                    <FieldTextarea
-                      label="Bullet points (one per line)"
-                      value={exp.bullets}
-                      onChange={(v) => updateExp(i, "bullets", v)}
-                      rows={3}
-                      placeholder={"Built and shipped the new dashboard\nImproved page speed by 40%"}
-                    />
-                    {form.experience.length > 1 && (
-                      <button type="button" onClick={() => removeExp(i)} className="inline-flex items-center gap-1 text-xs font-medium text-red-600 hover:text-red-700">
-                        <IconTrash className="h-4 w-4" /> Remove this job
-                      </button>
-                    )}
-                  </div>
-                ))}
-                <button type="button" onClick={addExp} className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-600 hover:text-blue-700">
-                  <IconPlus className="h-4 w-4" /> Add another job
-                </button>
-              </section>
-
-              {/* Education */}
-              <section className="space-y-4">
-                <SectionHeader icon={<IconGraduation className="h-[18px] w-[18px]" />}>Education</SectionHeader>
-                {form.education.map((ed, i) => (
-                  <div key={i} className="space-y-3 rounded-xl border border-zinc-200 bg-zinc-50 p-4">
-                    <PlainInput label="Degree" value={ed.degree} onChange={(v) => updateEdu(i, "degree", v)} placeholder="BS Computer Science" />
-                    <div className="grid gap-3 sm:grid-cols-2">
-                      <PlainInput label="Institution" value={ed.institution} onChange={(v) => updateEdu(i, "institution", v)} placeholder="State University" />
-                      <PlainInput label="Period" value={ed.period} onChange={(v) => updateEdu(i, "period", v)} placeholder="2014 – 2018" />
-                    </div>
-                    {form.education.length > 1 && (
-                      <button type="button" onClick={() => removeEdu(i)} className="inline-flex items-center gap-1 text-xs font-medium text-red-600 hover:text-red-700">
-                        <IconTrash className="h-4 w-4" /> Remove this entry
-                      </button>
-                    )}
-                  </div>
-                ))}
-                <button type="button" onClick={addEdu} className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-600 hover:text-blue-700">
-                  <IconPlus className="h-4 w-4" /> Add more education
-                </button>
-              </section>
-
-              {/* Skills */}
-              <section className="space-y-4">
-                <SectionHeader icon={<IconTools className="h-[18px] w-[18px]" />}>Skills</SectionHeader>
-                <IconField
-                  label="Skills (separate with commas)"
-                  icon={<IconTools />}
-                  value={form.skills}
-                  onChange={onField("skills")}
-                  placeholder="JavaScript, React, Figma, Team leadership"
-                />
-              </section>
-
-              <button
-                type="submit"
-                className="w-full rounded-lg bg-blue-600 px-5 py-3 font-semibold text-white shadow-sm transition-colors hover:bg-blue-700"
-              >
-                Preview my CV →
-              </button>
-            </form>
-          </Reveal>
-        </div>
-
-        {result && (
-          <div className="mt-12 w-full max-w-[820px] print:mt-0">
-            <div className="mb-6 rounded-xl border border-zinc-200 bg-white p-4 shadow-sm print:hidden">
-              <TemplatePicker value={template} onChange={setTemplate} />
+            <div className="mt-6">
+              <Stepper current={1} />
             </div>
-            <div className="mb-4 flex justify-end print:hidden">
-              <button
-                onClick={handleDownload}
-                disabled={downloading}
-                className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-5 py-2.5 font-semibold text-white shadow-sm transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
+
+            <Reveal stagger>
+              <div className="flex items-center gap-3">
+                <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+                  <IconText className="h-6 w-6" />
+                </span>
+                <div>
+                  <h1 className="text-3xl font-bold tracking-tight">Manual CV Builder</h1>
+                  <p className="text-sm text-zinc-600">
+                    Fill in each section yourself — full control over every word.
+                  </p>
+                </div>
+              </div>
+
+              <form
+                onSubmit={handlePreview}
+                noValidate
+                className="mt-8 space-y-8 rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm sm:p-8"
               >
-                <IconDownload className="h-[18px] w-[18px]" />
-                {downloading ? "Preparing PDF…" : "Download PDF"}
-              </button>
-            </div>
-            <Template cv={result} />
+                <section className="space-y-4">
+                  <SectionHeader icon={<IconUser className="h-[18px] w-[18px]" />}>Personal details</SectionHeader>
+                  <IconField label="Full name" icon={<IconUser />} value={form.fullName} onChange={onField("fullName")} onBlur={onBlurField("fullName")} placeholder="John Doe" error={errors.fullName} />
+                  <IconField label="Professional title" icon={<IconBriefcase />} value={form.jobTitle} onChange={onField("jobTitle")} onBlur={onBlurField("jobTitle")} placeholder="Software Engineer" error={errors.jobTitle} />
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <IconField label="Email" icon={<IconMail />} value={form.email} onChange={onField("email")} onBlur={onBlurField("email")} placeholder="you@example.com" error={errors.email} type="email" inputMode="email" />
+                    <IconField label="Phone" icon={<IconPhone />} value={form.phone} onChange={onField("phone")} onBlur={onBlurField("phone")} placeholder="+1 (555) 123-4567" error={errors.phone} type="tel" inputMode="tel" />
+                  </div>
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <IconField label="Location" icon={<IconMapPin />} value={form.location} onChange={onField("location")} placeholder="London, UK" />
+                    <IconField label="Website / portfolio" icon={<IconGlobe />} value={form.website} onChange={onField("website")} onBlur={onBlurField("website")} placeholder="yoursite.com" error={errors.website} inputMode="url" />
+                  </div>
+                </section>
+
+                <section className="space-y-4">
+                  <SectionHeader icon={<IconText className="h-[18px] w-[18px]" />}>Professional summary</SectionHeader>
+                  <FieldTextarea
+                    label="Summary"
+                    value={form.summary}
+                    onChange={onField("summary")}
+                    rows={3}
+                    placeholder="A short 2–3 sentence summary of who you are and what you do."
+                  />
+                </section>
+
+                <section className="space-y-4">
+                  <SectionHeader icon={<IconBriefcase className="h-[18px] w-[18px]" />}>Experience</SectionHeader>
+                  {form.experience.map((exp, i) => (
+                    <div key={i} className="space-y-3 rounded-xl border border-zinc-200 bg-zinc-50 p-4">
+                      <div className="grid gap-3 sm:grid-cols-2">
+                        <PlainInput label="Role" value={exp.role} onChange={(v) => updateExp(i, "role", v)} placeholder="Frontend Developer" />
+                        <PlainInput label="Company" value={exp.company} onChange={(v) => updateExp(i, "company", v)} placeholder="TechCorp" />
+                      </div>
+                      <PlainInput label="Period" value={exp.period} onChange={(v) => updateExp(i, "period", v)} placeholder="2022 – Present" />
+                      <FieldTextarea
+                        label="Bullet points (one per line)"
+                        value={exp.bullets}
+                        onChange={(v) => updateExp(i, "bullets", v)}
+                        rows={3}
+                        placeholder={"Built and shipped the new dashboard\nImproved page speed by 40%"}
+                      />
+                      {form.experience.length > 1 && (
+                        <button type="button" onClick={() => removeExp(i)} className="inline-flex items-center gap-1 text-xs font-medium text-red-600 hover:text-red-700">
+                          <IconTrash className="h-4 w-4" /> Remove this job
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                  <button type="button" onClick={addExp} className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-600 hover:text-blue-700">
+                    <IconPlus className="h-4 w-4" /> Add another job
+                  </button>
+                </section>
+
+                <section className="space-y-4">
+                  <SectionHeader icon={<IconGraduation className="h-[18px] w-[18px]" />}>Education</SectionHeader>
+                  {form.education.map((ed, i) => (
+                    <div key={i} className="space-y-3 rounded-xl border border-zinc-200 bg-zinc-50 p-4">
+                      <PlainInput label="Degree" value={ed.degree} onChange={(v) => updateEdu(i, "degree", v)} placeholder="BS Computer Science" />
+                      <div className="grid gap-3 sm:grid-cols-2">
+                        <PlainInput label="Institution" value={ed.institution} onChange={(v) => updateEdu(i, "institution", v)} placeholder="State University" />
+                        <PlainInput label="Period" value={ed.period} onChange={(v) => updateEdu(i, "period", v)} placeholder="2014 – 2018" />
+                      </div>
+                      {form.education.length > 1 && (
+                        <button type="button" onClick={() => removeEdu(i)} className="inline-flex items-center gap-1 text-xs font-medium text-red-600 hover:text-red-700">
+                          <IconTrash className="h-4 w-4" /> Remove this entry
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                  <button type="button" onClick={addEdu} className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-600 hover:text-blue-700">
+                    <IconPlus className="h-4 w-4" /> Add more education
+                  </button>
+                </section>
+
+                <section className="space-y-4">
+                  <SectionHeader icon={<IconTools className="h-[18px] w-[18px]" />}>Skills</SectionHeader>
+                  <IconField
+                    label="Skills (separate with commas)"
+                    icon={<IconTools />}
+                    value={form.skills}
+                    onChange={onField("skills")}
+                    placeholder="JavaScript, React, Figma, Team leadership"
+                  />
+                </section>
+
+                <button
+                  type="submit"
+                  className="w-full rounded-lg bg-blue-600 px-5 py-3 font-semibold text-white shadow-sm transition-colors hover:bg-blue-700"
+                >
+                  Preview &amp; choose template →
+                </button>
+              </form>
+            </Reveal>
           </div>
-        )}
-      </main>
+        </main>
+      )}
 
       <div className="print:hidden">
         <SiteFooter />
