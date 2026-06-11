@@ -270,7 +270,7 @@ export function CvEditor({
       </div>
 
       {/* Toolbar */}
-      <div className="sticky top-16 z-30 -mx-4 mb-6 flex items-center justify-between gap-3 border-b border-zinc-200 bg-zinc-50/90 px-4 py-3 backdrop-blur print:hidden sm:-mx-6 sm:px-6">
+      <div className="-mx-4 mb-6 flex items-center justify-between gap-3 border-b border-zinc-200 bg-white px-4 py-3 print:hidden sm:-mx-6 sm:px-6">
         <button
           type="button"
           onClick={onBack}
@@ -406,7 +406,7 @@ export function CvEditor({
 
         {/* LIVE PREVIEW */}
         <div className="print:hidden">
-          <div className="lg:sticky lg:top-32">
+          <div>
             <p className="mb-2 text-xs font-medium uppercase tracking-wide text-zinc-400">Live preview</p>
             <ScaledPreview>
               <TemplateView id={template} cv={previewCv} domId="live-cv" />
