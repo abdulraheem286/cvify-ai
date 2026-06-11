@@ -7,6 +7,7 @@ import type { CVResult } from "@/app/types";
 import { downloadCvPdf } from "@/app/lib/pdf";
 import { Reveal } from "@/app/components/Reveal";
 import { SiteHeader } from "@/app/components/SiteHeader";
+import { SiteFooter } from "@/app/components/SiteFooter";
 import {
   IconField,
   FieldTextarea,
@@ -222,6 +223,10 @@ export default function BuildClient() {
           </div>
         )}
       </main>
+
+      <div className="print:hidden">
+        <SiteFooter />
+      </div>
     </div>
   );
 }
