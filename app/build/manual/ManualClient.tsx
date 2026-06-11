@@ -7,7 +7,16 @@ import type { CVResult } from "@/app/types";
 import { downloadCvPdf } from "@/app/lib/pdf";
 import { Reveal } from "@/app/components/Reveal";
 import { SiteHeader } from "@/app/components/SiteHeader";
-import { IconField, FieldTextarea, emailError } from "@/app/components/fields";
+import {
+  IconField,
+  FieldTextarea,
+  nameError,
+  emailError,
+  phoneError,
+  urlError,
+  requiredError,
+  sanitizePhone,
+} from "@/app/components/fields";
 import {
   IconUser,
   IconBriefcase,
@@ -40,6 +49,16 @@ type ManualForm = {
   skills: string;
 };
 
+type StringKey =
+  | "fullName"
+  | "jobTitle"
+  | "email"
+  | "phone"
+  | "location"
+  | "website"
+  | "summary"
+  | "skills";
+
 const EMPTY: ManualForm = {
   fullName: "",
   jobTitle: "",
@@ -53,14 +72,37 @@ const EMPTY: ManualForm = {
   skills: "",
 };
 
+function pErr(key: StringKey, v: string): string {
+  switch (key) {
+    case "fullName":
+      return nameError(v, true);
+    case "jobTitle":
+      return requiredError(v, "Professional title");
+    case "email":
+      return emailError(v, true);
+    case "phone":
+      return phoneError(v);
+    case "website":
+      return urlError(v);
+    default:
+      return "";
+  }
+}
+
 export default function ManualClient() {
   const [form, setForm] = useState<ManualForm>(EMPTY);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [result, setResult] = useState<CVResult | null>(null);
   const [downloading, setDownloading] = useState(false);
 
-  const set = (key: keyof ManualForm) => (v: string) =>
+  const onField = (key: StringKey) => (value: string) => {
+    const v = key === "phone" ? sanitizePhone(value) : value;
     setForm((prev) => ({ ...prev, [key]: v }));
+    setErrors((prev) => (prev[key] ? { ...prev, [key]: "" } : prev));
+  };
+
+  const onBlurField = (key: StringKey) => () =>
+    setErrors((prev) => ({ ...prev, [key]: pErr(key, form[key]) }));
 
   function updateExp(i: number, key: keyof ExpEntry, value: string) {
     setForm((prev) => {
@@ -97,14 +139,12 @@ export default function ManualClient() {
   }
 
   function validate() {
+    const keys: StringKey[] = ["fullName", "jobTitle", "email", "phone", "website"];
     const e: Record<string, string> = {};
-    if (!form.fullName.trim()) e.fullName = "Your name is required.";
-    if (!form.jobTitle.trim()) e.jobTitle = "A professional title is required.";
-    if (!form.email.trim()) e.email = "Email is required.";
-    else {
-      const m = emailError(form.email);
-      if (m) e.email = m;
-    }
+    keys.forEach((k) => {
+      const msg = pErr(k, form[k]);
+      if (msg) e[k] = msg;
+    });
     setErrors(e);
     return Object.keys(e).length === 0;
   }
@@ -180,20 +220,21 @@ export default function ManualClient() {
 
             <form
               onSubmit={handlePreview}
+              noValidate
               className="mt-8 space-y-8 rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm sm:p-8"
             >
               {/* Personal */}
               <section className="space-y-4">
                 <SectionHeader icon={<IconUser className="h-[18px] w-[18px]" />}>Personal details</SectionHeader>
-                <IconField label="Full name" icon={<IconUser />} value={form.fullName} onChange={set("fullName")} placeholder="John Doe" error={errors.fullName} />
-                <IconField label="Professional title" icon={<IconBriefcase />} value={form.jobTitle} onChange={set("jobTitle")} placeholder="Software Engineer" error={errors.jobTitle} />
+                <IconField label="Full name" icon={<IconUser />} value={form.fullName} onChange={onField("fullName")} onBlur={onBlurField("fullName")} placeholder="John Doe" error={errors.fullName} />
+                <IconField label="Professional title" icon={<IconBriefcase />} value={form.jobTitle} onChange={onField("jobTitle")} onBlur={onBlurField("jobTitle")} placeholder="Software Engineer" error={errors.jobTitle} />
                 <div className="grid gap-4 sm:grid-cols-2">
-                  <IconField label="Email" icon={<IconMail />} value={form.email} onChange={set("email")} placeholder="you@example.com" error={errors.email} type="email" />
-                  <IconField label="Phone" icon={<IconPhone />} value={form.phone} onChange={set("phone")} placeholder="+1 (555) 123-4567" />
+                  <IconField label="Email" icon={<IconMail />} value={form.email} onChange={onField("email")} onBlur={onBlurField("email")} placeholder="you@example.com" error={errors.email} type="email" inputMode="email" />
+                  <IconField label="Phone" icon={<IconPhone />} value={form.phone} onChange={onField("phone")} onBlur={onBlurField("phone")} placeholder="+1 (555) 123-4567" error={errors.phone} type="tel" inputMode="tel" />
                 </div>
                 <div className="grid gap-4 sm:grid-cols-2">
-                  <IconField label="Location" icon={<IconMapPin />} value={form.location} onChange={set("location")} placeholder="London, UK" />
-                  <IconField label="Website / portfolio" icon={<IconGlobe />} value={form.website} onChange={set("website")} placeholder="yoursite.com" />
+                  <IconField label="Location" icon={<IconMapPin />} value={form.location} onChange={onField("location")} placeholder="London, UK" />
+                  <IconField label="Website / portfolio" icon={<IconGlobe />} value={form.website} onChange={onField("website")} onBlur={onBlurField("website")} placeholder="yoursite.com" error={errors.website} inputMode="url" />
                 </div>
               </section>
 
@@ -203,7 +244,7 @@ export default function ManualClient() {
                 <FieldTextarea
                   label="Summary"
                   value={form.summary}
-                  onChange={set("summary")}
+                  onChange={onField("summary")}
                   rows={3}
                   placeholder="A short 2–3 sentence summary of who you are and what you do."
                 />
@@ -267,7 +308,7 @@ export default function ManualClient() {
                   label="Skills (separate with commas)"
                   icon={<IconTools />}
                   value={form.skills}
-                  onChange={set("skills")}
+                  onChange={onField("skills")}
                   placeholder="JavaScript, React, Figma, Team leadership"
                 />
               </section>
