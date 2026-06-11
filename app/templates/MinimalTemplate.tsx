@@ -1,10 +1,11 @@
 import type { CSSProperties } from "react";
 import type { CVResult } from "@/app/types";
+import { themeVars, DEFAULT_THEME, type Theme } from "./theme";
 
-type Props = { cv: CVResult; domId?: string; accent?: string };
+type Props = { cv: CVResult; domId?: string; theme?: Theme };
 
-// Minimal: centered, mostly monochrome with a subtle accent.
-export function MinimalTemplate({ cv, domId = "cv-document", accent = "#2563eb" }: Props) {
+// Minimal: centered, mostly monochrome with a subtle primary accent.
+export function MinimalTemplate({ cv, domId = "cv-document", theme = DEFAULT_THEME }: Props) {
   const contactLine = [
     cv.contact?.email,
     cv.contact?.phone,
@@ -18,17 +19,17 @@ export function MinimalTemplate({ cv, domId = "cv-document", accent = "#2563eb" 
   return (
     <div
       id={domId}
-      style={{ "--accent": accent } as CSSProperties}
-      className="mx-auto w-full max-w-[800px] bg-white text-zinc-800 shadow-xl ring-1 ring-zinc-200"
+      style={themeVars(theme) as CSSProperties}
+      className="mx-auto w-full max-w-[800px] bg-[var(--bg)] font-[family-name:var(--font-body)] text-zinc-800 shadow-xl ring-1 ring-zinc-200"
     >
       <div className="p-10 sm:p-14">
         <header className="text-center">
-          <h1 className="text-3xl font-semibold uppercase tracking-[0.18em] text-zinc-900">{cv.fullName}</h1>
-          <p className="mt-1.5 text-sm uppercase tracking-[0.2em] text-[var(--accent)]">{cv.jobTitle}</p>
+          <h1 className="font-[family-name:var(--font-heading)] text-3xl font-semibold uppercase tracking-[0.18em] text-[var(--secondary)]">{cv.fullName}</h1>
+          <p className="mt-1.5 text-sm uppercase tracking-[0.2em] text-[var(--primary)]">{cv.jobTitle}</p>
           {contactLine && <p className="mt-3 text-xs text-zinc-500">{contactLine}</p>}
         </header>
 
-        <hr className="my-6 border-[var(--accent)]/40" />
+        <hr className="my-6 border-[var(--primary)]/40" />
 
         {cv.summary && (
           <p className="mx-auto max-w-prose text-center text-sm leading-relaxed text-zinc-700">{cv.summary}</p>
@@ -100,7 +101,7 @@ export function MinimalTemplate({ cv, domId = "cv-document", accent = "#2563eb" 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section className="mt-7">
-      <h2 className="mb-3 text-center text-xs font-semibold uppercase tracking-[0.2em] text-[var(--accent)]">
+      <h2 className="mb-3 text-center font-[family-name:var(--font-heading)] text-xs font-semibold uppercase tracking-[0.2em] text-[var(--primary)]">
         {title}
       </h2>
       {children}

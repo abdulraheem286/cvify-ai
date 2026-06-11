@@ -6,60 +6,116 @@ import { SidebarTemplate } from "./SidebarTemplate";
 import { OnyxTemplate } from "./OnyxTemplate";
 import { AuroraTemplate } from "./AuroraTemplate";
 import { ClassicTemplate } from "./ClassicTemplate";
+import { DEFAULT_THEME, type Theme } from "./theme";
+
+// Re-export the theme model so consumers can import everything from "@/app/templates".
+export * from "./theme";
 
 export type Category = "Professional" | "Minimal" | "Creative";
 export const CATEGORIES: Category[] = ["Professional", "Minimal", "Creative"];
 
-export type LayoutId = "modern" | "sidebar" | "classic" | "minimal" | "aurora" | "onyx";
+// A "template" is now purely a LAYOUT (structure). Colour/font/background are the
+// Theme, applied on top — they are NOT separate templates.
+export type LayoutId = string;
+export type TemplateId = string;
 
-type LayoutComp = (props: { cv: CVResult; domId?: string; accent?: string }) => ReactElement;
+export type LayoutComp = (props: { cv: CVResult; domId?: string; theme?: Theme }) => ReactElement;
 
-const LAYOUTS: Record<LayoutId, { name: string; Component: LayoutComp; category: Category }> = {
-  modern: { name: "Modern", Component: ModernTemplate, category: "Professional" },
-  sidebar: { name: "Sidebar", Component: SidebarTemplate, category: "Professional" },
-  classic: { name: "Classic", Component: ClassicTemplate, category: "Minimal" },
-  minimal: { name: "Minimal", Component: MinimalTemplate, category: "Minimal" },
-  aurora: { name: "Aurora", Component: AuroraTemplate, category: "Creative" },
-  onyx: { name: "Onyx", Component: OnyxTemplate, category: "Creative" },
+type LayoutDef = {
+  id: LayoutId;
+  name: string;
+  category: Category;
+  Component: LayoutComp;
+  // The look this layout ships with (used for gallery previews + as the editor's starting theme).
+  defaultTheme: Theme;
 };
 
-export const ACCENTS: { id: string; name: string; hex: string }[] = [
-  { id: "blue", name: "Blue", hex: "#2563eb" },
-  { id: "emerald", name: "Emerald", hex: "#059669" },
-  { id: "violet", name: "Violet", hex: "#7c3aed" },
-  { id: "rose", name: "Rose", hex: "#e11d48" },
-  { id: "amber", name: "Amber", hex: "#d97706" },
+function theme(partial: Partial<Theme>): Theme {
+  return { ...DEFAULT_THEME, ...partial };
+}
+
+const LAYOUT_LIST: LayoutDef[] = [
+  {
+    id: "modern",
+    name: "Modern",
+    category: "Professional",
+    Component: ModernTemplate,
+    defaultTheme: theme({ primary: "#2563eb", secondary: "#0f172a" }),
+  },
+  {
+    id: "sidebar",
+    name: "Sidebar",
+    category: "Professional",
+    Component: SidebarTemplate,
+    defaultTheme: theme({ primary: "#4f46e5", secondary: "#1e1b4b" }),
+  },
+  {
+    id: "classic",
+    name: "Classic",
+    category: "Minimal",
+    Component: ClassicTemplate,
+    defaultTheme: theme({
+      primary: "#1c1917",
+      secondary: "#44403c",
+      bg: "#fdfbf6",
+      fontBody: "var(--font-source-serif)",
+      fontHeading: "var(--font-lora)",
+    }),
+  },
+  {
+    id: "minimal",
+    name: "Minimal",
+    category: "Minimal",
+    Component: MinimalTemplate,
+    defaultTheme: theme({ primary: "#334155", secondary: "#0f172a" }),
+  },
+  {
+    id: "aurora",
+    name: "Aurora",
+    category: "Creative",
+    Component: AuroraTemplate,
+    defaultTheme: theme({ primary: "#7c3aed", secondary: "#3b0764", fontHeading: "var(--font-poppins)" }),
+  },
+  {
+    id: "onyx",
+    name: "Onyx",
+    category: "Creative",
+    Component: OnyxTemplate,
+    defaultTheme: theme({ primary: "#2563eb", secondary: "#0f172a" }),
+  },
 ];
 
-export type TemplateId = string;
+const LAYOUTS: Record<LayoutId, LayoutDef> = Object.fromEntries(
+  LAYOUT_LIST.map((l) => [l.id, l]),
+);
 
 export type TemplateDef = {
   id: TemplateId;
   name: string;
   category: Category;
-  layout: LayoutId;
-  accent: string;
+  defaultTheme: Theme;
 };
 
-// 6 layouts × 5 accents = 30 templates.
-export const TEMPLATES: TemplateDef[] = (Object.keys(LAYOUTS) as LayoutId[]).flatMap((layout) =>
-  ACCENTS.map((a) => ({
-    id: `${layout}-${a.id}`,
-    name: `${LAYOUTS[layout].name} ${a.name}`,
-    category: LAYOUTS[layout].category,
-    layout,
-    accent: a.hex,
-  })),
-);
+export const TEMPLATES: TemplateDef[] = LAYOUT_LIST.map((l) => ({
+  id: l.id,
+  name: l.name,
+  category: l.category,
+  defaultTheme: l.defaultTheme,
+}));
 
-export const DEFAULT_TEMPLATE: TemplateId = "aurora-blue";
+export const DEFAULT_TEMPLATE: TemplateId = "modern";
 
 export function getTemplate(id: TemplateId): TemplateDef {
-  return TEMPLATES.find((t) => t.id === id) ?? TEMPLATES[0];
+  const l = LAYOUTS[id] ?? LAYOUT_LIST[0];
+  return { id: l.id, name: l.name, category: l.category, defaultTheme: l.defaultTheme };
 }
 
-export function getLayoutComponent(layout: LayoutId): LayoutComp {
-  return LAYOUTS[layout].Component;
+export function getLayoutComponent(id: LayoutId): LayoutComp {
+  return (LAYOUTS[id] ?? LAYOUT_LIST[0]).Component;
+}
+
+export function getDefaultTheme(id: TemplateId): Theme {
+  return (LAYOUTS[id] ?? LAYOUT_LIST[0]).defaultTheme;
 }
 
 export function templatesByCategory(category: Category): TemplateDef[] {

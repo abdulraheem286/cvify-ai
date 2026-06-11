@@ -4,7 +4,8 @@ import { useState, type ChangeEvent, type ReactNode } from "react";
 import type { CVResult } from "@/app/types";
 import { ScaledPreview } from "./ScaledPreview";
 import { TemplatePicker } from "./TemplatePicker";
-import { DEFAULT_TEMPLATE, type TemplateId } from "@/app/templates";
+import { CustomizationPanel } from "./CustomizationPanel";
+import { DEFAULT_TEMPLATE, getDefaultTheme, type TemplateId, type Theme } from "@/app/templates";
 import { TemplateView } from "@/app/templates/TemplateView";
 import { downloadCvPdf } from "@/app/lib/pdf";
 import {
@@ -195,6 +196,7 @@ export function CvEditor({
   });
   const [open, setOpen] = useState<Record<string, boolean>>({ personal: true });
   const [template, setTemplate] = useState<TemplateId>(initialTemplate);
+  const [theme, setTheme] = useState<Theme>(() => getDefaultTheme(initialTemplate));
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [downloading, setDownloading] = useState(false);
 
@@ -268,7 +270,7 @@ export function CvEditor({
     <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-8 sm:px-6 print:p-0">
       {/* Off-screen full-size render for crisp PDF export */}
       <div aria-hidden className="pointer-events-none fixed left-[-9999px] top-0 print:static print:left-0">
-        <TemplateView id={template} cv={exportCv} domId="cv-document" />
+        <TemplateView id={template} cv={exportCv} domId="cv-document" theme={theme} />
       </div>
 
       {/* Toolbar */}
@@ -282,6 +284,7 @@ export function CvEditor({
         </button>
         <div className="flex items-center gap-2">
           <TemplatePicker value={template} onChange={setTemplate} />
+          <CustomizationPanel value={theme} onChange={setTheme} />
           <button
             type="button"
             onClick={handleDownload}
@@ -411,7 +414,7 @@ export function CvEditor({
           <div>
             <p className="mb-2 text-xs font-medium uppercase tracking-wide text-zinc-400">Live preview</p>
             <ScaledPreview>
-              <TemplateView id={template} cv={previewCv} domId="live-cv" />
+              <TemplateView id={template} cv={previewCv} domId="live-cv" theme={theme} />
             </ScaledPreview>
           </div>
         </div>

@@ -1,10 +1,11 @@
 import type { CSSProperties } from "react";
 import type { CVResult } from "@/app/types";
+import { themeVars, DEFAULT_THEME, type Theme } from "./theme";
 
-type Props = { cv: CVResult; domId?: string; accent?: string };
+type Props = { cv: CVResult; domId?: string; theme?: Theme };
 
-// Onyx: bold dark header band with accent, clean body.
-export function OnyxTemplate({ cv, domId = "cv-document", accent = "#2563eb" }: Props) {
+// Onyx: bold dark header band (secondary) with primary accent, clean body.
+export function OnyxTemplate({ cv, domId = "cv-document", theme = DEFAULT_THEME }: Props) {
   const contactLine = [
     cv.contact?.email,
     cv.contact?.phone,
@@ -18,21 +19,21 @@ export function OnyxTemplate({ cv, domId = "cv-document", accent = "#2563eb" }: 
   return (
     <div
       id={domId}
-      style={{ "--accent": accent } as CSSProperties}
-      className="mx-auto w-full max-w-[800px] overflow-hidden bg-white text-zinc-800 shadow-xl ring-1 ring-zinc-200"
+      style={themeVars(theme) as CSSProperties}
+      className="mx-auto w-full max-w-[800px] overflow-hidden bg-[var(--bg)] font-[family-name:var(--font-body)] text-zinc-800 shadow-xl ring-1 ring-zinc-200"
     >
-      <header className="bg-zinc-900 px-10 py-10 text-white sm:px-14">
+      <header className="bg-[var(--secondary)] px-10 py-10 text-white sm:px-14">
         <div className="flex items-center justify-between gap-6">
           <div>
-            <h1 className="text-4xl font-bold tracking-tight">{cv.fullName}</h1>
-            <p className="mt-1 text-lg font-medium text-[var(--accent)]">{cv.jobTitle}</p>
+            <h1 className="font-[family-name:var(--font-heading)] text-4xl font-bold tracking-tight">{cv.fullName}</h1>
+            <p className="mt-1 text-lg font-medium text-[var(--primary)]">{cv.jobTitle}</p>
           </div>
           {cv.photo && (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={cv.photo} alt="" className="h-20 w-20 shrink-0 rounded-full object-cover ring-2 ring-white/20" />
           )}
         </div>
-        {contactLine && <p className="mt-4 text-xs text-zinc-400">{contactLine}</p>}
+        {contactLine && <p className="mt-4 text-xs text-white/60">{contactLine}</p>}
       </header>
 
       <div className="px-10 py-10 sm:px-14">
@@ -110,8 +111,8 @@ export function OnyxTemplate({ cv, domId = "cv-document", accent = "#2563eb" }: 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section className="mt-6">
-      <h2 className="mb-3 flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-zinc-900">
-        <span className="h-3.5 w-1 rounded bg-[var(--accent)]" />
+      <h2 className="mb-3 flex items-center gap-2 font-[family-name:var(--font-heading)] text-xs font-bold uppercase tracking-widest text-zinc-900">
+        <span className="h-3.5 w-1 rounded bg-[var(--primary)]" />
         {title}
       </h2>
       {children}

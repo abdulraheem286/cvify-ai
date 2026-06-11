@@ -74,7 +74,7 @@ export function TemplatePicker({
                       active ? "border-blue-500 ring-2 ring-blue-200" : "border-zinc-200 hover:border-zinc-300"
                     }`}
                   >
-                    <Thumb layout={t.layout} accent={t.accent} />
+                    <Thumb layout={t.id} accent={t.defaultTheme.primary} />
                     <span className="mt-1 block truncate text-[11px] font-medium text-zinc-600">{t.name}</span>
                   </button>
                 );

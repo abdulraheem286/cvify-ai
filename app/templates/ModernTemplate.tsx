@@ -1,10 +1,11 @@
 import type { CSSProperties } from "react";
 import type { CVResult } from "@/app/types";
+import { themeVars, DEFAULT_THEME, type Theme } from "./theme";
 
-type Props = { cv: CVResult; domId?: string; accent?: string };
+type Props = { cv: CVResult; domId?: string; theme?: Theme };
 
-// Modern: accent header underline, single column, optional photo, chips.
-export function ModernTemplate({ cv, domId = "cv-document", accent = "#2563eb" }: Props) {
+// Modern: primary header underline, single column, optional photo, chips.
+export function ModernTemplate({ cv, domId = "cv-document", theme = DEFAULT_THEME }: Props) {
   const contactLine = [
     cv.contact?.email,
     cv.contact?.phone,
@@ -18,18 +19,18 @@ export function ModernTemplate({ cv, domId = "cv-document", accent = "#2563eb" }
   return (
     <div
       id={domId}
-      style={{ "--accent": accent } as CSSProperties}
-      className="mx-auto w-full max-w-[800px] bg-white text-zinc-800 shadow-xl ring-1 ring-zinc-200"
+      style={themeVars(theme) as CSSProperties}
+      className="mx-auto w-full max-w-[800px] bg-[var(--bg)] font-[family-name:var(--font-body)] text-zinc-800 shadow-xl ring-1 ring-zinc-200"
     >
       <div className="p-10 sm:p-14">
-        <header className="flex items-center gap-5 border-b-2 border-[var(--accent)] pb-5">
+        <header className="flex items-center gap-5 border-b-2 border-[var(--primary)] pb-5">
           {cv.photo && (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={cv.photo} alt="" className="h-20 w-20 shrink-0 rounded-full object-cover ring-2 ring-[var(--accent)]/30" />
+            <img src={cv.photo} alt="" className="h-20 w-20 shrink-0 rounded-full object-cover ring-2 ring-[var(--primary)]/30" />
           )}
           <div>
-            <h1 className="text-4xl font-bold tracking-tight text-zinc-900">{cv.fullName}</h1>
-            <p className="mt-1 text-lg font-medium text-[var(--accent)]">{cv.jobTitle}</p>
+            <h1 className="font-[family-name:var(--font-heading)] text-4xl font-bold tracking-tight text-[var(--secondary)]">{cv.fullName}</h1>
+            <p className="mt-1 text-lg font-medium text-[var(--primary)]">{cv.jobTitle}</p>
             {contactLine && <p className="mt-2 text-sm text-zinc-500">{contactLine}</p>}
           </div>
         </header>
@@ -73,7 +74,7 @@ export function ModernTemplate({ cv, domId = "cv-document", accent = "#2563eb" }
           <Section title="Skills">
             <div className="flex flex-wrap gap-2">
               {cv.skills.map((s, i) => (
-                <span key={i} className="rounded-md bg-[var(--accent)]/10 px-2.5 py-1 text-xs font-medium text-[var(--accent)] ring-1 ring-[var(--accent)]/20">
+                <span key={i} className="rounded-md bg-[var(--primary)]/10 px-2.5 py-1 text-xs font-medium text-[var(--primary)] ring-1 ring-[var(--primary)]/20">
                   {s}
                 </span>
               ))}
@@ -108,7 +109,7 @@ export function ModernTemplate({ cv, domId = "cv-document", accent = "#2563eb" }
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section className="mt-6">
-      <h2 className="mb-3 text-xs font-bold uppercase tracking-widest text-[var(--accent)]">{title}</h2>
+      <h2 className="mb-3 font-[family-name:var(--font-heading)] text-xs font-bold uppercase tracking-widest text-[var(--primary)]">{title}</h2>
       {children}
     </section>
   );

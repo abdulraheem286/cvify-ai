@@ -1,10 +1,11 @@
 import type { CSSProperties } from "react";
 import type { CVResult } from "@/app/types";
+import { themeVars, DEFAULT_THEME, type Theme } from "./theme";
 
-type Props = { cv: CVResult; domId?: string; accent?: string };
+type Props = { cv: CVResult; domId?: string; theme?: Theme };
 
-// Aurora: bold accent header with photo, two-tone two-column body.
-export function AuroraTemplate({ cv, domId = "cv-document", accent = "#2563eb" }: Props) {
+// Aurora: bold primary header with photo, two-tone two-column body.
+export function AuroraTemplate({ cv, domId = "cv-document", theme = DEFAULT_THEME }: Props) {
   const contactLine = [
     cv.contact?.email,
     cv.contact?.phone,
@@ -18,16 +19,16 @@ export function AuroraTemplate({ cv, domId = "cv-document", accent = "#2563eb" }
   return (
     <div
       id={domId}
-      style={{ "--accent": accent } as CSSProperties}
-      className="mx-auto w-full max-w-[800px] overflow-hidden bg-white text-zinc-800 shadow-xl ring-1 ring-zinc-200"
+      style={themeVars(theme) as CSSProperties}
+      className="mx-auto w-full max-w-[800px] overflow-hidden bg-[var(--bg)] font-[family-name:var(--font-body)] text-zinc-800 shadow-xl ring-1 ring-zinc-200"
     >
-      <header className="flex items-center gap-6 bg-[var(--accent)] p-8 text-white sm:p-10">
+      <header className="flex items-center gap-6 bg-[var(--primary)] p-8 text-white sm:p-10">
         {cv.photo && (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={cv.photo} alt="" className="h-24 w-24 shrink-0 rounded-full object-cover ring-4 ring-white/30" />
         )}
         <div>
-          <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">{cv.fullName}</h1>
+          <h1 className="font-[family-name:var(--font-heading)] text-3xl font-bold tracking-tight sm:text-4xl">{cv.fullName}</h1>
           <p className="mt-1 text-lg text-white/80">{cv.jobTitle}</p>
           {contactLine && <p className="mt-2 text-xs text-white/80">{contactLine}</p>}
         </div>
@@ -45,7 +46,7 @@ export function AuroraTemplate({ cv, domId = "cv-document", accent = "#2563eb" }
                     <h3 className="font-semibold text-zinc-900">{job.role}</h3>
                     {job.period && <span className="shrink-0 text-xs text-zinc-500">{job.period}</span>}
                   </div>
-                  {job.company && <p className="text-sm text-[var(--accent)]">{job.company}</p>}
+                  {job.company && <p className="text-sm text-[var(--primary)]">{job.company}</p>}
                   <ul className="mt-1.5 list-disc space-y-1 pl-5 text-sm text-zinc-700">
                     {job.bullets?.map((b, j) => <li key={j}>{b}</li>)}
                   </ul>
@@ -81,13 +82,13 @@ export function AuroraTemplate({ cv, domId = "cv-document", accent = "#2563eb" }
           )}
         </main>
 
-        <aside className="col-span-1 bg-[var(--accent)]/10 p-6">
+        <aside className="col-span-1 bg-[var(--primary)]/10 p-6">
           {cv.skills?.length > 0 && (
             <div>
-              <h2 className="text-xs font-bold uppercase tracking-widest text-[var(--accent)]">Skills</h2>
+              <h2 className="text-xs font-bold uppercase tracking-widest text-[var(--primary)]">Skills</h2>
               <div className="mt-2 flex flex-wrap gap-1.5">
                 {cv.skills.map((s, i) => (
-                  <span key={i} className="rounded bg-white px-2 py-1 text-xs text-zinc-700 ring-1 ring-[var(--accent)]/20">
+                  <span key={i} className="rounded bg-white px-2 py-1 text-xs text-zinc-700 ring-1 ring-[var(--primary)]/20">
                     {s}
                   </span>
                 ))}
@@ -97,7 +98,7 @@ export function AuroraTemplate({ cv, domId = "cv-document", accent = "#2563eb" }
 
           {cv.languages && cv.languages.length > 0 && (
             <div className="mt-6">
-              <h2 className="text-xs font-bold uppercase tracking-widest text-[var(--accent)]">Languages</h2>
+              <h2 className="text-xs font-bold uppercase tracking-widest text-[var(--primary)]">Languages</h2>
               <ul className="mt-2 space-y-1 text-sm text-zinc-700">
                 {cv.languages.map((l, i) => (
                   <li key={i}>
@@ -117,7 +118,7 @@ export function AuroraTemplate({ cv, domId = "cv-document", accent = "#2563eb" }
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section className="mt-6 first:mt-0">
-      <h2 className="mb-3 text-xs font-bold uppercase tracking-widest text-[var(--accent)]">{title}</h2>
+      <h2 className="mb-3 font-[family-name:var(--font-heading)] text-xs font-bold uppercase tracking-widest text-[var(--primary)]">{title}</h2>
       {children}
     </section>
   );

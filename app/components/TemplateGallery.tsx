@@ -5,11 +5,8 @@ import { ScaledPreview } from "./ScaledPreview";
 import { TemplateView } from "@/app/templates/TemplateView";
 import {
   CATEGORIES,
-  ACCENTS,
   templatesByCategory,
-  getTemplate,
   type Category,
-  type LayoutId,
   type TemplateId,
 } from "@/app/templates";
 import type { CVResult } from "@/app/types";
@@ -57,9 +54,8 @@ export function TemplateGallery({
   onBack: () => void;
   backLabel: string;
 }) {
-  const [cat, setCat] = useState<Category>("Creative");
-  const [accentId, setAccentId] = useState("blue");
-  const layouts = Array.from(new Set(templatesByCategory(cat).map((t) => t.layout))) as LayoutId[];
+  const [cat, setCat] = useState<Category>("Professional");
+  const templates = templatesByCategory(cat);
 
   return (
     <main className="mx-auto w-full max-w-6xl flex-1 px-6 py-10">
@@ -72,8 +68,10 @@ export function TemplateGallery({
       </button>
 
       <div className="mt-6 text-center">
-        <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">Choose a template</h1>
-        <p className="mt-2 text-zinc-600">Pick a style to start with — you can change it anytime while editing.</p>
+        <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">Choose a layout</h1>
+        <p className="mt-2 text-zinc-600">
+          Pick a structure to start with. You can recolour it and change fonts anytime while editing.
+        </p>
       </div>
 
       {/* Category tabs */}
@@ -92,44 +90,24 @@ export function TemplateGallery({
         ))}
       </div>
 
-      {/* Accent colours */}
-      <div className="mt-5 flex items-center justify-center gap-2">
-        <span className="text-xs font-medium text-zinc-500">Colour:</span>
-        {ACCENTS.map((a) => (
-          <button
-            key={a.id}
-            type="button"
-            onClick={() => setAccentId(a.id)}
-            aria-label={a.name}
-            className={`h-6 w-6 rounded-full ring-2 ring-offset-2 transition ${
-              accentId === a.id ? "ring-zinc-400" : "ring-transparent hover:ring-zinc-200"
-            }`}
-            style={{ backgroundColor: a.hex }}
-          />
-        ))}
-      </div>
-
-      {/* Selectable previews */}
+      {/* Selectable layout previews */}
       <div className="mx-auto mt-10 grid max-w-4xl gap-8 sm:grid-cols-2">
-        {layouts.map((layout) => {
-          const id = `${layout}-${accentId}`;
-          return (
-            <button
-              key={layout}
-              type="button"
-              onClick={() => onSelect(id)}
-              className="group rounded-2xl border border-zinc-200 bg-white p-4 text-left shadow-sm transition-all hover:border-blue-300 hover:shadow-md"
-            >
-              <ScaledPreview>
-                <TemplateView id={id} cv={SAMPLE} domId={`gal-${layout}`} />
-              </ScaledPreview>
-              <div className="mt-3 flex items-center justify-between">
-                <span className="font-semibold text-zinc-900">{getTemplate(id).name}</span>
-                <span className="text-sm font-semibold text-blue-600">Use this →</span>
-              </div>
-            </button>
-          );
-        })}
+        {templates.map((t) => (
+          <button
+            key={t.id}
+            type="button"
+            onClick={() => onSelect(t.id)}
+            className="group rounded-2xl border border-zinc-200 bg-white p-4 text-left shadow-sm transition-all hover:border-blue-300 hover:shadow-md"
+          >
+            <ScaledPreview>
+              <TemplateView id={t.id} cv={SAMPLE} domId={`gal-${t.id}`} theme={t.defaultTheme} />
+            </ScaledPreview>
+            <div className="mt-3 flex items-center justify-between">
+              <span className="font-semibold text-zinc-900">{t.name}</span>
+              <span className="text-sm font-semibold text-blue-600">Use this →</span>
+            </div>
+          </button>
+        ))}
       </div>
     </main>
   );

@@ -1,10 +1,11 @@
 import type { CSSProperties } from "react";
 import type { CVResult } from "@/app/types";
+import { themeVars, DEFAULT_THEME, type Theme } from "./theme";
 
-type Props = { cv: CVResult; domId?: string; accent?: string };
+type Props = { cv: CVResult; domId?: string; theme?: Theme };
 
-// Classic: traditional, serif headings, full-width section rules.
-export function ClassicTemplate({ cv, domId = "cv-document", accent = "#2563eb" }: Props) {
+// Classic: traditional, heading-font titles, full-width section rules.
+export function ClassicTemplate({ cv, domId = "cv-document", theme = DEFAULT_THEME }: Props) {
   const contactLine = [
     cv.contact?.email,
     cv.contact?.phone,
@@ -18,13 +19,13 @@ export function ClassicTemplate({ cv, domId = "cv-document", accent = "#2563eb" 
   return (
     <div
       id={domId}
-      style={{ "--accent": accent } as CSSProperties}
-      className="mx-auto w-full max-w-[800px] bg-white text-zinc-800 shadow-xl ring-1 ring-zinc-200"
+      style={themeVars(theme) as CSSProperties}
+      className="mx-auto w-full max-w-[800px] bg-[var(--bg)] font-[family-name:var(--font-body)] text-zinc-800 shadow-xl ring-1 ring-zinc-200"
     >
       <div className="p-10 sm:p-14">
         <header className="border-b border-zinc-300 pb-4 text-center">
-          <h1 className="font-serif text-4xl font-bold text-zinc-900">{cv.fullName}</h1>
-          <p className="mt-1 text-base font-medium text-[var(--accent)]">{cv.jobTitle}</p>
+          <h1 className="font-[family-name:var(--font-heading)] text-4xl font-bold text-[var(--secondary)]">{cv.fullName}</h1>
+          <p className="mt-1 text-base font-medium text-[var(--primary)]">{cv.jobTitle}</p>
           {contactLine && <p className="mt-2 text-xs text-zinc-500">{contactLine}</p>}
         </header>
 
@@ -96,7 +97,7 @@ export function ClassicTemplate({ cv, domId = "cv-document", accent = "#2563eb" 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section className="mt-6">
-      <h2 className="mb-3 border-b border-[var(--accent)]/40 pb-1 font-serif text-sm font-bold uppercase tracking-wider text-[var(--accent)]">
+      <h2 className="mb-3 border-b border-[var(--primary)]/40 pb-1 font-[family-name:var(--font-heading)] text-sm font-bold uppercase tracking-wider text-[var(--primary)]">
         {title}
       </h2>
       {children}

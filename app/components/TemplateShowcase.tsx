@@ -5,19 +5,15 @@ import { ScaledPreview } from "./ScaledPreview";
 import { TemplateView } from "@/app/templates/TemplateView";
 import {
   CATEGORIES,
-  ACCENTS,
+  TEMPLATES,
   templatesByCategory,
-  getTemplate,
   type Category,
-  type LayoutId,
 } from "@/app/templates";
 import type { CVResult } from "@/app/types";
 
 export function TemplateShowcase({ cv }: { cv: CVResult }) {
   const [cat, setCat] = useState<Category>("Creative");
-  const [accentId, setAccentId] = useState("blue");
-
-  const layouts = Array.from(new Set(templatesByCategory(cat).map((t) => t.layout))) as LayoutId[];
+  const templates = templatesByCategory(cat);
 
   return (
     <div className="mt-12">
@@ -37,40 +33,20 @@ export function TemplateShowcase({ cv }: { cv: CVResult }) {
         ))}
       </div>
 
-      {/* Accent colours */}
-      <div className="mt-5 flex items-center justify-center gap-2">
-        <span className="text-xs font-medium text-zinc-500">Colour:</span>
-        {ACCENTS.map((a) => (
-          <button
-            key={a.id}
-            type="button"
-            onClick={() => setAccentId(a.id)}
-            aria-label={a.name}
-            className={`h-6 w-6 rounded-full ring-2 ring-offset-2 transition ${
-              accentId === a.id ? "ring-zinc-400" : "ring-transparent hover:ring-zinc-200"
-            }`}
-            style={{ backgroundColor: a.hex }}
-          />
+      {/* Previews — the category's layouts, each in its own default look */}
+      <div className="mt-8 grid gap-8 sm:grid-cols-2">
+        {templates.map((t) => (
+          <div key={t.id}>
+            <ScaledPreview>
+              <TemplateView id={t.id} cv={cv} domId={`show-${t.id}`} theme={t.defaultTheme} />
+            </ScaledPreview>
+            <p className="mt-3 text-center text-sm font-medium text-zinc-700">{t.name}</p>
+          </div>
         ))}
       </div>
 
-      {/* Previews — the category's layouts in the chosen colour */}
-      <div className="mt-8 grid gap-8 sm:grid-cols-2">
-        {layouts.map((layout) => {
-          const id = `${layout}-${accentId}`;
-          return (
-            <div key={layout}>
-              <ScaledPreview>
-                <TemplateView id={id} cv={cv} domId={`show-${layout}`} />
-              </ScaledPreview>
-              <p className="mt-3 text-center text-sm font-medium text-zinc-700">{getTemplate(id).name}</p>
-            </div>
-          );
-        })}
-      </div>
-
       <p className="mt-6 text-center text-sm text-zinc-500">
-        30 templates across 3 categories — switch layout and colour anytime.
+        {TEMPLATES.length} distinct layouts across 3 categories — recolour, restyle and change fonts to make any of them yours.
       </p>
     </div>
   );

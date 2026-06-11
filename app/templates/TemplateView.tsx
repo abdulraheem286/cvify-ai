@@ -1,9 +1,20 @@
 import type { CVResult } from "@/app/types";
-import { getTemplate, getLayoutComponent, type TemplateId } from "./index";
+import { getLayoutComponent, getDefaultTheme, type TemplateId } from "./index";
+import type { Theme } from "./theme";
 
-// Renders a template id by resolving its layout + accent.
-export function TemplateView({ id, cv, domId }: { id: TemplateId; cv: CVResult; domId?: string }) {
-  const t = getTemplate(id);
-  const Layout = getLayoutComponent(t.layout);
-  return <Layout cv={cv} domId={domId} accent={t.accent} />;
+// Renders a layout (template) with a theme applied on top.
+// If no theme is passed, the layout's own default theme is used.
+export function TemplateView({
+  id,
+  cv,
+  domId,
+  theme,
+}: {
+  id: TemplateId;
+  cv: CVResult;
+  domId?: string;
+  theme?: Theme;
+}) {
+  const Layout = getLayoutComponent(id);
+  return <Layout cv={cv} domId={domId} theme={theme ?? getDefaultTheme(id)} />;
 }

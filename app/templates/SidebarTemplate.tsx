@@ -1,22 +1,23 @@
 import type { CSSProperties } from "react";
 import type { CVResult } from "@/app/types";
+import { themeVars, DEFAULT_THEME, type Theme } from "./theme";
 
-type Props = { cv: CVResult; domId?: string; accent?: string };
+type Props = { cv: CVResult; domId?: string; theme?: Theme };
 
-// Sidebar: two columns — accent left rail with photo, contact, skills, languages.
-export function SidebarTemplate({ cv, domId = "cv-document", accent = "#2563eb" }: Props) {
+// Sidebar: two columns — primary left rail with photo, contact, skills, languages.
+export function SidebarTemplate({ cv, domId = "cv-document", theme = DEFAULT_THEME }: Props) {
   return (
     <div
       id={domId}
-      style={{ "--accent": accent } as CSSProperties}
-      className="mx-auto flex w-full max-w-[800px] bg-white text-zinc-800 shadow-xl ring-1 ring-zinc-200"
+      style={themeVars(theme) as CSSProperties}
+      className="mx-auto flex w-full max-w-[800px] bg-[var(--bg)] font-[family-name:var(--font-body)] text-zinc-800 shadow-xl ring-1 ring-zinc-200"
     >
-      <aside className="w-[34%] bg-[var(--accent)] p-6 text-white">
+      <aside className="w-[34%] bg-[var(--primary)] p-6 text-white">
         {cv.photo && (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={cv.photo} alt="" className="mb-4 h-24 w-24 rounded-full object-cover ring-4 ring-white/30" />
         )}
-        <h1 className="text-2xl font-bold leading-tight text-white">{cv.fullName}</h1>
+        <h1 className="font-[family-name:var(--font-heading)] text-2xl font-bold leading-tight text-white">{cv.fullName}</h1>
         <p className="mt-1 text-sm text-white/80">{cv.jobTitle}</p>
 
         <div className="mt-6 space-y-1.5 text-xs leading-relaxed text-white/90">
@@ -62,7 +63,7 @@ export function SidebarTemplate({ cv, domId = "cv-document", accent = "#2563eb" 
                   <h3 className="font-semibold text-zinc-900">{job.role}</h3>
                   {job.period && <span className="shrink-0 text-xs text-zinc-500">{job.period}</span>}
                 </div>
-                {job.company && <p className="text-sm text-[var(--accent)]">{job.company}</p>}
+                {job.company && <p className="text-sm text-[var(--primary)]">{job.company}</p>}
                 <ul className="mt-1.5 list-disc space-y-1 pl-5 text-sm text-zinc-700">
                   {job.bullets?.map((b, j) => <li key={j}>{b}</li>)}
                 </ul>
@@ -104,7 +105,7 @@ export function SidebarTemplate({ cv, domId = "cv-document", accent = "#2563eb" 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section className="mt-6 first:mt-0">
-      <h2 className="mb-3 text-xs font-bold uppercase tracking-widest text-[var(--accent)]">{title}</h2>
+      <h2 className="mb-3 font-[family-name:var(--font-heading)] text-xs font-bold uppercase tracking-widest text-[var(--primary)]">{title}</h2>
       {children}
     </section>
   );

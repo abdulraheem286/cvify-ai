@@ -1,5 +1,13 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import {
+  Geist,
+  Geist_Mono,
+  Inter,
+  Poppins,
+  Roboto,
+  Lora,
+  Source_Serif_4,
+} from "next/font/google";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -11,6 +19,13 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
+
+// Fonts the user can pick from in the CV customization panel.
+const inter = Inter({ variable: "--font-inter", subsets: ["latin"] });
+const poppins = Poppins({ variable: "--font-poppins", subsets: ["latin"], weight: ["400", "500", "600", "700"] });
+const roboto = Roboto({ variable: "--font-roboto", subsets: ["latin"], weight: ["400", "500", "700"] });
+const lora = Lora({ variable: "--font-lora", subsets: ["latin"] });
+const sourceSerif = Source_Serif_4({ variable: "--font-source-serif", subsets: ["latin"] });
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://cvifyai.vercel.app"),
@@ -59,7 +74,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} ${poppins.variable} ${roboto.variable} ${lora.variable} ${sourceSerif.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">{children}</body>
     </html>
