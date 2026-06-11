@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { SiteHeader } from "../components/SiteHeader";
 import { SiteFooter } from "../components/SiteFooter";
+import { Reveal } from "../components/Reveal";
 
 // On-page SEO for the build chooser.
 export const metadata: Metadata = {
@@ -18,14 +19,16 @@ export default function BuildChooser() {
 
       <main className="flex flex-1 flex-col items-center justify-center px-6 py-20">
         <div className="w-full max-w-3xl text-center">
-          <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
-            How do you want to build your CV?
-          </h1>
-          <p className="mt-3 text-zinc-600">
-            Both ways are free and end with a clean PDF download.
-          </p>
+          <Reveal stagger>
+            <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
+              How do you want to build your CV?
+            </h1>
+            <p className="mt-3 text-zinc-600">
+              Both ways are free and end with a clean PDF download.
+            </p>
+          </Reveal>
 
-          <div className="mt-12 grid gap-6 sm:grid-cols-2">
+          <Reveal stagger delay={0.15} className="mt-12 grid gap-6 sm:grid-cols-2">
             <Link
               href="/build/ai"
               className="group rounded-2xl border border-zinc-200 bg-white p-8 text-left shadow-sm transition-all hover:border-blue-300 hover:shadow-md"
@@ -59,7 +62,7 @@ export default function BuildChooser() {
                 Start manually →
               </span>
             </Link>
-          </div>
+          </Reveal>
         </div>
       </main>
 

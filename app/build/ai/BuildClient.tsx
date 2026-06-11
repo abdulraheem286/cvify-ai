@@ -5,6 +5,7 @@ import Link from "next/link";
 import { CvDocument } from "@/app/components/CvDocument";
 import type { CVResult } from "@/app/types";
 import { downloadCvPdf } from "@/app/lib/pdf";
+import { Reveal } from "@/app/components/Reveal";
 
 type CVForm = {
   name: string;
@@ -63,7 +64,7 @@ export default function BuildClient() {
 
   return (
     <main className="flex flex-1 flex-col items-center bg-white px-6 py-12 text-zinc-900 print:p-0">
-      <div className="w-full max-w-2xl print:hidden">
+      <Reveal stagger className="w-full max-w-2xl print:hidden">
         <Link href="/build" className="text-sm text-zinc-500 transition-colors hover:text-blue-600">
           ← Back to build options
         </Link>
@@ -114,7 +115,7 @@ export default function BuildClient() {
             {error}
           </p>
         )}
-      </div>
+      </Reveal>
 
       {result && (
         <div className="mt-12 w-full max-w-[820px] print:mt-0">

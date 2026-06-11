@@ -3,6 +3,7 @@ import Link from "next/link";
 import { SiteHeader } from "./components/SiteHeader";
 import { SiteFooter } from "./components/SiteFooter";
 import { CvDocument } from "./components/CvDocument";
+import { Reveal } from "./components/Reveal";
 import type { CVResult } from "./types";
 
 // On-page SEO for the home page.
@@ -117,7 +118,7 @@ export default function Home() {
             aria-hidden
             className="pointer-events-none absolute left-1/2 top-[-8rem] h-[26rem] w-[40rem] -translate-x-1/2 rounded-full bg-blue-200/40 blur-[120px]"
           />
-          <div className="relative mx-auto max-w-3xl px-6 pt-20 text-center sm:pt-28">
+          <Reveal stagger className="relative mx-auto max-w-3xl px-6 pt-20 text-center sm:pt-28">
             <span className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700">
               Free • AI-powered • No sign-up to start
             </span>
@@ -143,15 +144,15 @@ export default function Home() {
                 See how it works
               </a>
             </div>
-          </div>
+          </Reveal>
 
           {/* Product preview — the real CV template */}
-          <div className="relative mx-auto mt-16 max-w-3xl px-6">
+          <Reveal y={40} className="relative mx-auto mt-16 max-w-3xl px-6">
             <div className="max-h-[620px] overflow-hidden rounded-2xl">
               <CvDocument cv={sampleCv} />
             </div>
             <div className="pointer-events-none absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-white to-transparent" />
-          </div>
+          </Reveal>
         </section>
 
         {/* Trust strip */}
@@ -172,7 +173,7 @@ export default function Home() {
             CVify AI handles the hard parts — strong wording, clean structure,
             and professional design — so you can apply with confidence.
           </p>
-          <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <Reveal stagger className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             <Feature
               icon={<IconSparkles />}
               title="AI writing"
@@ -193,7 +194,7 @@ export default function Home() {
               title="Instant PDF"
               text="Download a print-ready PDF in one click, formatted exactly the way employers expect."
             />
-          </div>
+          </Reveal>
         </section>
 
         {/* How it works */}
@@ -202,11 +203,11 @@ export default function Home() {
             <h2 className="text-center text-3xl font-bold tracking-tight sm:text-4xl">
               How to make a CV with CVify AI
             </h2>
-            <div className="mt-16 grid gap-10 sm:grid-cols-3">
+            <Reveal stagger className="mt-16 grid gap-10 sm:grid-cols-3">
               <Step n={1} title="Add your details" text="Paste your old CV or jot down your jobs, skills, and education. Rough notes are fine." />
               <Step n={2} title="AI polishes it" text="CVify AI rewrites your input into clear, professional wording and a clean, organised layout." />
               <Step n={3} title="Download your PDF" text="Preview your finished CV in a beautiful template and download a print-ready PDF instantly." />
-            </div>
+            </Reveal>
           </div>
         </section>
 
@@ -215,7 +216,7 @@ export default function Home() {
           <h2 className="text-center text-3xl font-bold tracking-tight sm:text-4xl">
             Frequently asked questions
           </h2>
-          <div className="mt-12 divide-y divide-zinc-200 border-y border-zinc-200">
+          <Reveal stagger className="mt-12 divide-y divide-zinc-200 border-y border-zinc-200">
             {faqs.map((f) => (
               <details key={f.q} className="group py-5">
                 <summary className="flex cursor-pointer list-none items-center justify-between text-base font-medium text-zinc-900">
@@ -225,12 +226,12 @@ export default function Home() {
                 <p className="mt-3 text-sm leading-relaxed text-zinc-600">{f.a}</p>
               </details>
             ))}
-          </div>
+          </Reveal>
         </section>
 
         {/* Final CTA */}
         <section className="mx-auto max-w-6xl px-6 pb-24">
-          <div className="rounded-3xl bg-blue-600 px-6 py-16 text-center text-white">
+          <Reveal y={40} className="rounded-3xl bg-blue-600 px-6 py-16 text-center text-white">
             <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
               Ready to build your CV?
             </h2>
@@ -243,7 +244,7 @@ export default function Home() {
             >
               Create my CV free →
             </Link>
-          </div>
+          </Reveal>
         </section>
       </main>
 
