@@ -3,14 +3,10 @@
 import { useState, type FormEvent } from "react";
 import Link from "next/link";
 import type { CVResult } from "@/app/types";
-import { downloadCvPdf } from "@/app/lib/pdf";
 import { Reveal } from "@/app/components/Reveal";
 import { SiteHeader } from "@/app/components/SiteHeader";
 import { SiteFooter } from "@/app/components/SiteFooter";
-import { Stepper } from "@/app/components/Stepper";
-import { PreviewStep } from "@/app/components/PreviewStep";
 import { CvEditor, cvToForm, type EditorForm } from "@/app/components/CvEditor";
-import { type TemplateId } from "@/app/templates";
 import {
   IconField,
   FieldTextarea,
@@ -29,10 +25,7 @@ import {
   IconGlobe,
   IconSparkles,
   IconArrowLeft,
-  IconText,
 } from "@/app/components/icons";
-
-const STEPS = ["Your info", "Edit", "Template"];
 
 type AIForm = {
   name: string;
@@ -77,10 +70,7 @@ export default function BuildClient() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [editorInitial, setEditorInitial] = useState<EditorForm | null>(null);
-  const [result, setResult] = useState<CVResult | null>(null);
-  const [template, setTemplate] = useState<TemplateId>("modern");
-  const [downloading, setDownloading] = useState(false);
-  const [step, setStep] = useState<"ai" | "edit" | "preview">("ai");
+  const [step, setStep] = useState<"ai" | "edit">("ai");
 
   const onAi = (key: keyof AIForm) => (value: string) => {
     const v = key === "phone" ? sanitizePhone(value) : value;
@@ -114,26 +104,12 @@ export default function BuildClient() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Something went wrong.");
-      const cv = data.cv as CVResult;
-      setResult(cv);
-      setEditorInitial(cvToForm(cv));
+      setEditorInitial(cvToForm(data.cv as CVResult));
       setStep("edit");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong.");
     } finally {
       setLoading(false);
-    }
-  }
-
-  async function handleDownload() {
-    setDownloading(true);
-    try {
-      await downloadCvPdf(result?.fullName?.replace(/\s+/g, "-") || "cv");
-    } catch (err) {
-      console.error("PDF export failed:", err);
-      setError("Could not create the PDF. Please try again.");
-    } finally {
-      setDownloading(false);
     }
   }
 
@@ -143,37 +119,8 @@ export default function BuildClient() {
         <SiteHeader />
       </div>
 
-      {step === "preview" && result ? (
-        <main className="flex-1 print:p-0">
-          <PreviewStep
-            cv={result}
-            steps={STEPS}
-            template={template}
-            onTemplateChange={setTemplate}
-            onBack={() => {
-              if (result) setEditorInitial(cvToForm(result));
-              setStep("edit");
-            }}
-            onDownload={handleDownload}
-            downloading={downloading}
-          />
-        </main>
-      ) : step === "edit" && editorInitial ? (
-        <CvEditor
-          initial={editorInitial}
-          steps={STEPS}
-          currentStep={1}
-          title="Review & edit"
-          subtitle="Tweak anything the AI wrote, then choose a template."
-          icon={<IconText className="h-6 w-6" />}
-          submitLabel="Preview & choose template →"
-          onSubmit={(cv) => {
-            setResult(cv);
-            setStep("preview");
-          }}
-          onBack={() => setStep("ai")}
-          backLabel="Back to AI input"
-        />
+      {step === "edit" && editorInitial ? (
+        <CvEditor initial={editorInitial} onBack={() => setStep("ai")} backLabel="Back to AI input" />
       ) : (
         <main className="flex flex-1 flex-col items-center px-6 py-10">
           <div className="w-full max-w-2xl">
@@ -184,12 +131,8 @@ export default function BuildClient() {
               <IconArrowLeft className="h-4 w-4" /> Back to build options
             </Link>
 
-            <div className="mt-6">
-              <Stepper steps={STEPS} current={0} />
-            </div>
-
             <Reveal stagger>
-              <div className="flex items-center gap-3">
+              <div className="mt-6 flex items-center gap-3">
                 <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
                   <IconSparkles className="h-6 w-6" />
                 </span>
@@ -216,7 +159,7 @@ export default function BuildClient() {
 
                 <div className="grid gap-5 sm:grid-cols-2">
                   <IconField label="Location" icon={<IconMapPin />} value={aiForm.location} onChange={onAi("location")} placeholder="London, UK" />
-                  <IconField label="Website / portfolio" icon={<IconGlobe />} value={aiForm.website} onChange={onAi("website")} onBlur={onAiBlur("website")} placeholder="yoursite.com" error={aiErrors.website} inputMode="url" />
+                  <IconField label="Website / portfolio" icon={<IconGlobe />} value={aiForm.website} onChange={onAi("website")} placeholder="yoursite.com" />
                 </div>
 
                 <FieldTextarea

@@ -60,3 +60,21 @@ export const IconTrash = ({ className }: IconProps) =>
 
 export const IconArrowLeft = ({ className }: IconProps) =>
   base(<path d="M19 12H5M12 19l-7-7 7-7" />, className);
+
+export const IconEye = ({ className }: IconProps) =>
+  base(<><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z" /><circle cx="12" cy="12" r="3" /></>, className);
+
+export const IconEyeOff = ({ className }: IconProps) =>
+  base(<path d="M3 3l18 18M10.6 10.6a3 3 0 0 0 4.2 4.2M9.9 4.2A10.9 10.9 0 0 1 12 5c6.5 0 10 7 10 7a18.5 18.5 0 0 1-3.2 4.1M6.6 6.6A18 18 0 0 0 2 12s3.5 7 10 7a10.9 10.9 0 0 0 3-.4" />, className);
+
+export const IconChevron = ({ className }: IconProps) =>
+  base(<path d="M6 9l6 6 6-6" />, className);
+
+export const IconImage = ({ className }: IconProps) =>
+  base(<><rect x="3" y="3" width="18" height="18" rx="2" /><circle cx="9" cy="9" r="2" /><path d="m21 15-5-5L5 21" /></>, className);
+
+export const IconAward = ({ className }: IconProps) =>
+  base(<><circle cx="12" cy="8" r="5" /><path d="M8.5 12.5 7 22l5-3 5 3-1.5-9.5" /></>, className);
+
+export const IconLanguages = ({ className }: IconProps) =>
+  base(<path d="M4 5h7M9 3v2c0 4-2 7-5 9M5 9c0 3 3 5 6 6M14 21l4-9 4 9M16.5 16h5" />, className);
