@@ -18,7 +18,9 @@ export function BoldTemplate({ cv, domId = "cv-document", theme = DEFAULT_THEME 
         <header className="flex items-end justify-between gap-6">
           <div>
             <h1 className="font-[family-name:var(--font-heading)] text-6xl font-black uppercase leading-[0.95] tracking-tight text-[var(--secondary)]">{cv.fullName}</h1>
-            <p className="mt-3 inline-block bg-[var(--primary)] px-3 py-1 text-sm font-bold uppercase tracking-widest text-white">{cv.jobTitle}</p>
+            {cv.jobTitle && (
+              <p className="mt-3 inline-block bg-[var(--primary)] px-3 py-1 text-sm font-bold uppercase tracking-widest text-white">{cv.jobTitle}</p>
+            )}
           </div>
           {cv.photo && (
             // eslint-disable-next-line @next/next/no-img-element
