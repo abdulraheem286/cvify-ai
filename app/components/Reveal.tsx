@@ -2,10 +2,9 @@
 
 import { useRef, type ReactNode } from "react";
 import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 
-gsap.registerPlugin(ScrollTrigger, useGSAP);
+gsap.registerPlugin(useGSAP);
 
 type RevealProps = {
   children: ReactNode;
@@ -18,8 +17,9 @@ type RevealProps = {
   stagger?: boolean;
 };
 
-// Fades + slides content up when it scrolls into view.
-// Wrap any block: <Reveal>...</Reveal> or <Reveal stagger className="grid ...">cards</Reveal>
+// Fades + slides content up on mount.
+// Animating on mount (not on scroll) guarantees content always ends up visible —
+// a scroll-trigger that fails to fire would leave content stuck hidden.
 export function Reveal({
   children,
   className,
@@ -40,11 +40,10 @@ export function Reveal({
       gsap.from(targets, {
         opacity: 0,
         y,
-        duration: 0.7,
+        duration: 0.6,
         ease: "power2.out",
         delay,
-        stagger: stagger ? 0.12 : 0,
-        scrollTrigger: { trigger: el, start: "top 85%", once: true },
+        stagger: stagger ? 0.1 : 0,
       });
     },
     { scope: ref },
