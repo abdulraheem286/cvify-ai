@@ -115,33 +115,64 @@ export function cvToForm(cv: CVResult): EditorForm {
 
 type SectionKey = "summary" | "experience" | "education" | "skills" | "languages" | "certificates";
 
-function formToCv(form: EditorForm, hidden: Record<SectionKey, boolean>): CVResult {
+// Sample content shown in the PREVIEW only (never in the downloaded PDF),
+// so an empty form still looks like a real CV.
+const PH = {
+  summary:
+    "Write a short, punchy summary of who you are and what you do best. The AI can draft this for you, or write it yourself.",
+  experience: [
+    {
+      role: "Job Title",
+      company: "Company Name",
+      period: "2022 — Present",
+      bullets: ["A key achievement or responsibility.", "Another accomplishment with measurable impact."],
+    },
+    {
+      role: "Previous Role",
+      company: "Earlier Company",
+      period: "2019 — 2022",
+      bullets: ["Something you delivered or improved."],
+    },
+  ],
+  education: [{ degree: "Your Degree", institution: "University / School", period: "2015 — 2019" }],
+  skills: ["Skill one", "Skill two", "Skill three", "Skill four"],
+  languages: [{ name: "English", level: "Native" }],
+  certificates: [{ name: "Certificate name", issuer: "Issuer", year: "2023" }],
+};
+
+// ph = true fills empty (non-hidden) fields with placeholders for the preview.
+function formToCv(form: EditorForm, hidden: Record<SectionKey, boolean>, ph = false): CVResult {
+  const fullName = `${form.firstName} ${form.lastName}`.trim();
+  const exp = form.experience
+    .filter((x) => x.role || x.company || x.bullets)
+    .map((x) => ({
+      role: x.role,
+      company: x.company,
+      period: x.period,
+      bullets: x.bullets.split("\n").map((b) => b.trim()).filter(Boolean),
+    }));
+  const edu = form.education.filter((x) => x.degree || x.institution);
+  const skills = form.skills.split(",").map((s) => s.trim()).filter(Boolean);
+  const langs = form.languages.filter((l) => l.name.trim());
+  const certs = form.certificates.filter((c) => c.name.trim());
+
   return {
-    fullName: `${form.firstName} ${form.lastName}`.trim(),
-    jobTitle: form.jobTitle,
+    fullName: fullName || (ph ? "Your Name" : ""),
+    jobTitle: form.jobTitle || (ph ? "Your Job Title" : ""),
     photo: form.photo || undefined,
     contact: {
-      email: form.email,
-      phone: form.phone,
-      location: form.location,
-      website: form.website,
+      email: form.email || (ph ? "you@email.com" : ""),
+      phone: form.phone || (ph ? "+1 (555) 000-0000" : ""),
+      location: form.location || (ph ? "City, Country" : ""),
+      website: form.website || (ph ? "yourwebsite.com" : ""),
       linkedin: form.linkedin || undefined,
     },
-    summary: hidden.summary ? "" : form.summary,
-    experience: hidden.experience
-      ? []
-      : form.experience
-          .filter((x) => x.role || x.company || x.bullets)
-          .map((x) => ({
-            role: x.role,
-            company: x.company,
-            period: x.period,
-            bullets: x.bullets.split("\n").map((b) => b.trim()).filter(Boolean),
-          })),
-    education: hidden.education ? [] : form.education.filter((x) => x.degree || x.institution),
-    skills: hidden.skills ? [] : form.skills.split(",").map((s) => s.trim()).filter(Boolean),
-    languages: hidden.languages ? [] : form.languages.filter((l) => l.name.trim()),
-    certificates: hidden.certificates ? [] : form.certificates.filter((c) => c.name.trim()),
+    summary: hidden.summary ? "" : form.summary || (ph ? PH.summary : ""),
+    experience: hidden.experience ? [] : exp.length ? exp : ph ? PH.experience : [],
+    education: hidden.education ? [] : edu.length ? edu : ph ? PH.education : [],
+    skills: hidden.skills ? [] : skills.length ? skills : ph ? PH.skills : [],
+    languages: hidden.languages ? [] : langs.length ? langs : ph ? PH.languages : [],
+    certificates: hidden.certificates ? [] : certs.length ? certs : ph ? PH.certificates : [],
   };
 }
 
@@ -168,7 +199,8 @@ export function CvEditor({
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [downloading, setDownloading] = useState(false);
 
-  const liveCv = formToCv(form, hidden);
+  const exportCv = formToCv(form, hidden); // clean — used for the PDF
+  const previewCv = formToCv(form, hidden, true); // with placeholders — preview only
   const Template = getTemplateComponent(template);
 
   const set = (key: keyof EditorForm) => (v: string) =>
@@ -226,7 +258,7 @@ export function CvEditor({
   async function handleDownload() {
     setDownloading(true);
     try {
-      await downloadCvPdf(liveCv.fullName.replace(/\s+/g, "-") || "cv");
+      await downloadCvPdf(exportCv.fullName.replace(/\s+/g, "-") || "cv");
     } catch (err) {
       console.error("PDF export failed:", err);
     } finally {
@@ -238,7 +270,7 @@ export function CvEditor({
     <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-8 sm:px-6 print:p-0">
       {/* Off-screen full-size render for crisp PDF export */}
       <div aria-hidden className="pointer-events-none fixed left-[-9999px] top-0 print:static print:left-0">
-        <Template cv={liveCv} domId="cv-document" />
+        <Template cv={exportCv} domId="cv-document" />
       </div>
 
       <button
@@ -380,7 +412,7 @@ export function CvEditor({
 
             <div className="mt-4">
               <ScaledPreview>
-                <Template cv={liveCv} domId="live-cv" />
+                <Template cv={previewCv} domId="live-cv" />
               </ScaledPreview>
             </div>
           </div>
