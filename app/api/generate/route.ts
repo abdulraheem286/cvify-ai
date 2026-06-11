@@ -76,9 +76,15 @@ Return ONLY valid JSON (no markdown, no comments) in EXACTLY this shape:
     return NextResponse.json({ cv });
   } catch (err) {
     console.error("AI generation failed:", err);
+    const msg = err instanceof Error ? err.message : "";
+    const isRateLimit = /429|quota|rate|RESOURCE_EXHAUSTED/i.test(msg);
     return NextResponse.json(
-      { error: "The AI failed to generate. Please try again." },
-      { status: 500 },
+      {
+        error: isRateLimit
+          ? "CVify AI is busy right now (free usage limit reached). Please wait a minute and try again."
+          : "The AI failed to generate. Please try again.",
+      },
+      { status: isRateLimit ? 429 : 500 },
     );
   }
 }
