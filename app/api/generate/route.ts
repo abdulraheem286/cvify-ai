@@ -9,6 +9,8 @@ type CVForm = {
   title: string;
   email: string;
   phone: string;
+  location: string;
+  website: string;
   experience: string;
 };
 
@@ -32,6 +34,8 @@ USER'S INFORMATION:
 - Desired job title: ${form.title}
 - Email: ${form.email}
 - Phone: ${form.phone}
+- Location: ${form.location}
+- Website / portfolio: ${form.website}
 - Background (rough notes or pasted old CV):
 ${form.experience}
 
@@ -46,7 +50,7 @@ Return ONLY valid JSON (no markdown, no comments) in EXACTLY this shape:
 {
   "fullName": "string",
   "jobTitle": "string",
-  "contact": { "email": "string", "phone": "string" },
+  "contact": { "email": "string", "phone": "string", "location": "string", "website": "string" },
   "summary": "string",
   "experience": [
     { "role": "string", "company": "string", "period": "string", "bullets": ["string"] }

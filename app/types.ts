@@ -2,7 +2,7 @@
 export type CVResult = {
   fullName: string;
   jobTitle: string;
-  contact: { email: string; phone: string };
+  contact: { email: string; phone: string; location: string; website: string };
   summary: string;
   experience: {
     role: string;

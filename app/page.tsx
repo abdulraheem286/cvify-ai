@@ -44,7 +44,12 @@ const faqs = [
 const sampleCv: CVResult = {
   fullName: "Sarah Johnson",
   jobTitle: "Senior Product Designer",
-  contact: { email: "sarah@example.com", phone: "+1 (555) 123-4567" },
+  contact: {
+    email: "sarah@example.com",
+    phone: "+1 (555) 123-4567",
+    location: "London, UK",
+    website: "sarahjohnson.design",
+  },
   summary:
     "Product designer with 6+ years crafting intuitive, user-centered digital experiences for fast-growing startups. Passionate about clean design systems and measurable impact.",
   experience: [

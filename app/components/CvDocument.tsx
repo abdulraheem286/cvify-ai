@@ -16,7 +16,9 @@ export function CvDocument({ cv }: { cv: CVResult }) {
           </h1>
           <p className="mt-1 text-lg font-medium text-blue-600">{cv.jobTitle}</p>
           <p className="mt-2 text-sm text-zinc-500">
-            {[cv.contact?.email, cv.contact?.phone].filter(Boolean).join("  ·  ")}
+            {[cv.contact?.email, cv.contact?.phone, cv.contact?.location, cv.contact?.website]
+              .filter(Boolean)
+              .join("  ·  ")}
           </p>
         </header>
 
