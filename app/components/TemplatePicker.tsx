@@ -11,6 +11,7 @@ import {
 } from "@/app/templates";
 import { IconChevron } from "./icons";
 
+// Dropdown template picker (collapsible, category-tabbed, colour thumbnails).
 export function TemplatePicker({
   value,
   onChange,
@@ -23,54 +24,64 @@ export function TemplatePicker({
   const [cat, setCat] = useState<Category>(current.category);
 
   return (
-    <div>
+    <div className="relative">
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        className="flex w-full items-center justify-between rounded-lg border border-zinc-200 px-3 py-2.5 text-sm"
+        className="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-50"
       >
-        <span className="font-medium text-zinc-700">
-          Template: <span className="text-blue-600">{current.name}</span>
-        </span>
+        <span className="hidden text-zinc-500 sm:inline">Template:</span>
+        <span className="text-blue-600">{current.name}</span>
         <IconChevron className={`h-4 w-4 text-zinc-400 transition-transform ${open ? "rotate-180" : ""}`} />
       </button>
 
       {open && (
-        <div className="mt-3">
-          <div className="flex gap-1.5">
-            {CATEGORIES.map((c) => (
-              <button
-                key={c}
-                type="button"
-                onClick={() => setCat(c)}
-                className={`rounded-full px-3 py-1 text-xs font-semibold transition-colors ${
-                  cat === c ? "bg-blue-600 text-white" : "bg-zinc-100 text-zinc-600 hover:bg-zinc-200"
-                }`}
-              >
-                {c}
-              </button>
-            ))}
-          </div>
-
-          <div className="mt-3 grid grid-cols-2 gap-2">
-            {templatesByCategory(cat).map((t) => {
-              const active = t.id === value;
-              return (
+        <>
+          <button
+            aria-hidden
+            tabIndex={-1}
+            onClick={() => setOpen(false)}
+            className="fixed inset-0 z-30 cursor-default"
+          />
+          <div className="absolute right-0 z-40 mt-2 w-[330px] rounded-xl border border-zinc-200 bg-white p-3 shadow-xl">
+            <div className="flex gap-1.5">
+              {CATEGORIES.map((c) => (
                 <button
-                  key={t.id}
+                  key={c}
                   type="button"
-                  onClick={() => onChange(t.id)}
-                  className={`rounded-lg border p-1.5 text-left transition ${
-                    active ? "border-blue-500 ring-2 ring-blue-200" : "border-zinc-200 hover:border-zinc-300"
+                  onClick={() => setCat(c)}
+                  className={`rounded-full px-3 py-1 text-xs font-semibold transition-colors ${
+                    cat === c ? "bg-blue-600 text-white" : "bg-zinc-100 text-zinc-600 hover:bg-zinc-200"
                   }`}
                 >
-                  <Thumb layout={t.layout} accent={t.accent} />
-                  <span className="mt-1 block truncate text-[11px] font-medium text-zinc-600">{t.name}</span>
+                  {c}
                 </button>
-              );
-            })}
+              ))}
+            </div>
+
+            <div className="mt-3 grid max-h-[55vh] grid-cols-2 gap-2 overflow-y-auto">
+              {templatesByCategory(cat).map((t) => {
+                const active = t.id === value;
+                return (
+                  <button
+                    key={t.id}
+                    type="button"
+                    onClick={() => {
+                      onChange(t.id);
+                      setOpen(false);
+                    }}
+                    className={`rounded-lg border p-1.5 text-left transition ${
+                      active ? "border-blue-500 ring-2 ring-blue-200" : "border-zinc-200 hover:border-zinc-300"
+                    }`}
+                  >
+                    <Thumb layout={t.layout} accent={t.accent} />
+                    <span className="mt-1 block truncate text-[11px] font-medium text-zinc-600">{t.name}</span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
-        </div>
+        </>
       )}
     </div>
   );

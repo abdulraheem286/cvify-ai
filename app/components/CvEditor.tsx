@@ -269,15 +269,30 @@ export function CvEditor({
         <TemplateView id={template} cv={exportCv} domId="cv-document" />
       </div>
 
-      <button
-        type="button"
-        onClick={onBack}
-        className="mb-6 inline-flex items-center gap-1.5 text-sm text-zinc-500 transition-colors hover:text-blue-600 print:hidden"
-      >
-        <IconArrowLeft className="h-4 w-4" /> {backLabel}
-      </button>
+      {/* Toolbar */}
+      <div className="sticky top-16 z-30 -mx-4 mb-6 flex items-center justify-between gap-3 border-b border-zinc-200 bg-zinc-50/90 px-4 py-3 backdrop-blur print:hidden sm:-mx-6 sm:px-6">
+        <button
+          type="button"
+          onClick={onBack}
+          className="inline-flex items-center gap-1.5 text-sm font-medium text-zinc-600 transition-colors hover:text-blue-600"
+        >
+          <IconArrowLeft className="h-4 w-4" /> <span className="hidden sm:inline">{backLabel}</span>
+        </button>
+        <div className="flex items-center gap-2">
+          <TemplatePicker value={template} onChange={setTemplate} />
+          <button
+            type="button"
+            onClick={handleDownload}
+            disabled={downloading}
+            className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-700 disabled:opacity-60"
+          >
+            <IconDownload className="h-[18px] w-[18px]" />
+            <span className="hidden sm:inline">{downloading ? "Preparing…" : "Download PDF"}</span>
+          </button>
+        </div>
+      </div>
 
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,460px)]">
+      <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,440px)]">
         {/* EDITOR */}
         <div className="print:hidden">
           <h1 className="text-2xl font-bold tracking-tight">Build your CV</h1>
@@ -391,26 +406,11 @@ export function CvEditor({
 
         {/* LIVE PREVIEW */}
         <div className="print:hidden">
-          <div className="lg:sticky lg:top-20">
-            <button
-              type="button"
-              onClick={handleDownload}
-              disabled={downloading}
-              className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 px-5 py-3 font-semibold text-white shadow-sm transition-colors hover:bg-blue-700 disabled:opacity-60"
-            >
-              <IconDownload className="h-[18px] w-[18px]" />
-              {downloading ? "Preparing PDF…" : "Download PDF"}
-            </button>
-
-            <div className="mt-4 rounded-xl border border-zinc-200 bg-white p-4 shadow-sm">
-              <TemplatePicker value={template} onChange={setTemplate} />
-            </div>
-
-            <div className="mt-4">
-              <ScaledPreview>
-                <TemplateView id={template} cv={previewCv} domId="live-cv" />
-              </ScaledPreview>
-            </div>
+          <div className="lg:sticky lg:top-32">
+            <p className="mb-2 text-xs font-medium uppercase tracking-wide text-zinc-400">Live preview</p>
+            <ScaledPreview>
+              <TemplateView id={template} cv={previewCv} domId="live-cv" />
+            </ScaledPreview>
           </div>
         </div>
       </div>
