@@ -175,10 +175,12 @@ function formToCv(form: EditorForm, hidden: Record<SectionKey, boolean>, ph = fa
 
 export function CvEditor({
   initial,
+  initialTemplate = DEFAULT_TEMPLATE,
   onBack,
   backLabel,
 }: {
   initial: EditorForm;
+  initialTemplate?: TemplateId;
   onBack: () => void;
   backLabel: string;
 }) {
@@ -192,7 +194,7 @@ export function CvEditor({
     certificates: true,
   });
   const [open, setOpen] = useState<Record<string, boolean>>({ personal: true });
-  const [template, setTemplate] = useState<TemplateId>(DEFAULT_TEMPLATE);
+  const [template, setTemplate] = useState<TemplateId>(initialTemplate);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [downloading, setDownloading] = useState(false);
 

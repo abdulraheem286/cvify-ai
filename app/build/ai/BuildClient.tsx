@@ -1,12 +1,14 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import type { CVResult } from "@/app/types";
 import { Reveal } from "@/app/components/Reveal";
 import { SiteHeader } from "@/app/components/SiteHeader";
 import { SiteFooter } from "@/app/components/SiteFooter";
 import { CvEditor, cvToForm, type EditorForm } from "@/app/components/CvEditor";
+import { TemplateGallery } from "@/app/components/TemplateGallery";
+import { DEFAULT_TEMPLATE, type TemplateId } from "@/app/templates";
 import {
   IconField,
   FieldTextarea,
@@ -65,12 +67,14 @@ function aiFieldError(key: keyof AIForm, v: string): string {
 }
 
 export default function BuildClient() {
+  const router = useRouter();
+  const [step, setStep] = useState<"template" | "ai" | "edit">("template");
+  const [chosen, setChosen] = useState<TemplateId>(DEFAULT_TEMPLATE);
   const [aiForm, setAiForm] = useState<AIForm>(EMPTY_AI);
   const [aiErrors, setAiErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [editorInitial, setEditorInitial] = useState<EditorForm | null>(null);
-  const [step, setStep] = useState<"ai" | "edit">("ai");
 
   const onAi = (key: keyof AIForm) => (value: string) => {
     const v = key === "phone" ? sanitizePhone(value) : value;
@@ -119,17 +123,32 @@ export default function BuildClient() {
         <SiteHeader />
       </div>
 
-      {step === "edit" && editorInitial ? (
-        <CvEditor initial={editorInitial} onBack={() => setStep("ai")} backLabel="Back to AI input" />
+      {step === "template" ? (
+        <TemplateGallery
+          onSelect={(id) => {
+            setChosen(id);
+            setStep("ai");
+          }}
+          onBack={() => router.push("/build")}
+          backLabel="Back to build options"
+        />
+      ) : step === "edit" && editorInitial ? (
+        <CvEditor
+          initial={editorInitial}
+          initialTemplate={chosen}
+          onBack={() => setStep("ai")}
+          backLabel="Back to AI input"
+        />
       ) : (
         <main className="flex flex-1 flex-col items-center px-6 py-10">
           <div className="w-full max-w-2xl">
-            <Link
-              href="/build"
+            <button
+              type="button"
+              onClick={() => setStep("template")}
               className="inline-flex items-center gap-1.5 text-sm text-zinc-500 transition-colors hover:text-blue-600"
             >
-              <IconArrowLeft className="h-4 w-4" /> Back to build options
-            </Link>
+              <IconArrowLeft className="h-4 w-4" /> Back to templates
+            </button>
 
             <Reveal stagger>
               <div className="mt-6 flex items-center gap-3">
