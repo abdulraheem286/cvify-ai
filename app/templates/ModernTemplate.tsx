@@ -1,21 +1,37 @@
 import type { CVResult } from "@/app/types";
 
-// Modern: blue accent header, single column, skill chips.
+// Modern: blue accent header, single column, optional photo, skill chips.
 export function ModernTemplate({ cv, domId = "cv-document" }: { cv: CVResult; domId?: string }) {
+  const contactLine = [
+    cv.contact?.email,
+    cv.contact?.phone,
+    cv.contact?.location,
+    cv.contact?.website,
+    cv.contact?.linkedin,
+  ]
+    .filter(Boolean)
+    .join("  ·  ");
+
   return (
     <div
       id={domId}
       className="mx-auto w-full max-w-[800px] bg-white text-zinc-800 shadow-xl ring-1 ring-zinc-200"
     >
       <div className="p-10 sm:p-14">
-        <header className="border-b-2 border-blue-600 pb-5">
-          <h1 className="text-4xl font-bold tracking-tight text-zinc-900">{cv.fullName}</h1>
-          <p className="mt-1 text-lg font-medium text-blue-600">{cv.jobTitle}</p>
-          <p className="mt-2 text-sm text-zinc-500">
-            {[cv.contact?.email, cv.contact?.phone, cv.contact?.location, cv.contact?.website]
-              .filter(Boolean)
-              .join("  ·  ")}
-          </p>
+        <header className="flex items-center gap-5 border-b-2 border-blue-600 pb-5">
+          {cv.photo && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={cv.photo}
+              alt=""
+              className="h-20 w-20 shrink-0 rounded-full object-cover ring-2 ring-blue-100"
+            />
+          )}
+          <div>
+            <h1 className="text-4xl font-bold tracking-tight text-zinc-900">{cv.fullName}</h1>
+            <p className="mt-1 text-lg font-medium text-blue-600">{cv.jobTitle}</p>
+            {contactLine && <p className="mt-2 text-sm text-zinc-500">{contactLine}</p>}
+          </div>
         </header>
 
         {cv.summary && <p className="mt-6 text-sm leading-relaxed text-zinc-700">{cv.summary}</p>}
@@ -65,6 +81,29 @@ export function ModernTemplate({ cv, domId = "cv-document" }: { cv: CVResult; do
                 </span>
               ))}
             </div>
+          </Section>
+        )}
+
+        {cv.languages && cv.languages.length > 0 && (
+          <Section title="Languages">
+            <p className="text-sm text-zinc-700">
+              {cv.languages
+                .map((l) => (l.level ? `${l.name} (${l.level})` : l.name))
+                .filter(Boolean)
+                .join("  ·  ")}
+            </p>
+          </Section>
+        )}
+
+        {cv.certificates && cv.certificates.length > 0 && (
+          <Section title="Certificates">
+            {cv.certificates.map((c, i) => (
+              <p key={i} className="text-sm text-zinc-700">
+                <span className="font-medium text-zinc-900">{c.name}</span>
+                {c.issuer && <span className="text-zinc-600"> — {c.issuer}</span>}
+                {c.year && <span className="text-zinc-400"> ({c.year})</span>}
+              </p>
+            ))}
           </Section>
         )}
       </div>

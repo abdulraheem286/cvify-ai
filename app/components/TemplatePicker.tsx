@@ -37,17 +37,15 @@ export function TemplatePicker({
   );
 }
 
-// Tiny abstract previews of each layout (no real content — reliable + fast).
 function Thumb({ id }: { id: TemplateId }) {
   if (id === "minimal") {
     return (
-      <div className="h-20 rounded bg-zinc-50 p-2">
+      <div className="h-16 rounded bg-zinc-50 p-2">
         <div className="mx-auto h-1.5 w-1/2 rounded bg-zinc-800" />
         <div className="mx-auto mt-1 h-1 w-1/4 rounded bg-zinc-300" />
-        <div className="my-1.5 h-px w-full bg-zinc-300" />
+        <div className="my-1 h-px w-full bg-zinc-300" />
         <div className="space-y-1">
           <div className="mx-auto h-1 w-5/6 rounded bg-zinc-200" />
-          <div className="mx-auto h-1 w-3/4 rounded bg-zinc-200" />
           <div className="mx-auto h-1 w-2/3 rounded bg-zinc-200" />
         </div>
       </div>
@@ -55,31 +53,56 @@ function Thumb({ id }: { id: TemplateId }) {
   }
   if (id === "sidebar") {
     return (
-      <div className="flex h-20 overflow-hidden rounded bg-zinc-50">
+      <div className="flex h-16 overflow-hidden rounded bg-zinc-50">
         <div className="w-1/3 bg-blue-600 p-1.5">
           <div className="h-1.5 w-3/4 rounded bg-white/90" />
           <div className="mt-1 h-1 w-1/2 rounded bg-white/60" />
-          <div className="mt-2 space-y-1">
-            <div className="h-1 w-full rounded bg-white/40" />
-            <div className="h-1 w-2/3 rounded bg-white/40" />
-          </div>
         </div>
         <div className="flex-1 space-y-1 p-1.5">
           <div className="h-1 w-full rounded bg-zinc-200" />
           <div className="h-1 w-5/6 rounded bg-zinc-200" />
+        </div>
+      </div>
+    );
+  }
+  if (id === "onyx") {
+    return (
+      <div className="h-16 overflow-hidden rounded bg-zinc-50">
+        <div className="bg-zinc-900 px-2 py-1.5">
+          <div className="h-1.5 w-2/3 rounded bg-white/90" />
+          <div className="mt-1 h-1 w-1/3 rounded bg-blue-400" />
+        </div>
+        <div className="space-y-1 p-2">
+          <div className="h-1 w-full rounded bg-zinc-200" />
           <div className="h-1 w-4/6 rounded bg-zinc-200" />
+        </div>
+      </div>
+    );
+  }
+  if (id === "aurora") {
+    return (
+      <div className="h-16 overflow-hidden rounded bg-zinc-50">
+        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-2 py-1.5">
+          <div className="h-1.5 w-2/3 rounded bg-white/90" />
+          <div className="mt-1 h-1 w-1/3 rounded bg-white/60" />
+        </div>
+        <div className="flex gap-1 p-1.5">
+          <div className="flex-1 space-y-1">
+            <div className="h-1 w-full rounded bg-zinc-200" />
+            <div className="h-1 w-5/6 rounded bg-zinc-200" />
+          </div>
+          <div className="w-1/3 rounded bg-blue-100" />
         </div>
       </div>
     );
   }
   // modern
   return (
-    <div className="h-20 rounded bg-zinc-50 p-2">
+    <div className="h-16 rounded bg-zinc-50 p-2">
       <div className="h-1.5 w-2/3 rounded bg-blue-600" />
       <div className="mt-1 h-1 w-1/3 rounded bg-zinc-300" />
-      <div className="mt-2 space-y-1">
+      <div className="mt-1.5 space-y-1">
         <div className="h-1 w-full rounded bg-zinc-200" />
-        <div className="h-1 w-5/6 rounded bg-zinc-200" />
         <div className="h-1 w-4/6 rounded bg-zinc-200" />
       </div>
     </div>

@@ -87,6 +87,11 @@ const sampleCv: CVResult = {
     { degree: "BA, Interaction Design", institution: "London College of Communication", period: "2014 — 2018" },
   ],
   skills: ["Figma", "Prototyping", "Design Systems", "UX Research", "UI Design"],
+  languages: [
+    { name: "English", level: "Native" },
+    { name: "Spanish", level: "Fluent" },
+  ],
+  certificates: [{ name: "Google UX Design Certificate", issuer: "Coursera", year: "2022" }],
 };
 
 export default function Home() {

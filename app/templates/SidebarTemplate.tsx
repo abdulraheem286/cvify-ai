@@ -1,6 +1,6 @@
 import type { CVResult } from "@/app/types";
 
-// Sidebar: two columns — coloured left rail with contact + skills, main on the right.
+// Sidebar: two columns — coloured left rail with photo, contact, skills, languages.
 export function SidebarTemplate({ cv, domId = "cv-document" }: { cv: CVResult; domId?: string }) {
   return (
     <div
@@ -9,6 +9,14 @@ export function SidebarTemplate({ cv, domId = "cv-document" }: { cv: CVResult; d
     >
       {/* Left rail */}
       <aside className="w-[34%] bg-blue-600 p-6 text-blue-50">
+        {cv.photo && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={cv.photo}
+            alt=""
+            className="mb-4 h-24 w-24 rounded-full object-cover ring-4 ring-white/30"
+          />
+        )}
         <h1 className="text-2xl font-bold leading-tight text-white">{cv.fullName}</h1>
         <p className="mt-1 text-sm text-blue-100">{cv.jobTitle}</p>
 
@@ -17,6 +25,7 @@ export function SidebarTemplate({ cv, domId = "cv-document" }: { cv: CVResult; d
           {cv.contact?.email && <p className="break-words">{cv.contact.email}</p>}
           {cv.contact?.phone && <p>{cv.contact.phone}</p>}
           {cv.contact?.website && <p className="break-words">{cv.contact.website}</p>}
+          {cv.contact?.linkedin && <p className="break-words">{cv.contact.linkedin}</p>}
         </div>
 
         {cv.skills?.length > 0 && (
@@ -25,6 +34,20 @@ export function SidebarTemplate({ cv, domId = "cv-document" }: { cv: CVResult; d
             <ul className="mt-2 space-y-1 text-xs">
               {cv.skills.map((s, i) => (
                 <li key={i}>{s}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {cv.languages && cv.languages.length > 0 && (
+          <div className="mt-6">
+            <h2 className="text-xs font-bold uppercase tracking-widest text-white">Languages</h2>
+            <ul className="mt-2 space-y-1 text-xs">
+              {cv.languages.map((l, i) => (
+                <li key={i}>
+                  {l.name}
+                  {l.level && <span className="text-blue-200"> — {l.level}</span>}
+                </li>
               ))}
             </ul>
           </div>
@@ -62,6 +85,18 @@ export function SidebarTemplate({ cv, domId = "cv-document" }: { cv: CVResult; d
                   {ed.period && <span className="text-zinc-400"> · {ed.period}</span>}
                 </p>
               </div>
+            ))}
+          </Section>
+        )}
+
+        {cv.certificates && cv.certificates.length > 0 && (
+          <Section title="Certificates">
+            {cv.certificates.map((c, i) => (
+              <p key={i} className="mb-1 text-sm text-zinc-700">
+                <span className="font-medium text-zinc-900">{c.name}</span>
+                {c.issuer && <span className="text-zinc-600"> — {c.issuer}</span>}
+                {c.year && <span className="text-zinc-400"> ({c.year})</span>}
+              </p>
             ))}
           </Section>
         )}
