@@ -50,6 +50,26 @@ const faqs = [
     q: "Can I make more than one CV?",
     a: "Yes. Create as many CVs as you like and tailor each one to a specific job, industry, or template.",
   },
+  {
+    q: "Can I change the colors and fonts?",
+    a: "Yes. A customization panel lets you set a primary and secondary color, the background, and separate fonts for headings and body text — or pick a ready-made preset. Any look works with any layout.",
+  },
+  {
+    q: "Can I add my own sections like Projects or Awards?",
+    a: "Yes. Add custom sections and name them anything — Projects, Awards, Volunteering, Publications — each with its own items. They render in your chosen template's style.",
+  },
+  {
+    q: "Is the PDF readable by applicant tracking systems?",
+    a: "Yes. CVify AI generates a real text-based PDF (not an image), so the text is selectable and searchable, and applicant tracking systems can parse it. Clean single-column structure and standard headings help too.",
+  },
+  {
+    q: "What's the difference between a resume and a CV?",
+    a: "In the US, a resume is a short one-to-two page summary tailored to a job, while a CV is longer and more detailed. Elsewhere the terms are often used interchangeably. CVify AI works for both — keep it concise for a resume, or add custom sections for a fuller CV.",
+  },
+  {
+    q: "How long should my resume be?",
+    a: "For most people, one page is ideal — two if you have many years of relevant experience. Focus on recent, relevant achievements and trim older or unrelated roles.",
+  },
 ];
 
 const sampleCv: CVResult = {
@@ -161,9 +181,9 @@ export default function Home() {
         <section className="border-b border-zinc-200 bg-white">
           <div className="mx-auto grid max-w-5xl gap-4 px-6 py-10 sm:grid-cols-2 lg:grid-cols-4">
             <Stat value="100%" label="Free to use" />
-            <Stat value="~10s" label="AI writes your draft" />
-            <Stat value="3" label="Clean templates" />
-            <Stat value="1-click" label="PDF download" />
+            <Stat value="18" label="Distinct templates" />
+            <Stat value="AI" label="Writes & improves it" />
+            <Stat value="ATS" label="Real text PDF" />
           </div>
         </section>
 
@@ -176,12 +196,12 @@ export default function Home() {
               subtitle="CVify AI handles the hard parts — strong wording, clean structure, and professional design."
             />
             <Reveal stagger className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              <Feature icon={<IconSparkles />} title="AI writing" text="Describe yourself in plain words and get a strong summary and achievement-focused bullet points." />
-              <Feature icon={<IconText />} title="Full editor" text="Every field is editable. Tweak the AI's draft or write it all yourself — your choice, your words." />
-              <Feature icon={<IconTools />} title="ATS-friendly" text="Clean, single-column formatting with standard headings that reads clearly in tracking systems." />
-              <Feature icon={<IconGraduation />} title="For any field" text="Students, career-changers, and senior pros — the editor adapts to your experience." />
-              <Feature icon={<IconGlobe />} title="Works anywhere" text="Runs in your browser on any device. Add location, website, and contact details with ease." />
-              <Feature icon={<IconDownload />} title="Instant PDF" text="Download a print-ready PDF in one click, formatted exactly the way employers expect." />
+              <Feature icon={<IconSparkles />} title="AI that writes & improves" text="Generate a summary, rewrite bullet points into achievements, and suggest skills — right inside the editor." />
+              <Feature icon={<IconGlobe />} title="18 distinct templates" text="Eighteen genuinely different layouts across professional, minimal, and creative styles." />
+              <Feature icon={<IconTools />} title="Full customization" text="Set your colors, background, and heading and body fonts — or pick a one-click preset. Any look, any layout." />
+              <Feature icon={<IconText />} title="Custom sections" text="Add your own sections — Projects, Awards, Volunteering, Publications — and reorder everything." />
+              <Feature icon={<IconDownload />} title="ATS-ready text PDF" text="Download a real, selectable text PDF that applicant tracking systems can actually read." />
+              <Feature icon={<IconGraduation />} title="For any field" text="Students, career-changers, and senior pros — the editor adapts to your experience with a live preview." />
             </Reveal>
           </div>
         </section>
@@ -259,18 +279,54 @@ export default function Home() {
                 Edit everything, switch styles instantly
               </h2>
               <p className="mt-4 text-zinc-600">
-                Fine-tune every section in the editor, then flip between templates and watch your CV
-                update in real time — your content stays exactly where it is.
+                Fine-tune every section in the editor, then flip between 18 templates and recolor or
+                restyle in a click — your content stays exactly where it is.
               </p>
               <ul className="mt-6 space-y-2 text-sm text-zinc-700">
-                <Check>Add or remove jobs and education</Check>
+                <Check>Add, remove, and reorder any section</Check>
                 <Check>Live preview of the finished CV</Check>
-                <Check>Three templates, one click to switch</Check>
+                <Check>18 templates plus full color and font control</Check>
               </ul>
               <Link href="/build/manual" className="mt-8 inline-block rounded-lg bg-blue-600 px-5 py-2.5 font-semibold text-white shadow-sm transition-colors hover:bg-blue-700">
                 Build it manually →
               </Link>
             </div>
+          </div>
+        </section>
+
+        {/* Who it's for */}
+        <section className="border-t border-zinc-200 bg-white">
+          <div className="mx-auto max-w-6xl px-6 py-20">
+            <SectionHead
+              eyebrow="Who it's for"
+              title="Built for every kind of job seeker"
+              subtitle="Whatever stage you're at, CVify AI gives you a polished CV tailored to the role."
+            />
+            <Reveal stagger className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+              <UseCase title="Students & graduates" text="Land your first role with a clean CV that highlights projects, education, and skills over years of experience." />
+              <UseCase title="Career changers" text="Reframe your background around transferable skills, and let AI sharpen the wording for a new field." />
+              <UseCase title="Experienced professionals" text="Turn a long history into a focused, achievement-led resume that fits a page or two." />
+              <UseCase title="Freelancers & creatives" text="Show projects, clients, and outcomes with custom sections made for portfolio-style work." />
+            </Reveal>
+          </div>
+        </section>
+
+        {/* Resume writing tips */}
+        <section id="tips" className="border-t border-zinc-200 bg-zinc-50">
+          <div className="mx-auto max-w-6xl px-6 py-20">
+            <SectionHead
+              eyebrow="Resume tips"
+              title="How to write a resume that gets interviews"
+              subtitle="Simple, proven principles — and CVify AI helps you apply each one."
+            />
+            <Reveal stagger className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              <Tip n="01" title="Lead with achievements" text="Replace duties with results — 'Grew sign-ups 30%' beats 'responsible for marketing.' The AI rewrites your bullets this way." />
+              <Tip n="02" title="Tailor it to each job" text="Mirror the language of the job description and put the most relevant experience first. Make a fresh copy per role in seconds." />
+              <Tip n="03" title="Keep it scannable" text="Clear headings, short bullets, consistent dates. Recruiters skim in seconds, so single-column layouts read best." />
+              <Tip n="04" title="Quantify everything" text="Numbers stand out: people managed, money saved, percent improved, deadlines hit. Add them wherever you honestly can." />
+              <Tip n="05" title="Make it ATS-safe" text="Avoid text trapped in images or complex tables. CVify AI exports a real text PDF that tracking systems can read." />
+              <Tip n="06" title="Proofread and trim" text="Cut filler, fix typos, and keep it to one or two pages. A tight resume signals clear thinking." />
+            </Reveal>
           </div>
         </section>
 
@@ -342,6 +398,25 @@ function Feature({ icon, title, text }: { icon: ReactNode; title: string; text: 
         {icon}
       </div>
       <h3 className="mt-4 font-semibold text-zinc-900">{title}</h3>
+      <p className="mt-2 text-sm leading-relaxed text-zinc-600">{text}</p>
+    </div>
+  );
+}
+
+function UseCase({ title, text }: { title: string; text: string }) {
+  return (
+    <div className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm">
+      <h3 className="font-semibold text-zinc-900">{title}</h3>
+      <p className="mt-2 text-sm leading-relaxed text-zinc-600">{text}</p>
+    </div>
+  );
+}
+
+function Tip({ n, title, text }: { n: string; title: string; text: string }) {
+  return (
+    <div className="rounded-2xl border border-zinc-200 bg-white p-6">
+      <p className="text-sm font-bold text-blue-600">{n}</p>
+      <h3 className="mt-2 font-semibold text-zinc-900">{title}</h3>
       <p className="mt-2 text-sm leading-relaxed text-zinc-600">{text}</p>
     </div>
   );
