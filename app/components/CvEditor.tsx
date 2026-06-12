@@ -574,7 +574,11 @@ export function CvEditor({
             disabled={downloading}
             className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-700 disabled:opacity-60"
           >
-            <IconDownload className="h-[18px] w-[18px]" />
+            {downloading ? (
+              <span className="h-[18px] w-[18px] animate-spin rounded-full border-2 border-white/40 border-t-white" />
+            ) : (
+              <IconDownload className="h-[18px] w-[18px]" />
+            )}
             <span className="hidden sm:inline">{downloading ? "Preparing…" : "Download PDF"}</span>
           </button>
         </div>

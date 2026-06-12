@@ -139,7 +139,8 @@ export default function ImportClient() {
                 {/* Upload */}
                 <label className="flex cursor-pointer flex-col items-center justify-center gap-1 rounded-xl border-2 border-dashed border-zinc-300 px-6 py-8 text-center transition-colors hover:border-blue-400 hover:bg-blue-50/40">
                   <input type="file" accept=".pdf,.txt,application/pdf,text/plain" onChange={onFile} className="hidden" />
-                  <span className="text-sm font-semibold text-blue-600">
+                  <span className="flex items-center gap-2 text-sm font-semibold text-blue-600">
+                    {extracting && <span className="h-4 w-4 animate-spin rounded-full border-2 border-blue-300 border-t-blue-600" />}
                     {extracting ? "Reading file…" : "Upload a PDF or TXT file"}
                   </span>
                   <span className="text-xs text-zinc-500">
