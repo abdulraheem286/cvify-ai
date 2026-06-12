@@ -839,10 +839,12 @@ function Panel({
   children: ReactNode;
 }) {
   return (
-    <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white">
+    <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm transition-shadow hover:shadow-md">
       <div className="flex items-center justify-between gap-2 px-4 py-3">
         <button type="button" onClick={onToggleOpen} className="flex flex-1 items-center gap-3 text-left">
-          <span className="text-blue-600">{icon}</span>
+          <span className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors ${open ? "bg-blue-600 text-white" : "bg-blue-50 text-blue-600"}`}>
+            {icon}
+          </span>
           <span className="font-medium text-zinc-900">{title}</span>
         </button>
         <div className="flex items-center gap-1">

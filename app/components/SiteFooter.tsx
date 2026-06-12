@@ -2,12 +2,12 @@ import Link from "next/link";
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-zinc-200 bg-zinc-50">
-      <div className="mx-auto max-w-6xl px-6 py-12">
+    <footer className="border-t border-zinc-200 bg-gradient-to-b from-zinc-50 to-zinc-100/50">
+      <div className="mx-auto max-w-6xl px-6 py-14">
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           <div>
             <Link href="/" className="text-lg font-bold tracking-tight text-zinc-900">
-              CVify <span className="text-blue-600">AI</span>
+              CVify <span className="bg-gradient-to-r from-blue-600 to-indigo-500 bg-clip-text text-transparent">AI</span>
             </Link>
             <p className="mt-3 max-w-xs text-sm text-zinc-500">
               Free AI resume &amp; CV builder. Build a professional CV in minutes and download a
@@ -69,7 +69,7 @@ function Social({ label, path }: { label: string; path: string }) {
   return (
     <span
       aria-label={label}
-      className="flex h-8 w-8 items-center justify-center rounded-lg border border-zinc-200 bg-white text-zinc-500"
+      className="flex h-9 w-9 items-center justify-center rounded-lg border border-zinc-200 bg-white text-zinc-500 transition-all hover:-translate-y-0.5 hover:border-blue-200 hover:text-blue-600 hover:shadow-sm"
     >
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <path d={path} />
