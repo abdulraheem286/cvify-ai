@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type ChangeEvent, type ReactNode } from "react";
+import { useState, useEffect, useRef, type ChangeEvent, type ReactNode } from "react";
 import type { CVResult } from "@/app/types";
 import { ScaledPreview } from "./ScaledPreview";
 import { TemplatePicker } from "./TemplatePicker";
@@ -208,6 +208,36 @@ function formToCv(form: EditorForm, hidden: Record<SectionKey, boolean>, ph = fa
   };
 }
 
+const DRAFT_KEY = "cvify:draft:v1";
+
+type Draft = {
+  form: EditorForm;
+  template: TemplateId;
+  theme: Theme;
+  hidden: Record<SectionKey, boolean>;
+  savedAt: number;
+};
+
+function formHasContent(f: EditorForm): boolean {
+  return Boolean(
+    f.firstName || f.lastName || f.jobTitle || f.summary || f.skills ||
+      f.experience.some((e) => e.role || e.company || e.bullets) ||
+      f.education.some((e) => e.degree || e.institution) ||
+      f.customSections.some((s) => s.heading || s.items.some((i) => i.title || i.description)),
+  );
+}
+
+function timeAgo(ts: number): string {
+  const s = Math.floor((Date.now() - ts) / 1000);
+  if (s < 60) return "just now";
+  const m = Math.floor(s / 60);
+  if (m < 60) return `${m} min ago`;
+  const h = Math.floor(m / 60);
+  if (h < 24) return `${h} hr ago`;
+  const d = Math.floor(h / 24);
+  return `${d} day${d > 1 ? "s" : ""} ago`;
+}
+
 export function CvEditor({
   initial,
   initialTemplate = DEFAULT_TEMPLATE,
@@ -236,9 +266,70 @@ export function CvEditor({
   const [downloading, setDownloading] = useState(false);
   const [aiBusy, setAiBusy] = useState<string | null>(null); // which AI action is running
   const [aiError, setAiError] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
+  const [savedAt, setSavedAt] = useState<number | null>(null);
+  const [draft, setDraft] = useState<Draft | null>(null); // a recoverable saved draft
+  const firstSave = useRef(true);
 
   const exportCv = formToCv(form, hidden); // clean — used for the PDF
   const previewCv = formToCv(form, hidden, true); // with placeholders — preview only
+
+  // Offer to restore a previously saved draft (never auto-clobbers the current one).
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(DRAFT_KEY);
+      if (raw) {
+        const d = JSON.parse(raw) as Draft;
+        if (d?.form && formHasContent(d.form)) setDraft(d);
+      }
+    } catch {
+      /* ignore unreadable draft */
+    }
+  }, []);
+
+  // Auto-save the editor state to the browser (debounced). Skips the first mount.
+  useEffect(() => {
+    if (firstSave.current) {
+      firstSave.current = false;
+      return;
+    }
+    setSaving(true);
+    const t = setTimeout(() => {
+      const payload: Draft = { form, template, theme, hidden, savedAt: Date.now() };
+      try {
+        localStorage.setItem(DRAFT_KEY, JSON.stringify(payload));
+      } catch {
+        // Storage full (usually a large photo) — retry without the photo.
+        try {
+          localStorage.setItem(DRAFT_KEY, JSON.stringify({ ...payload, form: { ...form, photo: "" } }));
+        } catch {
+          /* give up silently */
+        }
+      }
+      setSaving(false);
+      setSavedAt(Date.now());
+    }, 600);
+    return () => clearTimeout(t);
+  }, [form, template, theme, hidden]);
+
+  function restoreDraft() {
+    if (!draft) return;
+    setForm(draft.form);
+    if (draft.template) setTemplate(draft.template);
+    if (draft.theme) setTheme(draft.theme);
+    if (draft.hidden) setHidden(draft.hidden);
+    setDraft(null);
+  }
+
+  function startFresh() {
+    setForm(EMPTY_FORM);
+    setDraft(null);
+    try {
+      localStorage.removeItem(DRAFT_KEY);
+    } catch {
+      /* ignore */
+    }
+  }
 
   const set = (key: keyof EditorForm) => (v: string) =>
     setForm((prev) => ({ ...prev, [key]: v }));
@@ -466,6 +557,14 @@ export function CvEditor({
           <IconArrowLeft className="h-4 w-4" /> <span className="hidden sm:inline">{backLabel}</span>
         </button>
         <div className="flex items-center gap-2">
+          {savedAt && (
+            <button type="button" onClick={startFresh} className="hidden text-xs font-medium text-zinc-400 transition-colors hover:text-zinc-700 sm:inline">
+              Start fresh
+            </button>
+          )}
+          {(saving || savedAt) && (
+            <span className="hidden text-xs text-zinc-400 md:inline">{saving ? "Saving…" : "Saved ✓"}</span>
+          )}
           <TemplatePicker value={template} onChange={setTemplate} />
           <CustomizationPanel value={theme} onChange={setTheme} />
           <button
@@ -479,6 +578,22 @@ export function CvEditor({
           </button>
         </div>
       </div>
+
+      {draft && (
+        <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-blue-200 bg-blue-50 px-4 py-3 print:hidden">
+          <p className="text-sm text-blue-900">
+            You have an unsaved draft from {timeAgo(draft.savedAt)}. Restore it?
+          </p>
+          <div className="flex items-center gap-2">
+            <button type="button" onClick={restoreDraft} className="rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-semibold text-white transition-colors hover:bg-blue-700">
+              Restore
+            </button>
+            <button type="button" onClick={() => setDraft(null)} className="rounded-lg px-3 py-1.5 text-sm font-medium text-blue-700 transition-colors hover:bg-blue-100">
+              Dismiss
+            </button>
+          </div>
+        </div>
+      )}
 
       <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,440px)]">
         {/* EDITOR */}
@@ -668,9 +783,9 @@ export function CvEditor({
 
         {/* LIVE PREVIEW */}
         <div className="print:hidden">
-          <div>
+          <div className="lg:sticky lg:top-6">
             <p className="mb-2 text-xs font-medium uppercase tracking-wide text-zinc-400">Live preview</p>
-            <ScaledPreview>
+            <ScaledPreview maxHeight={760}>
               <TemplateView id={template} cv={previewCv} domId="live-cv" theme={theme} />
             </ScaledPreview>
           </div>
