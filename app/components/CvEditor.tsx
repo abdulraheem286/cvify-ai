@@ -36,6 +36,7 @@ import {
   IconAward,
   IconLanguages,
   IconSparkles,
+  IconTarget,
 } from "./icons";
 
 export type ExpEntry = { role: string; company: string; period: string; bullets: string };
@@ -270,6 +271,11 @@ export function CvEditor({
   const [savedAt, setSavedAt] = useState<number | null>(null);
   const [draft, setDraft] = useState<Draft | null>(null); // a recoverable saved draft
   const [mobileView, setMobileView] = useState<"edit" | "preview">("edit");
+  const [tailorOpen, setTailorOpen] = useState(false);
+  const [jd, setJd] = useState("");
+  const [tailoring, setTailoring] = useState(false);
+  const [tailorError, setTailorError] = useState<string | null>(null);
+  const [tailorResult, setTailorResult] = useState<{ missingSkills: string[]; notes: string } | null>(null);
   const firstSave = useRef(true);
 
   const exportCv = formToCv(form, hidden); // clean — used for the PDF
@@ -541,6 +547,58 @@ export function CvEditor({
       }
     });
 
+  // ---- Tailor to a job description ----
+  async function handleTailor() {
+    if (!jd.trim()) {
+      setTailorError("Paste a job description first.");
+      return;
+    }
+    setTailoring(true);
+    setTailorError(null);
+    try {
+      const res = await fetch("/api/tailor", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ jd, cv: exportCv }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "Something went wrong.");
+      setForm((prev) => {
+        const next = { ...prev };
+        if (data.summary) next.summary = data.summary;
+        if (Array.isArray(data.experience) && data.experience.length) {
+          let k = 0;
+          next.experience = prev.experience.map((x) => {
+            const nonEmpty = x.role || x.company || x.bullets;
+            if (nonEmpty) {
+              const t = data.experience[k];
+              k += 1;
+              if (t && Array.isArray(t.bullets) && t.bullets.length) {
+                return { ...x, bullets: t.bullets.join("\n") };
+              }
+            }
+            return x;
+          });
+        }
+        return next;
+      });
+      setTailorResult({ missingSkills: data.missingSkills ?? [], notes: data.notes ?? "" });
+    } catch (err) {
+      setTailorError(err instanceof Error ? err.message : "Something went wrong.");
+    } finally {
+      setTailoring(false);
+    }
+  }
+
+  function addSkill(skill: string) {
+    setForm((prev) => {
+      const existing = prev.skills.split(",").map((s) => s.trim()).filter(Boolean);
+      if (existing.some((e) => e.toLowerCase() === skill.toLowerCase())) return prev;
+      return { ...prev, skills: [...existing, skill].join(", ") };
+    });
+    setTailorResult((r) => (r ? { ...r, missingSkills: r.missingSkills.filter((s) => s !== skill) } : r));
+  }
+
   return (
     <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-8 sm:px-6 print:p-0">
       {/* Off-screen full-size render for crisp PDF export */}
@@ -566,6 +624,14 @@ export function CvEditor({
           {(saving || savedAt) && (
             <span className="hidden text-xs text-zinc-400 md:inline">{saving ? "Saving…" : "Saved ✓"}</span>
           )}
+          <button
+            type="button"
+            onClick={() => setTailorOpen(true)}
+            className="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-50"
+          >
+            <IconTarget className="h-[18px] w-[18px] text-blue-600" />
+            <span className="hidden lg:inline">Tailor to job</span>
+          </button>
           <TemplatePicker value={template} onChange={setTemplate} />
           <CustomizationPanel value={theme} onChange={setTheme} />
           <button
@@ -818,6 +884,91 @@ export function CvEditor({
           </div>
         </div>
       </div>
+
+      {tailorOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 print:hidden">
+          <button aria-hidden tabIndex={-1} onClick={() => setTailorOpen(false)} className="absolute inset-0 cursor-default bg-black/40" />
+          <div className="relative z-10 max-h-[88vh] w-full max-w-lg overflow-y-auto rounded-2xl bg-white p-6 shadow-xl">
+            <div className="flex items-center gap-3">
+              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+                <IconTarget className="h-5 w-5" />
+              </span>
+              <div>
+                <h2 className="text-lg font-bold tracking-tight">Tailor to a job</h2>
+                <p className="text-sm text-zinc-500">Paste a job description — AI re-angles your summary and bullets to match it.</p>
+              </div>
+            </div>
+
+            <textarea
+              value={jd}
+              onChange={(e) => setJd(e.target.value)}
+              rows={8}
+              placeholder="Paste the full job description here…"
+              className="mt-4 w-full resize-y rounded-lg border border-zinc-300 px-4 py-3 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+            />
+            <button
+              type="button"
+              onClick={handleTailor}
+              disabled={tailoring}
+              className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 px-5 py-2.5 font-semibold text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {tailoring ? (
+                <>
+                  <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" /> Tailoring…
+                </>
+              ) : (
+                <>
+                  <IconTarget className="h-[18px] w-[18px]" /> Tailor my CV
+                </>
+              )}
+            </button>
+            <p className="mt-2 text-center text-xs text-zinc-400">
+              Uses only your real experience — nothing is invented. Review the changes after.
+            </p>
+
+            {tailorError && (
+              <p className="mt-4 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">{tailorError}</p>
+            )}
+
+            {tailorResult && (
+              <div className="mt-5 rounded-xl border border-emerald-200 bg-emerald-50 p-4">
+                <p className="text-sm font-semibold text-emerald-800">✓ Summary and bullet points tailored to this job.</p>
+                {tailorResult.notes && <p className="mt-1 text-sm text-emerald-700">{tailorResult.notes}</p>}
+                {tailorResult.missingSkills.length > 0 && (
+                  <div className="mt-3">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">
+                      Skills this job asks for that you haven&apos;t listed
+                    </p>
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      {tailorResult.missingSkills.map((s) => (
+                        <button
+                          key={s}
+                          type="button"
+                          onClick={() => addSkill(s)}
+                          className="inline-flex items-center gap-1 rounded-full border border-emerald-300 bg-white px-2.5 py-1 text-xs font-medium text-emerald-800 transition-colors hover:bg-emerald-100"
+                        >
+                          + {s}
+                        </button>
+                      ))}
+                    </div>
+                    <p className="mt-2 text-xs text-emerald-600">Tap to add — only include skills you genuinely have.</p>
+                  </div>
+                )}
+              </div>
+            )}
+
+            <div className="mt-5 flex justify-end">
+              <button
+                type="button"
+                onClick={() => setTailorOpen(false)}
+                className="rounded-lg px-4 py-2 text-sm font-medium text-zinc-600 transition-colors hover:bg-zinc-100"
+              >
+                {tailorResult ? "Done" : "Close"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
