@@ -15,6 +15,7 @@ import {
   IconTools,
   IconGraduation,
   IconDownload,
+  IconHistory,
 } from "./components/icons";
 import type { CVResult } from "./types";
 
@@ -45,6 +46,10 @@ const faqs = [
   {
     q: "Do I need to create an account?",
     a: "No account is needed to build and download a CV. You can start straight away.",
+  },
+  {
+    q: "Will I lose my work if I close the tab?",
+    a: "No. The editor auto-saves your progress in your browser as you type. When you come back, CVify AI offers to restore your draft so you can continue right where you left off — no account required.",
   },
   {
     q: "Can I make more than one CV?",
@@ -201,7 +206,7 @@ export default function Home() {
               <Feature icon={<IconTools />} title="Full customization" text="Set your colors, background, and heading and body fonts — or pick a one-click preset. Any look, any layout." />
               <Feature icon={<IconText />} title="Custom sections" text="Add your own sections — Projects, Awards, Volunteering, Publications — and reorder everything." />
               <Feature icon={<IconDownload />} title="ATS-ready text PDF" text="Download a real, selectable text PDF that applicant tracking systems can actually read." />
-              <Feature icon={<IconGraduation />} title="For any field" text="Students, career-changers, and senior pros — the editor adapts to your experience with a live preview." />
+              <Feature icon={<IconHistory />} title="Never lose your work" text="The editor auto-saves as you type. Close the tab and come back — pick up right where you left off." />
             </Reveal>
           </div>
         </section>

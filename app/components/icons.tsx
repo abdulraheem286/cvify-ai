@@ -52,6 +52,9 @@ export const IconSparkles = ({ className }: IconProps) =>
 export const IconDownload = ({ className }: IconProps) =>
   base(<path d="M12 3v12M7 10l5 5 5-5M5 21h14" />, className);
 
+export const IconHistory = ({ className }: IconProps) =>
+  base(<><path d="M3 12a9 9 0 1 0 3-6.7L3 8" /><path d="M3 3v5h5" /><path d="M12 7v5l3 2" /></>, className);
+
 export const IconPlus = ({ className }: IconProps) =>
   base(<path d="M12 5v14M5 12h14" />, className);
 
