@@ -49,8 +49,7 @@ export async function POST(request: Request) {
     });
   } catch (err) {
     console.error("Server PDF failed:", err);
-    const detail = err instanceof Error ? `${err.message}` : String(err);
-    return NextResponse.json({ error: "PDF generation failed.", detail }, { status: 500 });
+    return NextResponse.json({ error: "PDF generation failed." }, { status: 500 });
   } finally {
     if (browser) await browser.close();
   }
