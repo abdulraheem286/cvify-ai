@@ -47,7 +47,13 @@ export const IconTools = ({ className }: IconProps) =>
   base(<path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.7 2.7-2-2 2.7-2.7Z" />, className);
 
 export const IconSparkles = ({ className }: IconProps) =>
-  base(<path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2 2M16 16l2 2M18 6l-2 2M8 16l-2 2" />, className);
+  base(
+    <>
+      <path d="M12 3 10.4 8.4a2 2 0 0 1-2 1.4L3 12l5.4 1.6a2 2 0 0 1 1.4 2L12 21l1.6-5.4a2 2 0 0 1 2-1.4L21 12l-5.4-1.6a2 2 0 0 1-1.4-2L12 3Z" />
+      <path d="M19 4v3M20.5 5.5h-3" />
+    </>,
+    className,
+  );
 
 export const IconDownload = ({ className }: IconProps) =>
   base(<path d="M12 3v12M7 10l5 5 5-5M5 21h14" />, className);

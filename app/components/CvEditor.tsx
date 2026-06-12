@@ -269,6 +269,7 @@ export function CvEditor({
   const [saving, setSaving] = useState(false);
   const [savedAt, setSavedAt] = useState<number | null>(null);
   const [draft, setDraft] = useState<Draft | null>(null); // a recoverable saved draft
+  const [mobileView, setMobileView] = useState<"edit" | "preview">("edit");
   const firstSave = useRef(true);
 
   const exportCv = formToCv(form, hidden); // clean — used for the PDF
@@ -595,9 +596,27 @@ export function CvEditor({
         </div>
       )}
 
-      <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,440px)]">
+      {/* Mobile Edit / Preview toggle */}
+      <div className="mb-5 flex rounded-xl border border-zinc-200 bg-white p-1 lg:hidden print:hidden">
+        <button
+          type="button"
+          onClick={() => setMobileView("edit")}
+          className={`flex-1 rounded-lg py-2 text-sm font-semibold transition-colors ${mobileView === "edit" ? "bg-blue-600 text-white shadow-sm" : "text-zinc-600"}`}
+        >
+          Edit
+        </button>
+        <button
+          type="button"
+          onClick={() => setMobileView("preview")}
+          className={`flex-1 rounded-lg py-2 text-sm font-semibold transition-colors ${mobileView === "preview" ? "bg-blue-600 text-white shadow-sm" : "text-zinc-600"}`}
+        >
+          Preview
+        </button>
+      </div>
+
+      <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,480px)]">
         {/* EDITOR */}
-        <div className="print:hidden">
+        <div className={`print:hidden ${mobileView === "preview" ? "hidden lg:block" : ""}`}>
           <h1 className="text-2xl font-bold tracking-tight">Build your CV</h1>
           <p className="mt-1 text-sm text-zinc-600">
             Fill in the sections below — your preview updates live. Use the eye icon to hide a
@@ -782,12 +801,16 @@ export function CvEditor({
         </div>
 
         {/* LIVE PREVIEW */}
-        <div className="print:hidden">
+        <div className={`print:hidden ${mobileView === "edit" ? "hidden lg:block" : ""}`}>
           <div className="lg:sticky lg:top-6">
-            <p className="mb-2 text-xs font-medium uppercase tracking-wide text-zinc-400">Live preview</p>
-            <ScaledPreview maxHeight={760}>
-              <TemplateView id={template} cv={previewCv} domId="live-cv" theme={theme} />
-            </ScaledPreview>
+            <p className="mb-2 flex items-center gap-2 text-xs font-medium uppercase tracking-wide text-zinc-400">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" /> Live preview
+            </p>
+            <div className="rounded-2xl bg-zinc-100 p-4 ring-1 ring-zinc-200">
+              <ScaledPreview maxHeight={800}>
+                <TemplateView id={template} cv={previewCv} domId="live-cv" theme={theme} />
+              </ScaledPreview>
+            </div>
           </div>
         </div>
       </div>
