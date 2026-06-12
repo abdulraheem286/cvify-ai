@@ -6,9 +6,9 @@ import { Reveal } from "../components/Reveal";
 
 // On-page SEO for the build chooser.
 export const metadata: Metadata = {
-  title: "Build Your CV — Choose AI or Manual (Free)",
+  title: "Build Your CV — AI, Manual, or Import (Free)",
   description:
-    "Choose how to build your CV with CVify AI: let AI write it from your notes, or fill in every section yourself. Both are free and end with an instant PDF download.",
+    "Choose how to build your CV with CVify AI: let AI write it from your notes, fill in every section yourself, or import an existing CV (PDF or paste). All free, with an instant PDF download.",
   alternates: { canonical: "/build" },
 };
 
@@ -18,17 +18,17 @@ export default function BuildChooser() {
       <SiteHeader />
 
       <main className="flex flex-1 flex-col items-center justify-center px-6 py-20">
-        <div className="w-full max-w-3xl text-center">
+        <div className="w-full max-w-5xl text-center">
           <Reveal stagger>
             <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
               How do you want to build your CV?
             </h1>
             <p className="mt-3 text-zinc-600">
-              Both ways are free and end with a clean PDF download.
+              All three are free and end with a clean PDF download.
             </p>
           </Reveal>
 
-          <Reveal stagger delay={0.15} className="mt-12 grid gap-6 sm:grid-cols-2">
+          <Reveal stagger delay={0.15} className="mt-12 grid gap-6 sm:grid-cols-3">
             <Link
               href="/build/ai"
               className="group rounded-2xl border border-zinc-200 bg-white p-8 text-left shadow-sm transition-all hover:border-blue-300 hover:shadow-md"
@@ -62,6 +62,23 @@ export default function BuildChooser() {
                 Start manually →
               </span>
             </Link>
+
+            <Link
+              href="/build/import"
+              className="group rounded-2xl border border-zinc-200 bg-white p-8 text-left shadow-sm transition-all hover:border-blue-300 hover:shadow-md"
+            >
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+                <IconUpload />
+              </div>
+              <h2 className="mt-5 text-xl font-semibold text-zinc-900">Import existing CV</h2>
+              <p className="mt-2 text-sm leading-relaxed text-zinc-600">
+                Upload a PDF or paste your current CV. AI reads it into the editor so you can restyle
+                and improve it.
+              </p>
+              <span className="mt-4 inline-block text-sm font-semibold text-blue-600">
+                Import my CV →
+              </span>
+            </Link>
           </Reveal>
         </div>
       </main>
@@ -83,6 +100,13 @@ function IconPen() {
   return (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
       <path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" />
+    </svg>
+  );
+}
+function IconUpload() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 15V4M8 8l4-4 4 4M5 20h14" />
     </svg>
   );
 }

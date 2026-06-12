@@ -25,6 +25,7 @@ export function SiteFooter() {
             links={[
               ["AI builder", "/build/ai"],
               ["Manual builder", "/build/manual"],
+              ["Import CV", "/build/import"],
               ["Templates", "/#templates"],
             ]}
           />

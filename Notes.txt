@@ -1,0 +1,31 @@
+if exp is less than 15, custom section.
+add earlier highlights. 
+additional experience.
+add note: recommend 2 pages preferred. 
+
+import CV
+import cv from LinkedIn
+
+
+Career Switching. 
+if you want to target a new career or pursue old.
+
+Remote Checkbox/dropdown (fulltime, parttime, contract)
+
+Remote title against job title - Italic
+
+autofill using your old CV
+
+upload your own template
+
+download as word document
+
+Download template (for traffic)
+
+Guidance on how to create CV
+
+Add Blogs
+
+enhance FAQ for SEO
+
+Difference in CV and resume for blog
