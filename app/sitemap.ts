@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 
-const BASE = "https://cvifyai.vercel.app";
+const BASE = "https://www.cvifyai.com";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
@@ -8,5 +8,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE}/build`, changeFrequency: "monthly", priority: 0.9 },
     { url: `${BASE}/build/ai`, changeFrequency: "monthly", priority: 0.8 },
     { url: `${BASE}/build/manual`, changeFrequency: "monthly", priority: 0.8 },
+    { url: `${BASE}/build/import`, changeFrequency: "monthly", priority: 0.8 },
   ];
 }

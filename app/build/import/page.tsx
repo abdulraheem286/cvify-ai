@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     title: "Import Your CV — Upload or Paste an Existing Resume",
     description:
       "Upload a PDF or paste your old CV and CVify AI fills the editor automatically. Restyle and download in minutes.",
-    url: "https://cvifyai.vercel.app/build/import",
+    url: "https://www.cvifyai.com/build/import",
     type: "website",
   },
 };

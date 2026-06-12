@@ -128,7 +128,7 @@ export default function Home() {
         name: "CVify AI",
         applicationCategory: "BusinessApplication",
         operatingSystem: "Web",
-        url: "https://cvifyai.vercel.app",
+        url: "https://www.cvifyai.com",
         description:
           "Free AI resume builder that turns rough notes into a polished, professional CV with beautiful templates and instant PDF download.",
         offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },

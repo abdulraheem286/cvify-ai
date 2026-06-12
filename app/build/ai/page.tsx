@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     title: "AI CV Builder — Create Your Resume in Minutes",
     description:
       "Turn rough notes into a polished, professional CV with AI. Free, with instant PDF download.",
-    url: "https://cvifyai.vercel.app/build/ai",
+    url: "https://www.cvifyai.com/build/ai",
     type: "website",
   },
 };

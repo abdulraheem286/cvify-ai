@@ -28,7 +28,7 @@ const lora = Lora({ variable: "--font-lora", subsets: ["latin"] });
 const sourceSerif = Source_Serif_4({ variable: "--font-source-serif", subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://cvifyai.vercel.app"),
+  metadataBase: new URL("https://www.cvifyai.com"),
   title: {
     default: "CVify AI — Free AI Resume & CV Builder | Build a Pro CV in Minutes",
     template: "%s | CVify AI",
@@ -52,7 +52,7 @@ export const metadata: Metadata = {
     title: "CVify AI — Free AI Resume & CV Builder",
     description:
       "Build a polished, professional CV in minutes. Free AI resume builder with beautiful templates and instant PDF download.",
-    url: "https://cvifyai.vercel.app",
+    url: "https://www.cvifyai.com",
     siteName: "CVify AI",
     type: "website",
     locale: "en_US",

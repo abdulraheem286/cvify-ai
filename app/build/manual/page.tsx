@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     title: "Manual CV Builder — Create Your Resume Step by Step",
     description:
       "Fill in every section yourself and download a polished, professional CV. Free, with instant PDF download.",
-    url: "https://cvifyai.vercel.app/build/manual",
+    url: "https://www.cvifyai.com/build/manual",
     type: "website",
   },
 };
