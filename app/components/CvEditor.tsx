@@ -362,10 +362,32 @@ export function CvEditor({
 
   async function handleDownload() {
     setDownloading(true);
+    const name = exportCv.fullName.replace(/\s+/g, "-") || "cv";
     try {
-      await downloadCvPdf(exportCv.fullName.replace(/\s+/g, "-") || "cv");
+      // Server-side print → real selectable / ATS-readable text PDF.
+      const res = await fetch("/api/pdf", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ cv: exportCv, template, theme, fileName: name }),
+      });
+      if (!res.ok) throw new Error("server pdf failed");
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${name}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
     } catch (err) {
-      console.error("PDF export failed:", err);
+      // Fallback: the original client-side image PDF, so download never fails.
+      console.error("Server PDF failed, falling back to image PDF:", err);
+      try {
+        await downloadCvPdf(name);
+      } catch (e2) {
+        console.error("Image PDF fallback failed:", e2);
+      }
     } finally {
       setDownloading(false);
     }
