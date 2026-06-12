@@ -234,16 +234,16 @@ export default function Home() {
         </section>
 
         {/* Templates showcase — single tabbed preview */}
-        <section id="templates" className="border-y border-zinc-200 bg-white">
+        <section id="templates" className="border-y border-zinc-200 bg-gradient-to-b from-white to-zinc-50">
           <div className="mx-auto max-w-5xl px-6 py-20">
             <SectionHead
               eyebrow="Templates"
-              title="Choose from modern, minimal, and clean designs"
-              subtitle="Switch between styles anytime without losing your content. Every template exports to a crisp PDF."
+              title="18 templates across professional, minimal & creative"
+              subtitle="Switch styles anytime without losing your content, then recolor and change fonts to make it yours."
             />
             <TemplateShowcase cv={sampleCv} />
             <div className="mt-12 text-center">
-              <Link href="/build" className="inline-block rounded-lg bg-blue-600 px-6 py-3 font-semibold text-white shadow-sm transition-colors hover:bg-blue-700">
+              <Link href="/build" className="inline-flex items-center gap-1 rounded-xl bg-blue-600 px-6 py-3 font-semibold text-white shadow-lg shadow-blue-600/20 transition-all hover:-translate-y-0.5 hover:bg-blue-700">
                 Start with a template →
               </Link>
             </div>
@@ -251,7 +251,7 @@ export default function Home() {
         </section>
 
         {/* How it works */}
-        <section id="how" className="bg-blue-50">
+        <section id="how" className="bg-gradient-to-b from-blue-50 to-white">
           <div className="mx-auto max-w-6xl px-6 py-20">
             <SectionHead eyebrow="Process" title="Four simple steps" subtitle="From a blank page to a polished resume in minutes." />
             <Reveal stagger className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -284,10 +284,13 @@ export default function Home() {
                 Try the AI builder →
               </Link>
             </div>
-            <div className="w-full">
-              <ScaledPreview>
-                <ModernTemplate cv={sampleCv} domId="row-modern" />
-              </ScaledPreview>
+            <div className="relative w-full">
+              <div aria-hidden className="pointer-events-none absolute inset-x-6 inset-y-8 rounded-[2rem] bg-gradient-to-tr from-blue-400/15 to-indigo-400/15 blur-2xl" />
+              <div className="relative">
+                <ScaledPreview>
+                  <ModernTemplate cv={sampleCv} domId="row-modern" />
+                </ScaledPreview>
+              </div>
             </div>
           </div>
         </section>
@@ -295,10 +298,13 @@ export default function Home() {
         {/* Feature row 2 — edit & switch */}
         <section className="border-t border-zinc-200 bg-zinc-50">
           <div className="mx-auto grid max-w-6xl items-center gap-12 px-6 py-20 lg:grid-cols-2">
-            <div className="order-2 w-full lg:order-1">
-              <ScaledPreview>
-                <SidebarTemplate cv={sampleCv} domId="row-sidebar" />
-              </ScaledPreview>
+            <div className="relative order-2 w-full lg:order-1">
+              <div aria-hidden className="pointer-events-none absolute inset-x-6 inset-y-8 rounded-[2rem] bg-gradient-to-tr from-indigo-400/15 to-blue-400/15 blur-2xl" />
+              <div className="relative">
+                <ScaledPreview>
+                  <SidebarTemplate cv={sampleCv} domId="row-sidebar" />
+                </ScaledPreview>
+              </div>
             </div>
             <div className="order-1 lg:order-2">
               <p className="text-sm font-semibold uppercase tracking-wide text-blue-600">Edit live</p>
@@ -377,18 +383,22 @@ export default function Home() {
 
         {/* CTA */}
         <section className="mx-auto max-w-6xl px-6 pb-20">
-          <div className="rounded-3xl bg-blue-600 px-6 py-16 text-center text-white">
-            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Start building your resume today</h2>
-            <p className="mx-auto mt-4 max-w-md text-blue-100">
-              Join job seekers who land interviews with CVify AI — free, with a clean PDF in minutes.
-            </p>
-            <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-              <Link href="/build" className="rounded-lg bg-white px-6 py-3 font-semibold text-blue-700 transition-colors hover:bg-blue-50">
-                Build my resume →
-              </Link>
-              <a href="#templates" className="rounded-lg border border-blue-400 px-6 py-3 font-semibold text-white transition-colors hover:bg-blue-500">
-                Browse templates
-              </a>
+          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-blue-600 to-indigo-600 px-6 py-16 text-center text-white shadow-xl shadow-blue-600/20">
+            <div aria-hidden className="pointer-events-none absolute -right-16 -top-24 h-72 w-72 rounded-full bg-white/10 blur-2xl" />
+            <div aria-hidden className="pointer-events-none absolute -bottom-24 -left-16 h-72 w-72 rounded-full bg-indigo-300/20 blur-2xl" />
+            <div className="relative">
+              <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Start building your resume today</h2>
+              <p className="mx-auto mt-4 max-w-md text-blue-100">
+                Join job seekers who land interviews with CVify AI — free, with a clean PDF in minutes.
+              </p>
+              <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+                <Link href="/build" className="rounded-xl bg-white px-6 py-3 font-semibold text-blue-700 shadow-lg transition-all hover:-translate-y-0.5 hover:bg-blue-50">
+                  Build my resume →
+                </Link>
+                <a href="#templates" className="rounded-xl border border-white/40 px-6 py-3 font-semibold text-white transition-colors hover:bg-white/10">
+                  Browse templates
+                </a>
+              </div>
             </div>
           </div>
         </section>
@@ -452,7 +462,7 @@ function Tip({ n, title, text }: { n: string; title: string; text: string }) {
 function Step({ n, title, text }: { n: number; title: string; text: string }) {
   return (
     <div className="rounded-2xl border border-zinc-200 bg-white p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-blue-600/5">
-      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-600 text-sm font-bold text-white">
+      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-blue-600 to-indigo-500 text-sm font-bold text-white shadow-md shadow-blue-600/20">
         {n}
       </div>
       <h3 className="mt-4 font-semibold text-zinc-900">{title}</h3>
