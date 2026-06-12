@@ -151,33 +151,55 @@ export default function Home() {
 
       <main className="flex-1">
         {/* Hero */}
-        <section className="border-b border-zinc-200 bg-gradient-to-b from-blue-50 to-white">
-          <div className="mx-auto grid max-w-6xl items-center gap-10 px-6 py-16 lg:grid-cols-2 lg:py-24">
+        <section className="relative overflow-hidden border-b border-zinc-200 bg-gradient-to-b from-blue-50/80 via-white to-white">
+          {/* soft ambient glow */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -top-32 left-1/2 h-[520px] w-[900px] -translate-x-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(59,130,246,0.18),transparent)] blur-2xl"
+          />
+          <div className="relative mx-auto grid max-w-6xl items-center gap-10 px-6 py-16 lg:grid-cols-2 lg:py-24">
             <Reveal stagger>
-              <p className="text-sm font-semibold uppercase tracking-wide text-blue-600">
+              <span className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-white/70 px-3 py-1 text-xs font-semibold text-blue-700 shadow-sm backdrop-blur">
+                <span className="relative flex h-1.5 w-1.5">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-blue-400 opacity-75" />
+                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-blue-500" />
+                </span>
                 Free AI resume builder
-              </p>
-              <h1 className="mt-3 text-5xl font-bold leading-[1.05] tracking-tight sm:text-6xl">
-                Build your resume in minutes with <span className="text-blue-600">AI</span>
+              </span>
+              <h1 className="mt-4 text-5xl font-bold leading-[1.05] tracking-tight sm:text-6xl">
+                Build your resume in minutes with{" "}
+                <span className="bg-gradient-to-r from-blue-600 to-indigo-500 bg-clip-text text-transparent">AI</span>
               </h1>
               <p className="mt-5 max-w-md text-lg text-zinc-600">
-                CVify AI turns simple notes into a professional resume. Edit every detail, choose a
-                clean template, and land more interviews.
+                CVify AI turns simple notes into a professional resume. Edit every detail, choose from
+                18 templates, and land more interviews.
               </p>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                <Link href="/build" className="rounded-lg bg-blue-600 px-6 py-3 text-center text-base font-semibold text-white shadow-sm transition-colors hover:bg-blue-700">
+                <Link href="/build" className="rounded-xl bg-blue-600 px-6 py-3 text-center text-base font-semibold text-white shadow-lg shadow-blue-600/20 transition-all hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-xl hover:shadow-blue-600/25">
                   Create my CV free →
                 </Link>
-                <a href="#templates" className="rounded-lg border border-zinc-300 bg-white px-6 py-3 text-center text-base font-semibold text-zinc-700 transition-colors hover:bg-zinc-50">
+                <a href="#templates" className="rounded-xl border border-zinc-300 bg-white px-6 py-3 text-center text-base font-semibold text-zinc-700 transition-colors hover:bg-zinc-50">
                   Browse templates
                 </a>
               </div>
+              <div className="mt-8 flex flex-wrap gap-x-5 gap-y-2 text-sm text-zinc-500">
+                <TrustItem>No sign-up needed</TrustItem>
+                <TrustItem>18 templates</TrustItem>
+                <TrustItem>ATS-ready PDF</TrustItem>
+              </div>
             </Reveal>
 
-            <div className="w-full">
-              <ScaledPreview>
-                <ModernTemplate cv={sampleCv} domId="hero-preview" />
-              </ScaledPreview>
+            <div className="relative w-full">
+              {/* glow behind the document */}
+              <div
+                aria-hidden
+                className="absolute inset-x-4 inset-y-8 rounded-[2rem] bg-gradient-to-tr from-blue-400/20 to-indigo-400/20 blur-2xl"
+              />
+              <div className="relative rotate-1 transition-transform duration-300 hover:rotate-0">
+                <ScaledPreview>
+                  <ModernTemplate cv={sampleCv} domId="hero-preview" />
+                </ScaledPreview>
+              </div>
             </div>
           </div>
         </section>
@@ -389,8 +411,8 @@ function SectionHead({ eyebrow, title, subtitle }: { eyebrow: string; title: str
 
 function Stat({ value, label }: { value: string; label: string }) {
   return (
-    <div className="rounded-xl border border-zinc-200 bg-white p-5 text-center">
-      <p className="text-3xl font-bold text-zinc-900">{value}</p>
+    <div className="rounded-xl border border-zinc-200 bg-white p-5 text-center shadow-sm transition-colors hover:border-blue-200">
+      <p className="bg-gradient-to-r from-blue-600 to-indigo-500 bg-clip-text text-3xl font-bold text-transparent">{value}</p>
       <p className="mt-1 text-sm text-zinc-500">{label}</p>
     </div>
   );
@@ -398,8 +420,8 @@ function Stat({ value, label }: { value: string; label: string }) {
 
 function Feature({ icon, title, text }: { icon: ReactNode; title: string; text: string }) {
   return (
-    <div className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm">
-      <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+    <div className="group rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-blue-200 hover:shadow-lg hover:shadow-blue-600/5">
+      <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-blue-600 transition-colors group-hover:bg-blue-600 group-hover:text-white">
         {icon}
       </div>
       <h3 className="mt-4 font-semibold text-zinc-900">{title}</h3>
@@ -410,7 +432,7 @@ function Feature({ icon, title, text }: { icon: ReactNode; title: string; text: 
 
 function UseCase({ title, text }: { title: string; text: string }) {
   return (
-    <div className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm">
+    <div className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-blue-200 hover:shadow-lg hover:shadow-blue-600/5">
       <h3 className="font-semibold text-zinc-900">{title}</h3>
       <p className="mt-2 text-sm leading-relaxed text-zinc-600">{text}</p>
     </div>
@@ -419,7 +441,7 @@ function UseCase({ title, text }: { title: string; text: string }) {
 
 function Tip({ n, title, text }: { n: string; title: string; text: string }) {
   return (
-    <div className="rounded-2xl border border-zinc-200 bg-white p-6">
+    <div className="rounded-2xl border border-zinc-200 bg-white p-6 transition-all duration-300 hover:-translate-y-1 hover:border-blue-200 hover:shadow-lg hover:shadow-blue-600/5">
       <p className="text-sm font-bold text-blue-600">{n}</p>
       <h3 className="mt-2 font-semibold text-zinc-900">{title}</h3>
       <p className="mt-2 text-sm leading-relaxed text-zinc-600">{text}</p>
@@ -429,13 +451,22 @@ function Tip({ n, title, text }: { n: string; title: string; text: string }) {
 
 function Step({ n, title, text }: { n: number; title: string; text: string }) {
   return (
-    <div className="rounded-2xl border border-zinc-200 bg-white p-6">
+    <div className="rounded-2xl border border-zinc-200 bg-white p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-blue-600/5">
       <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-600 text-sm font-bold text-white">
         {n}
       </div>
       <h3 className="mt-4 font-semibold text-zinc-900">{title}</h3>
       <p className="mt-2 text-sm leading-relaxed text-zinc-600">{text}</p>
     </div>
+  );
+}
+
+function TrustItem({ children }: { children: ReactNode }) {
+  return (
+    <span className="inline-flex items-center gap-1.5">
+      <span className="flex h-4 w-4 items-center justify-center rounded-full bg-blue-100 text-[10px] font-bold text-blue-700">✓</span>
+      {children}
+    </span>
   );
 }
 
