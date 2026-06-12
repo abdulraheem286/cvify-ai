@@ -74,7 +74,8 @@ export default function BuildChooser() {
 function IconSparkles() {
   return (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2 2M16 16l2 2M18 6l-2 2M8 16l-2 2" />
+      <path d="M12 3 10.4 8.4a2 2 0 0 1-2 1.4L3 12l5.4 1.6a2 2 0 0 1 1.4 2L12 21l1.6-5.4a2 2 0 0 1 2-1.4L21 12l-5.4-1.6a2 2 0 0 1-1.4-2L12 3Z" />
+      <path d="M19 4v3M20.5 5.5h-3" />
     </svg>
   );
 }
