@@ -21,4 +21,9 @@ export type CVResult = {
   skills: string[];
   languages?: { name: string; level: string }[];
   certificates?: { name: string; issuer: string; year: string }[];
+  // User-defined sections (e.g. Projects, Awards, Volunteering, Publications).
+  customSections?: {
+    heading: string;
+    items: { title: string; subtitle: string; period: string; description: string }[];
+  }[];
 };

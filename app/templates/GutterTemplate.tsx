@@ -1,6 +1,7 @@
 import type { CSSProperties } from "react";
 import type { CVResult } from "@/app/types";
 import { themeVars, DEFAULT_THEME, type Theme } from "./theme";
+import { CustomItems } from "./CustomItems";
 
 // Gutter: section titles sit in a narrow left column, content on the right. Editorial / minimal.
 export function GutterTemplate({ cv, domId = "cv-document", theme = DEFAULT_THEME }: { cv: CVResult; domId?: string; theme?: Theme }) {
@@ -85,6 +86,14 @@ export function GutterTemplate({ cv, domId = "cv-document", theme = DEFAULT_THEM
               </p>
             ))}
           </Row>
+        )}
+
+        {cv.customSections?.map((s, ci) =>
+          s.heading && s.items?.length ? (
+            <Row key={`cs-${ci}`} label={s.heading}>
+              <CustomItems items={s.items} />
+            </Row>
+          ) : null,
         )}
       </div>
     </div>

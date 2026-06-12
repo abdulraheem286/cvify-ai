@@ -1,6 +1,7 @@
 import type { CSSProperties } from "react";
 import type { CVResult } from "@/app/types";
 import { themeVars, DEFAULT_THEME, type Theme } from "./theme";
+import { CustomItems } from "./CustomItems";
 
 // Cards: each section is a soft rounded card — a modern dashboard feel.
 export function CardsTemplate({ cv, domId = "cv-document", theme = DEFAULT_THEME }: { cv: CVResult; domId?: string; theme?: Theme }) {
@@ -95,6 +96,14 @@ export function CardsTemplate({ cv, domId = "cv-document", theme = DEFAULT_THEME
             </Card>
           )}
         </div>
+
+        {cv.customSections?.map((s, ci) =>
+          s.heading && s.items?.length ? (
+            <Card key={`cs-${ci}`} title={s.heading}>
+              <CustomItems items={s.items} />
+            </Card>
+          ) : null,
+        )}
       </div>
     </div>
   );

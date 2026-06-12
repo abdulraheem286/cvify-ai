@@ -1,6 +1,7 @@
 import type { CSSProperties } from "react";
 import type { CVResult } from "@/app/types";
 import { themeVars, DEFAULT_THEME, type Theme } from "./theme";
+import { CustomItems } from "./CustomItems";
 
 // Bold: oversized expressive name, primary highlight on the title — designer energy.
 export function BoldTemplate({ cv, domId = "cv-document", theme = DEFAULT_THEME }: { cv: CVResult; domId?: string; theme?: Theme }) {
@@ -81,6 +82,14 @@ export function BoldTemplate({ cv, domId = "cv-document", theme = DEFAULT_THEME 
               <p key={i} className="text-sm text-zinc-700"><span className="font-bold text-zinc-900">{c.name}</span>{c.issuer && <span className="text-zinc-600"> — {c.issuer}</span>}{c.year && <span className="text-zinc-400"> ({c.year})</span>}</p>
             ))}
           </Section>
+        )}
+
+        {cv.customSections?.map((s, ci) =>
+          s.heading && s.items?.length ? (
+            <Section key={`cs-${ci}`} title={s.heading}>
+              <CustomItems items={s.items} />
+            </Section>
+          ) : null,
         )}
       </div>
     </div>

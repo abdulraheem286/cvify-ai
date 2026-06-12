@@ -1,6 +1,7 @@
 import type { CSSProperties } from "react";
 import type { CVResult } from "@/app/types";
 import { themeVars, DEFAULT_THEME, type Theme } from "./theme";
+import { CustomItems } from "./CustomItems";
 
 // Banner: full-width solid primary header with contact inside, single-column body.
 export function BannerTemplate({ cv, domId = "cv-document", theme = DEFAULT_THEME }: { cv: CVResult; domId?: string; theme?: Theme }) {
@@ -82,6 +83,14 @@ export function BannerTemplate({ cv, domId = "cv-document", theme = DEFAULT_THEM
               <p key={i} className="text-sm text-zinc-700"><span className="font-medium text-zinc-900">{c.name}</span>{c.issuer && <span className="text-zinc-600"> — {c.issuer}</span>}{c.year && <span className="text-zinc-400"> ({c.year})</span>}</p>
             ))}
           </Section>
+        )}
+
+        {cv.customSections?.map((s, ci) =>
+          s.heading && s.items?.length ? (
+            <Section key={`cs-${ci}`} title={s.heading}>
+              <CustomItems items={s.items} />
+            </Section>
+          ) : null,
         )}
       </div>
     </div>

@@ -1,6 +1,7 @@
 import type { CSSProperties } from "react";
 import type { CVResult } from "@/app/types";
 import { themeVars, DEFAULT_THEME, type Theme } from "./theme";
+import { CustomItems } from "./CustomItems";
 
 // Hairline: airy single column, full-width hairline rules between sections.
 export function HairlineTemplate({ cv, domId = "cv-document", theme = DEFAULT_THEME }: { cv: CVResult; domId?: string; theme?: Theme }) {
@@ -80,6 +81,14 @@ export function HairlineTemplate({ cv, domId = "cv-document", theme = DEFAULT_TH
               </p>
             ))}
           </Section>
+        )}
+
+        {cv.customSections?.map((s, ci) =>
+          s.heading && s.items?.length ? (
+            <Section key={`cs-${ci}`} title={s.heading}>
+              <CustomItems items={s.items} />
+            </Section>
+          ) : null,
         )}
       </div>
     </div>

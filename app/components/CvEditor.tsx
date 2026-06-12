@@ -42,6 +42,8 @@ export type ExpEntry = { role: string; company: string; period: string; bullets:
 export type EduEntry = { degree: string; institution: string; period: string };
 export type LangEntry = { name: string; level: string };
 export type CertEntry = { name: string; issuer: string; year: string };
+export type CustomItem = { title: string; subtitle: string; period: string; description: string };
+export type CustomSection = { heading: string; items: CustomItem[] };
 
 export type EditorForm = {
   firstName: string;
@@ -59,6 +61,7 @@ export type EditorForm = {
   skills: string;
   languages: LangEntry[];
   certificates: CertEntry[];
+  customSections: CustomSection[];
 };
 
 export const EMPTY_FORM: EditorForm = {
@@ -77,6 +80,7 @@ export const EMPTY_FORM: EditorForm = {
   skills: "",
   languages: [{ name: "", level: "" }],
   certificates: [{ name: "", issuer: "", year: "" }],
+  customSections: [],
 };
 
 export function cvToForm(cv: CVResult): EditorForm {
@@ -110,10 +114,23 @@ export function cvToForm(cv: CVResult): EditorForm {
     certificates: cv.certificates?.length
       ? cv.certificates.map((c) => ({ name: c.name ?? "", issuer: c.issuer ?? "", year: c.year ?? "" }))
       : [{ name: "", issuer: "", year: "" }],
+    customSections: cv.customSections?.length
+      ? cv.customSections.map((s) => ({
+          heading: s.heading ?? "",
+          items: s.items?.length
+            ? s.items.map((it) => ({
+                title: it.title ?? "",
+                subtitle: it.subtitle ?? "",
+                period: it.period ?? "",
+                description: it.description ?? "",
+              }))
+            : [{ title: "", subtitle: "", period: "", description: "" }],
+        }))
+      : [],
   };
 }
 
-type SectionKey = "summary" | "experience" | "education" | "skills" | "languages" | "certificates";
+type SectionKey = "summary" | "experience" | "education" | "skills" | "languages" | "certificates" | "customSections";
 
 // Sample content shown in the PREVIEW only (never in the downloaded PDF),
 // so an empty form still looks like a real CV.
@@ -173,6 +190,21 @@ function formToCv(form: EditorForm, hidden: Record<SectionKey, boolean>, ph = fa
     skills: hidden.skills ? [] : skills.length ? skills : ph ? PH.skills : [],
     languages: hidden.languages ? [] : langs.length ? langs : ph ? PH.languages : [],
     certificates: hidden.certificates ? [] : certs.length ? certs : ph ? PH.certificates : [],
+    customSections: hidden.customSections
+      ? []
+      : form.customSections
+          .map((s) => ({
+            heading: s.heading.trim(),
+            items: s.items
+              .filter((it) => it.title.trim() || it.description.trim() || it.subtitle.trim())
+              .map((it) => ({
+                title: it.title.trim(),
+                subtitle: it.subtitle.trim(),
+                period: it.period.trim(),
+                description: it.description.trim(),
+              })),
+          }))
+          .filter((s) => s.heading && s.items.length),
   };
 }
 
@@ -195,6 +227,7 @@ export function CvEditor({
     skills: false,
     languages: true, // off by default — opt in
     certificates: true,
+    customSections: false,
   });
   const [open, setOpen] = useState<Record<string, boolean>>({ personal: true });
   const [template, setTemplate] = useState<TemplateId>(initialTemplate);
@@ -254,6 +287,45 @@ export function CvEditor({
   }
   function removeItem(key: "experience" | "education" | "languages" | "certificates", i: number) {
     setForm((prev) => ({ ...prev, [key]: (prev[key] as unknown[]).filter((_, idx) => idx !== i) }));
+  }
+
+  // ---- custom sections (nested list) ----
+  const blankCustomItem = (): CustomItem => ({ title: "", subtitle: "", period: "", description: "" });
+  function addCustomSection() {
+    setForm((p) => ({ ...p, customSections: [...p.customSections, { heading: "", items: [blankCustomItem()] }] }));
+  }
+  function removeCustomSection(i: number) {
+    setForm((p) => ({ ...p, customSections: p.customSections.filter((_, idx) => idx !== i) }));
+  }
+  function updateCustomHeading(i: number, value: string) {
+    setForm((p) => {
+      const cs = [...p.customSections];
+      cs[i] = { ...cs[i], heading: value };
+      return { ...p, customSections: cs };
+    });
+  }
+  function addCustomItem(i: number) {
+    setForm((p) => {
+      const cs = [...p.customSections];
+      cs[i] = { ...cs[i], items: [...cs[i].items, blankCustomItem()] };
+      return { ...p, customSections: cs };
+    });
+  }
+  function removeCustomItem(i: number, j: number) {
+    setForm((p) => {
+      const cs = [...p.customSections];
+      cs[i] = { ...cs[i], items: cs[i].items.filter((_, idx) => idx !== j) };
+      return { ...p, customSections: cs };
+    });
+  }
+  function updateCustomItem(i: number, j: number, field: keyof CustomItem, value: string) {
+    setForm((p) => {
+      const cs = [...p.customSections];
+      const items = [...cs[i].items];
+      items[j] = { ...items[j], [field]: value };
+      cs[i] = { ...cs[i], items };
+      return { ...p, customSections: cs };
+    });
   }
 
   const toggleHide = (k: SectionKey) => setHidden((p) => ({ ...p, [k]: !p[k] }));
@@ -488,6 +560,35 @@ export function CvEditor({
                 </div>
               ))}
               <AddBtn onClick={() => addItem("certificates", { name: "", issuer: "", year: "" })}>Add certificate</AddBtn>
+            </Panel>
+
+            <Panel id="customSections" title="Custom Sections" icon={<IconText className="h-[18px] w-[18px]" />} open={!!open.customSections} onToggleOpen={() => toggleOpen("customSections")} hideable hidden={hidden.customSections} onToggleHide={() => toggleHide("customSections")}>
+              <p className="mb-3 text-xs text-zinc-500">
+                Add your own sections — name them anything (Projects, Awards, Volunteering, Publications…).
+              </p>
+              {form.customSections.map((s, i) => (
+                <div key={i} className="mb-4 rounded-lg border border-zinc-200 bg-zinc-50 p-3">
+                  <PlainInput label="Section name" value={s.heading} onChange={(v) => updateCustomHeading(i, v)} placeholder="Projects, Awards, Volunteering…" />
+                  <div className="mt-3 space-y-3">
+                    {s.items.map((it, j) => (
+                      <div key={j} className="space-y-2 rounded-lg border border-zinc-200 bg-white p-3">
+                        <div className="grid gap-2 sm:grid-cols-2">
+                          <PlainInput label="Title" value={it.title} onChange={(v) => updateCustomItem(i, j, "title", v)} placeholder="Project / award name" />
+                          <PlainInput label="Subtitle (optional)" value={it.subtitle} onChange={(v) => updateCustomItem(i, j, "subtitle", v)} placeholder="Role / issuer" />
+                        </div>
+                        <PlainInput label="Date (optional)" value={it.period} onChange={(v) => updateCustomItem(i, j, "period", v)} placeholder="2023" />
+                        <FieldTextarea label="Description (optional)" value={it.description} onChange={(v) => updateCustomItem(i, j, "description", v)} rows={2} placeholder="One or two lines about it." />
+                        {s.items.length > 1 && <RemoveBtn onClick={() => removeCustomItem(i, j)}>Remove item</RemoveBtn>}
+                      </div>
+                    ))}
+                  </div>
+                  <div className="mt-3 flex items-center justify-between">
+                    <AddBtn onClick={() => addCustomItem(i)}>Add item</AddBtn>
+                    <RemoveBtn onClick={() => removeCustomSection(i)}>Remove section</RemoveBtn>
+                  </div>
+                </div>
+              ))}
+              <AddBtn onClick={addCustomSection}>Add a section</AddBtn>
             </Panel>
           </div>
         </div>

@@ -1,6 +1,7 @@
 import type { CSSProperties } from "react";
 import type { CVResult } from "@/app/types";
 import { themeVars, DEFAULT_THEME, type Theme } from "./theme";
+import { CustomItems } from "./CustomItems";
 
 type Props = { cv: CVResult; domId?: string; theme?: Theme };
 
@@ -102,6 +103,14 @@ export function OnyxTemplate({ cv, domId = "cv-document", theme = DEFAULT_THEME 
               </p>
             ))}
           </Section>
+        )}
+
+        {cv.customSections?.map((s, ci) =>
+          s.heading && s.items?.length ? (
+            <Section key={`cs-${ci}`} title={s.heading}>
+              <CustomItems items={s.items} />
+            </Section>
+          ) : null,
         )}
       </div>
     </div>
