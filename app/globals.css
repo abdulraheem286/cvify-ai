@@ -18,6 +18,29 @@ body {
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }
 
+/* Tailwind v4 dropped the default pointer cursor on buttons. Restore it on
+   everything interactive so clickable things feel clickable. */
+@layer base {
+  button:not(:disabled),
+  [role="button"]:not(:disabled),
+  a[href],
+  label[for],
+  summary,
+  select:not(:disabled),
+  input[type="checkbox"]:not(:disabled),
+  input[type="radio"]:not(:disabled),
+  input[type="color"]:not(:disabled),
+  input[type="submit"]:not(:disabled),
+  input[type="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+
+  button:disabled,
+  [role="button"][aria-disabled="true"] {
+    cursor: not-allowed;
+  }
+}
+
 /* Entrance reveal — pure CSS so it can never get stuck hidden.
    Always ends at opacity:1 (visible) thanks to animation-fill-mode: both. */
 @keyframes cvify-reveal {
