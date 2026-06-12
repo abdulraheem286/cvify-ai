@@ -8,6 +8,7 @@ import { CustomizationPanel } from "./CustomizationPanel";
 import { DEFAULT_TEMPLATE, getDefaultTheme, type TemplateId, type Theme } from "@/app/templates";
 import { TemplateView } from "@/app/templates/TemplateView";
 import { downloadCvPdf } from "@/app/lib/pdf";
+import { aiSummary, aiBullets, aiSkills } from "@/app/lib/assist";
 import {
   IconField,
   FieldTextarea,
@@ -34,6 +35,7 @@ import {
   IconDownload,
   IconAward,
   IconLanguages,
+  IconSparkles,
 } from "./icons";
 
 export type ExpEntry = { role: string; company: string; period: string; bullets: string };
@@ -199,6 +201,8 @@ export function CvEditor({
   const [theme, setTheme] = useState<Theme>(() => getDefaultTheme(initialTemplate));
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [downloading, setDownloading] = useState(false);
+  const [aiBusy, setAiBusy] = useState<string | null>(null); // which AI action is running
+  const [aiError, setAiError] = useState<string | null>(null);
 
   const exportCv = formToCv(form, hidden); // clean — used for the PDF
   const previewCv = formToCv(form, hidden, true); // with placeholders — preview only
@@ -266,6 +270,62 @@ export function CvEditor({
     }
   }
 
+  // ---- AI assist (in-editor) ----
+  async function runAi(key: string, fn: () => Promise<void>) {
+    setAiBusy(key);
+    setAiError(null);
+    try {
+      await fn();
+    } catch (err) {
+      setAiError(err instanceof Error ? err.message : "The AI couldn't help with that.");
+    } finally {
+      setAiBusy(null);
+    }
+  }
+
+  const buildExp = () =>
+    form.experience
+      .filter((x) => x.role || x.company || x.bullets)
+      .map((x) => ({
+        role: x.role,
+        company: x.company,
+        bullets: x.bullets.split("\n").map((b) => b.trim()).filter(Boolean),
+      }));
+
+  const skillList = () => form.skills.split(",").map((s) => s.trim()).filter(Boolean);
+
+  const handleAiSummary = () =>
+    runAi("summary", async () => {
+      const text = await aiSummary({
+        name: `${form.firstName} ${form.lastName}`.trim(),
+        title: form.jobTitle,
+        summary: form.summary,
+        experience: buildExp(),
+        skills: skillList(),
+      });
+      if (text) setForm((p) => ({ ...p, summary: text }));
+    });
+
+  const handleAiBullets = (i: number) =>
+    runAi(`bullets-${i}`, async () => {
+      const job = form.experience[i];
+      const bullets = await aiBullets({ role: job.role, company: job.company, bullets: job.bullets });
+      if (bullets.length) updateList("experience", i, "bullets", bullets.join("\n"));
+    });
+
+  const handleAiSkills = () =>
+    runAi("skills", async () => {
+      const existing = skillList();
+      const suggested = await aiSkills({ title: form.jobTitle, experience: buildExp(), skills: existing });
+      if (suggested.length) {
+        const merged = [...existing];
+        for (const s of suggested) {
+          if (!merged.some((e) => e.toLowerCase() === s.toLowerCase())) merged.push(s);
+        }
+        setForm((p) => ({ ...p, skills: merged.join(", ") }));
+      }
+    });
+
   return (
     <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-8 sm:px-6 print:p-0">
       {/* Off-screen full-size render for crisp PDF export */}
@@ -303,8 +363,18 @@ export function CvEditor({
           <h1 className="text-2xl font-bold tracking-tight">Build your CV</h1>
           <p className="mt-1 text-sm text-zinc-600">
             Fill in the sections below — your preview updates live. Use the eye icon to hide a
-            section from the CV.
+            section from the CV. Look for the <span className="font-medium text-blue-600">AI buttons</span> to
+            write or improve content.
           </p>
+
+          {aiError && (
+            <div className="mt-4 flex items-start justify-between gap-3 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+              <span>{aiError}</span>
+              <button type="button" onClick={() => setAiError(null)} className="shrink-0 font-medium hover:underline">
+                Dismiss
+              </button>
+            </div>
+          )}
 
           <div className="mt-6 space-y-3">
             <Panel id="personal" title="Personal Details" icon={<IconUser className="h-[18px] w-[18px]" />} open={!!open.personal} onToggleOpen={() => toggleOpen("personal")}>
@@ -344,6 +414,11 @@ export function CvEditor({
             </Panel>
 
             <Panel id="summary" title="Summary" icon={<IconText className="h-[18px] w-[18px]" />} open={!!open.summary} onToggleOpen={() => toggleOpen("summary")} hideable hidden={hidden.summary} onToggleHide={() => toggleHide("summary")}>
+              <div className="mb-2 flex justify-end">
+                <AiButton onClick={handleAiSummary} busy={aiBusy === "summary"}>
+                  {form.summary.trim() ? "Improve with AI" : "Write with AI"}
+                </AiButton>
+              </div>
               <FieldTextarea label="Professional summary" value={form.summary} onChange={set("summary")} rows={3} placeholder="A short 2–3 sentence summary of who you are and what you do." />
             </Panel>
 
@@ -356,9 +431,14 @@ export function CvEditor({
                   </div>
                   <PlainInput label="Period" value={exp.period} onChange={(v) => updateList("experience", i, "period", v)} placeholder="2022 – Present" />
                   <FieldTextarea label="Bullet points (one per line)" value={exp.bullets} onChange={(v) => updateList("experience", i, "bullets", v)} rows={3} placeholder={"Built the new dashboard\nImproved page speed by 40%"} />
-                  {form.experience.length > 1 && (
-                    <RemoveBtn onClick={() => removeItem("experience", i)}>Remove job</RemoveBtn>
-                  )}
+                  <div className="flex items-center justify-between">
+                    <AiButton onClick={() => handleAiBullets(i)} busy={aiBusy === `bullets-${i}`} disabled={!exp.bullets.trim()}>
+                      Improve bullets
+                    </AiButton>
+                    {form.experience.length > 1 && (
+                      <RemoveBtn onClick={() => removeItem("experience", i)}>Remove job</RemoveBtn>
+                    )}
+                  </div>
                 </div>
               ))}
               <AddBtn onClick={() => addItem("experience", { role: "", company: "", period: "", bullets: "" })}>Add job</AddBtn>
@@ -380,6 +460,9 @@ export function CvEditor({
 
             <Panel id="skills" title="Skills" icon={<IconTools className="h-[18px] w-[18px]" />} open={!!open.skills} onToggleOpen={() => toggleOpen("skills")} hideable hidden={hidden.skills} onToggleHide={() => toggleHide("skills")}>
               <PlainInput label="Skills (separate with commas)" value={form.skills} onChange={set("skills")} placeholder="JavaScript, React, Figma, Team leadership" />
+              <div className="mt-2">
+                <AiButton onClick={handleAiSkills} busy={aiBusy === "skills"}>Suggest skills</AiButton>
+              </div>
             </Panel>
 
             <Panel id="languages" title="Languages" icon={<IconLanguages className="h-[18px] w-[18px]" />} open={!!open.languages} onToggleOpen={() => toggleOpen("languages")} hideable hidden={hidden.languages} onToggleHide={() => toggleHide("languages")}>
@@ -510,6 +593,34 @@ function RemoveBtn({ onClick, children }: { onClick: () => void; children: React
   return (
     <button type="button" onClick={onClick} className="inline-flex items-center gap-1 text-xs font-medium text-red-600 hover:text-red-700">
       <IconTrash className="h-4 w-4" /> {children}
+    </button>
+  );
+}
+
+function AiButton({
+  onClick,
+  busy,
+  disabled,
+  children,
+}: {
+  onClick: () => void;
+  busy: boolean;
+  disabled?: boolean;
+  children: ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={busy || disabled}
+      className="inline-flex items-center gap-1.5 rounded-lg border border-blue-200 bg-blue-50 px-2.5 py-1.5 text-xs font-semibold text-blue-700 transition-colors hover:bg-blue-100 disabled:cursor-not-allowed disabled:opacity-50"
+    >
+      {busy ? (
+        <span className="inline-block h-3.5 w-3.5 animate-spin rounded-full border-2 border-blue-300 border-t-blue-600" />
+      ) : (
+        <IconSparkles className="h-3.5 w-3.5" />
+      )}
+      {busy ? "Working…" : children}
     </button>
   );
 }
