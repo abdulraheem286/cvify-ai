@@ -288,6 +288,15 @@ export function CvEditor({
   function removeItem(key: "experience" | "education" | "languages" | "certificates", i: number) {
     setForm((prev) => ({ ...prev, [key]: (prev[key] as unknown[]).filter((_, idx) => idx !== i) }));
   }
+  function moveItem(key: "experience" | "education" | "languages" | "certificates", i: number, dir: -1 | 1) {
+    setForm((prev) => {
+      const list = [...(prev[key] as unknown[])];
+      const j = i + dir;
+      if (j < 0 || j >= list.length) return prev;
+      [list[i], list[j]] = [list[j], list[i]];
+      return { ...prev, [key]: list };
+    });
+  }
 
   // ---- custom sections (nested list) ----
   const blankCustomItem = (): CustomItem => ({ title: "", subtitle: "", period: "", description: "" });
@@ -323,6 +332,26 @@ export function CvEditor({
       const cs = [...p.customSections];
       const items = [...cs[i].items];
       items[j] = { ...items[j], [field]: value };
+      cs[i] = { ...cs[i], items };
+      return { ...p, customSections: cs };
+    });
+  }
+  function moveCustomSection(i: number, dir: -1 | 1) {
+    setForm((p) => {
+      const cs = [...p.customSections];
+      const j = i + dir;
+      if (j < 0 || j >= cs.length) return p;
+      [cs[i], cs[j]] = [cs[j], cs[i]];
+      return { ...p, customSections: cs };
+    });
+  }
+  function moveCustomItem(i: number, j: number, dir: -1 | 1) {
+    setForm((p) => {
+      const cs = [...p.customSections];
+      const items = [...cs[i].items];
+      const k = j + dir;
+      if (k < 0 || k >= items.length) return p;
+      [items[j], items[k]] = [items[k], items[j]];
       cs[i] = { ...cs[i], items };
       return { ...p, customSections: cs };
     });
@@ -497,6 +526,12 @@ export function CvEditor({
             <Panel id="experience" title="Experience" icon={<IconBriefcase className="h-[18px] w-[18px]" />} open={!!open.experience} onToggleOpen={() => toggleOpen("experience")} hideable hidden={hidden.experience} onToggleHide={() => toggleHide("experience")}>
               {form.experience.map((exp, i) => (
                 <div key={i} className="mb-3 space-y-3 rounded-lg border border-zinc-200 bg-zinc-50 p-3">
+                  {form.experience.length > 1 && (
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-medium text-zinc-400">#{i + 1}</span>
+                      <MoveBtns onUp={() => moveItem("experience", i, -1)} onDown={() => moveItem("experience", i, 1)} isFirst={i === 0} isLast={i === form.experience.length - 1} />
+                    </div>
+                  )}
                   <div className="grid gap-3 sm:grid-cols-2">
                     <PlainInput label="Role" value={exp.role} onChange={(v) => updateList("experience", i, "role", v)} placeholder="Frontend Developer" />
                     <PlainInput label="Company" value={exp.company} onChange={(v) => updateList("experience", i, "company", v)} placeholder="TechCorp" />
@@ -519,6 +554,12 @@ export function CvEditor({
             <Panel id="education" title="Education" icon={<IconGraduation className="h-[18px] w-[18px]" />} open={!!open.education} onToggleOpen={() => toggleOpen("education")} hideable hidden={hidden.education} onToggleHide={() => toggleHide("education")}>
               {form.education.map((ed, i) => (
                 <div key={i} className="mb-3 space-y-3 rounded-lg border border-zinc-200 bg-zinc-50 p-3">
+                  {form.education.length > 1 && (
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-medium text-zinc-400">#{i + 1}</span>
+                      <MoveBtns onUp={() => moveItem("education", i, -1)} onDown={() => moveItem("education", i, 1)} isFirst={i === 0} isLast={i === form.education.length - 1} />
+                    </div>
+                  )}
                   <PlainInput label="Degree" value={ed.degree} onChange={(v) => updateList("education", i, "degree", v)} placeholder="BS Computer Science" />
                   <div className="grid gap-3 sm:grid-cols-2">
                     <PlainInput label="Institution" value={ed.institution} onChange={(v) => updateList("education", i, "institution", v)} placeholder="State University" />
@@ -578,13 +619,23 @@ export function CvEditor({
                         </div>
                         <PlainInput label="Date (optional)" value={it.period} onChange={(v) => updateCustomItem(i, j, "period", v)} placeholder="2023" />
                         <FieldTextarea label="Description (optional)" value={it.description} onChange={(v) => updateCustomItem(i, j, "description", v)} rows={2} placeholder="One or two lines about it." />
-                        {s.items.length > 1 && <RemoveBtn onClick={() => removeCustomItem(i, j)}>Remove item</RemoveBtn>}
+                        {s.items.length > 1 && (
+                          <div className="flex items-center justify-between">
+                            <MoveBtns onUp={() => moveCustomItem(i, j, -1)} onDown={() => moveCustomItem(i, j, 1)} isFirst={j === 0} isLast={j === s.items.length - 1} />
+                            <RemoveBtn onClick={() => removeCustomItem(i, j)}>Remove item</RemoveBtn>
+                          </div>
+                        )}
                       </div>
                     ))}
                   </div>
                   <div className="mt-3 flex items-center justify-between">
                     <AddBtn onClick={() => addCustomItem(i)}>Add item</AddBtn>
-                    <RemoveBtn onClick={() => removeCustomSection(i)}>Remove section</RemoveBtn>
+                    <div className="flex items-center gap-2">
+                      {form.customSections.length > 1 && (
+                        <MoveBtns onUp={() => moveCustomSection(i, -1)} onDown={() => moveCustomSection(i, 1)} isFirst={i === 0} isLast={i === form.customSections.length - 1} />
+                      )}
+                      <RemoveBtn onClick={() => removeCustomSection(i)}>Remove section</RemoveBtn>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -695,6 +746,19 @@ function RemoveBtn({ onClick, children }: { onClick: () => void; children: React
     <button type="button" onClick={onClick} className="inline-flex items-center gap-1 text-xs font-medium text-red-600 hover:text-red-700">
       <IconTrash className="h-4 w-4" /> {children}
     </button>
+  );
+}
+
+function MoveBtns({ onUp, onDown, isFirst, isLast }: { onUp: () => void; onDown: () => void; isFirst: boolean; isLast: boolean }) {
+  return (
+    <div className="flex items-center">
+      <button type="button" onClick={onUp} disabled={isFirst} title="Move up" className="rounded p-1 text-zinc-400 hover:text-zinc-700 disabled:opacity-30">
+        <IconChevron className="h-4 w-4 rotate-180" />
+      </button>
+      <button type="button" onClick={onDown} disabled={isLast} title="Move down" className="rounded p-1 text-zinc-400 hover:text-zinc-700 disabled:opacity-30">
+        <IconChevron className="h-4 w-4" />
+      </button>
+    </div>
   );
 }
 
