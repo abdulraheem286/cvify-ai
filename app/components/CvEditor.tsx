@@ -163,7 +163,7 @@ const PH = {
 };
 
 // ph = true fills empty (non-hidden) fields with placeholders for the preview.
-function formToCv(form: EditorForm, hidden: Record<SectionKey, boolean>, ph = false): CVResult {
+export function formToCv(form: EditorForm, hidden: Record<string, boolean>, ph = false): CVResult {
   const fullName = `${form.firstName} ${form.lastName}`.trim();
   const exp = form.experience
     .filter((x) => x.role || x.company || x.bullets)

@@ -21,6 +21,7 @@ type AuthContextValue = {
   signInEmail: (email: string, password: string) => Promise<void>;
   signUpEmail: (name: string, email: string, password: string) => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
+  updateName: (name: string) => Promise<void>;
   signOut: () => Promise<void>;
 };
 
@@ -29,6 +30,7 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [, setTick] = useState(0); // force re-render after in-place profile updates
 
   useEffect(() => {
     if (!firebaseEnabled || !auth) {
@@ -59,6 +61,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (!auth) throw new Error("Accounts aren't available yet.");
     await sendPasswordResetEmail(auth, email);
   }
+  async function updateName(name: string) {
+    if (!auth?.currentUser) return;
+    await updateProfile(auth.currentUser, { displayName: name });
+    setTick((t) => t + 1);
+  }
   async function signOut() {
     if (!auth) return;
     await fbSignOut(auth);
@@ -66,7 +73,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   return (
     <AuthContext.Provider
-      value={{ user, loading, enabled: firebaseEnabled, signInGoogle, signInEmail, signUpEmail, resetPassword, signOut }}
+      value={{ user, loading, enabled: firebaseEnabled, signInGoogle, signInEmail, signUpEmail, resetPassword, updateName, signOut }}
     >
       {children}
     </AuthContext.Provider>

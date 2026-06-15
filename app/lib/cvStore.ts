@@ -30,11 +30,16 @@ function cvsCol(uid: string) {
   return collection(db, "users", uid, "cvs");
 }
 
-export async function listCvs(uid: string): Promise<CvMeta[]> {
+export async function listCvs(uid: string): Promise<CvRecord[]> {
   const snap = await getDocs(query(cvsCol(uid), orderBy("updatedAt", "desc")));
   return snap.docs.map((d) => {
     const data = d.data();
-    return { id: d.id, title: data.title || "Untitled CV", updatedAt: data.updatedAt?.toMillis?.() ?? 0 };
+    return {
+      id: d.id,
+      title: data.title || "Untitled CV",
+      updatedAt: data.updatedAt?.toMillis?.() ?? 0,
+      data: data.data as CvData,
+    };
   });
 }
 
