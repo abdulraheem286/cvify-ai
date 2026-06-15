@@ -207,15 +207,19 @@ function CvsView() {
         </div>
       ) : cvs.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-zinc-300 bg-white px-6 py-16 text-center">
-          <p className="text-zinc-600">You haven&apos;t created any CVs yet.</p>
-          <Link href="/build" className="mt-4 inline-block rounded-lg bg-blue-600 px-5 py-2.5 font-semibold text-white hover:bg-blue-700">
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-600/20">
+            <IconPlus className="h-6 w-6" />
+          </div>
+          <p className="mt-4 font-semibold text-zinc-900">No CVs yet</p>
+          <p className="mx-auto mt-1 max-w-xs text-sm text-zinc-600">Create your first CV — AI draft, manual, or import an existing one.</p>
+          <Link href="/build" className="mt-5 inline-block rounded-xl bg-blue-600 px-5 py-2.5 font-semibold text-white shadow-sm transition-colors hover:bg-blue-700">
             Create your first CV →
           </Link>
         </div>
       ) : (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-5">
           {cvs.map((cv) => (
-            <div key={cv.id} className="group overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm transition-shadow hover:shadow-md">
+            <div key={cv.id} className="group overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm transition-all hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-md">
               <Link href={`/build/manual?cv=${cv.id}`} className="block bg-zinc-100 p-3">
                 <ScaledPreview maxHeight={230}>
                   <TemplateView id={cv.data.template} cv={cvFromData(cv.data.form, cv.data.hidden)} theme={cv.data.theme} domId={`dash-${cv.id}`} />
@@ -309,7 +313,7 @@ function TemplatesView() {
     <div>
       <h1 className="text-2xl font-bold tracking-tight">My Templates</h1>
       <div className="mt-8 rounded-2xl border border-dashed border-zinc-300 bg-white px-6 py-16 text-center">
-        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-600/20">
           <IconTools className="h-6 w-6" />
         </div>
         <p className="mt-4 font-semibold text-zinc-900">Coming soon</p>
