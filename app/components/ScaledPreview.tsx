@@ -19,9 +19,13 @@ const BASE_WIDTH = 800; // every template renders at 800px wide
 export function ScaledPreview({
   children,
   maxHeight,
+  fixed = false,
 }: {
   children: ReactNode;
   maxHeight?: number;
+  // When true (with maxHeight), the box is ALWAYS maxHeight tall — so a row of
+  // cards share one uniform height regardless of each CV's length.
+  fixed?: boolean;
 }) {
   const outerRef = useRef<HTMLDivElement>(null);
   const innerRef = useRef<HTMLDivElement>(null);
@@ -48,7 +52,9 @@ export function ScaledPreview({
   }, []);
 
   const height = maxHeight
-    ? Math.min(fullHeight || maxHeight, maxHeight)
+    ? fixed
+      ? maxHeight
+      : Math.min(fullHeight || maxHeight, maxHeight)
     : fullHeight || undefined;
   const cropped = maxHeight ? fullHeight > maxHeight : false;
 

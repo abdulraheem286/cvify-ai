@@ -34,10 +34,10 @@ export function TemplateShowcase({ cv }: { cv: CVResult }) {
       </div>
 
       {/* Previews — the category's layouts, each in its own default look */}
-      <div className="mt-8 grid gap-8 sm:grid-cols-2">
+      <div className="mx-auto mt-8 grid max-w-7xl gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {templates.map((t) => (
           <div key={t.id}>
-            <ScaledPreview>
+            <ScaledPreview maxHeight={360} fixed>
               <TemplateView id={t.id} cv={cv} domId={`show-${t.id}`} theme={t.defaultTheme} />
             </ScaledPreview>
             <p className="mt-3 text-center text-sm font-medium text-zinc-700">{t.name}</p>

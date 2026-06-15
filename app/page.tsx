@@ -267,7 +267,7 @@ export default function Home() {
         <section className="border-t border-zinc-200 bg-white">
           <div className="mx-auto grid max-w-[1920px] items-center gap-12 px-6 py-20 lg:grid-cols-2">
             <div className="max-w-xl">
-              <p className="text-sm font-semibold uppercase tracking-wide text-blue-600">AI draft</p>
+              <span className="inline-block rounded-full border border-blue-100 bg-blue-50 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider text-blue-600">AI draft</span>
               <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
                 A professional first draft in seconds
               </h2>
@@ -307,7 +307,7 @@ export default function Home() {
               </div>
             </div>
             <div className="order-1 max-w-xl lg:order-2 lg:justify-self-end">
-              <p className="text-sm font-semibold uppercase tracking-wide text-blue-600">Edit live</p>
+              <span className="inline-block rounded-full border border-blue-100 bg-blue-50 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider text-blue-600">Edit live</span>
               <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
                 Edit everything, switch styles instantly
               </h2>
@@ -412,8 +412,10 @@ export default function Home() {
 function SectionHead({ eyebrow, title, subtitle }: { eyebrow: string; title: string; subtitle: string }) {
   return (
     <div className="mx-auto max-w-2xl text-center">
-      <p className="text-sm font-semibold uppercase tracking-wide text-blue-600">{eyebrow}</p>
-      <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">{title}</h2>
+      <span className="inline-block rounded-full border border-blue-100 bg-blue-50 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider text-blue-600">
+        {eyebrow}
+      </span>
+      <h2 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">{title}</h2>
       <p className="mt-4 text-zinc-600">{subtitle}</p>
     </div>
   );

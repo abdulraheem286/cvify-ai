@@ -91,7 +91,7 @@ export function TemplateGallery({
       </div>
 
       {/* Selectable layout previews */}
-      <div className="mx-auto mt-10 grid max-w-6xl gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="mx-auto mt-10 grid max-w-screen-2xl gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {templates.map((t) => (
           <button
             key={t.id}
@@ -99,7 +99,7 @@ export function TemplateGallery({
             onClick={() => onSelect(t.id)}
             className="group rounded-2xl border border-zinc-200 bg-white p-4 text-left shadow-sm transition-all hover:border-blue-300 hover:shadow-md"
           >
-            <ScaledPreview>
+            <ScaledPreview maxHeight={420} fixed>
               <TemplateView id={t.id} cv={SAMPLE} domId={`gal-${t.id}`} theme={t.defaultTheme} />
             </ScaledPreview>
             <div className="mt-3 flex items-center justify-between">
