@@ -6,7 +6,7 @@ import { RequireAuth } from "@/app/components/RequireAuth";
 export const metadata: Metadata = {
   title: "Manual CV Builder — Create Your Resume Step by Step (Free)",
   description:
-    "Build your CV manually with CVify AI. Fill in each section yourself for full control, pick a clean template, and download a professional PDF instantly — free, no sign-up required.",
+    "Build your CV manually with CVify AI. Fill in each section yourself for full control, pick a clean template, and download a professional PDF instantly — free.",
   alternates: { canonical: "/build/manual" },
   openGraph: {
     title: "Manual CV Builder — Create Your Resume Step by Step",

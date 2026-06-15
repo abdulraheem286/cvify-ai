@@ -42,7 +42,7 @@ export function SiteFooter() {
 
         <div className="mt-10 flex flex-col items-center justify-between gap-3 border-t border-zinc-200 pt-6 text-sm text-zinc-500 sm:flex-row">
           <p>© 2026 CVify AI. All rights reserved.</p>
-          <p>Free to use · No sign-up required to start</p>
+          <p>Free to use · Your CVs saved to your account</p>
         </div>
       </div>
     </footer>

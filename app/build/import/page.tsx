@@ -6,7 +6,7 @@ import { RequireAuth } from "@/app/components/RequireAuth";
 export const metadata: Metadata = {
   title: "Import Your CV — Upload or Paste an Existing Resume (Free)",
   description:
-    "Already have a CV? Upload a PDF or paste the text and CVify AI reads it into the editor automatically. Then restyle, recolor, and download a fresh PDF — free, no sign-up required.",
+    "Already have a CV? Upload a PDF or paste the text and CVify AI reads it into the editor automatically. Then restyle, recolor, and download a fresh PDF — free.",
   alternates: { canonical: "/build/import" },
   openGraph: {
     title: "Import Your CV — Upload or Paste an Existing Resume",

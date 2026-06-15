@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     template: "%s | CVify AI",
   },
   description:
-    "CVify AI is a free AI resume builder. Paste rough notes and get a polished, professional CV in minutes — or fill in the details yourself. Beautiful templates and instant PDF download. No sign-up needed to start.",
+    "CVify AI is a free AI resume builder. Paste rough notes and get a polished, professional CV in minutes — or fill in the details yourself. Beautiful templates, instant PDF download, and your CVs saved to your account.",
   keywords: [
     "AI resume builder",
     "free CV maker",

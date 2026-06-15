@@ -22,7 +22,7 @@ import type { CVResult } from "./types";
 export const metadata: Metadata = {
   title: "CVify AI — Free AI Resume & CV Builder | Build a Pro CV in Minutes",
   description:
-    "CVify AI is a free AI resume builder. Turn rough notes into a polished, professional CV in minutes, choose from clean templates, edit everything, and download a PDF instantly. No sign-up needed.",
+    "CVify AI is a free AI resume builder. Turn rough notes into a polished, professional CV in minutes, choose from clean templates, edit everything, and download a PDF instantly — all saved to your free account.",
   alternates: { canonical: "/" },
 };
 
@@ -45,7 +45,7 @@ const faqs = [
   },
   {
     q: "Do I need to create an account?",
-    a: "No account is needed to build and download a CV. You can start straight away.",
+    a: "Yes — a free account lets you save your CVs to your dashboard and pick up editing on any device. Signing in with Google takes a couple of seconds.",
   },
   {
     q: "Will I lose my work if I close the tab?",
@@ -183,7 +183,7 @@ export default function Home() {
                 </a>
               </div>
               <div className="mt-8 flex flex-wrap gap-x-5 gap-y-2 text-sm text-zinc-500">
-                <TrustItem>No sign-up needed</TrustItem>
+                <TrustItem>Free forever</TrustItem>
                 <TrustItem>18 templates</TrustItem>
                 <TrustItem>ATS-ready PDF</TrustItem>
               </div>
