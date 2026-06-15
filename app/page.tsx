@@ -166,7 +166,7 @@ export default function Home() {
                 </span>
                 Free AI resume builder
               </span>
-              <h1 className="mt-4 text-5xl font-bold leading-[1.05] tracking-tight sm:text-6xl">
+              <h1 className="mt-4 max-w-2xl text-5xl font-bold leading-[1.05] tracking-tight sm:text-6xl">
                 Build your resume in minutes with{" "}
                 <span className="bg-gradient-to-r from-blue-600 to-indigo-500 bg-clip-text text-transparent">AI</span>
               </h1>
@@ -266,7 +266,7 @@ export default function Home() {
         {/* Feature row 1 — AI draft */}
         <section className="border-t border-zinc-200 bg-white">
           <div className="mx-auto grid max-w-[1920px] items-center gap-12 px-6 py-20 lg:grid-cols-2">
-            <div>
+            <div className="max-w-xl">
               <p className="text-sm font-semibold uppercase tracking-wide text-blue-600">AI draft</p>
               <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
                 A professional first draft in seconds
@@ -306,7 +306,7 @@ export default function Home() {
                 </ScaledPreview>
               </div>
             </div>
-            <div className="order-1 lg:order-2">
+            <div className="order-1 max-w-xl lg:order-2 lg:justify-self-end">
               <p className="text-sm font-semibold uppercase tracking-wide text-blue-600">Edit live</p>
               <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
                 Edit everything, switch styles instantly

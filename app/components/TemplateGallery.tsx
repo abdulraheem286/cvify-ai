@@ -75,13 +75,13 @@ export function TemplateGallery({
       </div>
 
       {/* Category tabs */}
-      <div className="mt-8 flex flex-wrap justify-center gap-2">
+      <div className="mt-8 flex flex-wrap justify-center gap-2.5">
         {CATEGORIES.map((c) => (
           <button
             key={c}
             type="button"
             onClick={() => setCat(c)}
-            className={`rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
+            className={`rounded-full px-6 py-3 text-base font-semibold transition-colors ${
               cat === c ? "bg-blue-600 text-white shadow-sm" : "border border-zinc-300 bg-white text-zinc-600 hover:bg-zinc-50"
             }`}
           >
@@ -91,7 +91,7 @@ export function TemplateGallery({
       </div>
 
       {/* Selectable layout previews */}
-      <div className="mx-auto mt-10 grid max-w-4xl gap-8 sm:grid-cols-2">
+      <div className="mx-auto mt-10 grid max-w-6xl gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {templates.map((t) => (
           <button
             key={t.id}
@@ -103,8 +103,8 @@ export function TemplateGallery({
               <TemplateView id={t.id} cv={SAMPLE} domId={`gal-${t.id}`} theme={t.defaultTheme} />
             </ScaledPreview>
             <div className="mt-3 flex items-center justify-between">
-              <span className="font-semibold text-zinc-900">{t.name}</span>
-              <span className="text-sm font-semibold text-blue-600">Use this →</span>
+              <span className="text-lg font-semibold text-zinc-900">{t.name}</span>
+              <span className="text-base font-semibold text-blue-600">Use this →</span>
             </div>
           </button>
         ))}
