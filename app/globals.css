@@ -7,7 +7,7 @@
 
 /* Offset anchor-link jumps so section tops aren't hidden under the sticky header. */
 html {
-  scroll-padding-top: 100px;
+  scroll-padding-top: 70px;
 }
 
 @theme inline {
@@ -46,7 +46,7 @@ html {
   /* Site typography. Headings use --font-display, body uses --font-text.
      Swap these to restyle every heading / paragraph on the site at once.
      (CV templates keep their own --font-heading/--font-body, untouched.) */
-  --font-display: var(--font-poppins);
+  --font-display: var(--font-playfair);
   --font-text: var(--font-inter);
 }
 

@@ -67,30 +67,47 @@ type Tab = "cvs" | "templates" | "profile";
 function Dashboard() {
   const { user, signOut } = useAuth();
   const [tab, setTab] = useState<Tab>("cvs");
+  const initial = (user?.displayName || user?.email || "?").charAt(0).toUpperCase();
 
   return (
     <div className="flex min-h-full flex-1 flex-col bg-zinc-50 text-zinc-900">
       <AppHeader />
       <div className="flex w-full flex-1 flex-col gap-8 px-6 py-8 lg:flex-row lg:px-8">
         {/* Sidebar */}
-        <aside className="shrink-0 lg:w-60">
-          <nav className="flex gap-2 overflow-x-auto lg:flex-col lg:gap-1">
-            <NavItem icon={<IconText className="h-[18px] w-[18px]" />} active={tab === "cvs"} onClick={() => setTab("cvs")}>
-              My CVs
-            </NavItem>
-            <NavItem icon={<IconTools className="h-[18px] w-[18px]" />} active={tab === "templates"} onClick={() => setTab("templates")}>
-              My Templates
-            </NavItem>
-            <NavItem icon={<IconUser className="h-[18px] w-[18px]" />} active={tab === "profile"} onClick={() => setTab("profile")}>
-              Profile
-            </NavItem>
-          </nav>
-          <div className="mt-6 hidden rounded-xl border border-zinc-200 bg-white p-3 lg:block">
-            <p className="truncate text-sm font-medium text-zinc-800">{user?.displayName || "Account"}</p>
-            <p className="truncate text-xs text-zinc-500">{user?.email}</p>
-            <button type="button" onClick={() => signOut()} className="mt-2 text-xs font-medium text-blue-600 hover:text-blue-700">
-              Sign out
-            </button>
+        <aside className="shrink-0 lg:w-64">
+          <div className="flex h-full flex-col rounded-2xl border border-zinc-200 bg-white p-3 shadow-sm">
+            <p className="px-3 pb-2 pt-1.5 text-[11px] font-semibold uppercase tracking-wider text-zinc-400">Menu</p>
+            <nav className="flex gap-1.5 overflow-x-auto lg:flex-col">
+              <NavItem icon={<IconText className="h-[18px] w-[18px]" />} active={tab === "cvs"} onClick={() => setTab("cvs")}>
+                My CVs
+              </NavItem>
+              <NavItem icon={<IconTools className="h-[18px] w-[18px]" />} active={tab === "templates"} onClick={() => setTab("templates")}>
+                My Templates
+              </NavItem>
+              <NavItem icon={<IconUser className="h-[18px] w-[18px]" />} active={tab === "profile"} onClick={() => setTab("profile")}>
+                Profile
+              </NavItem>
+            </nav>
+
+            {/* Account — pinned to the bottom on desktop */}
+            <div className="mt-auto hidden pt-6 lg:block">
+              <div className="flex items-center gap-3 rounded-xl bg-zinc-50 p-3">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-blue-600 text-sm font-bold text-white">
+                  {initial}
+                </span>
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-semibold text-zinc-800">{user?.displayName || "Account"}</p>
+                  <p className="truncate text-xs text-zinc-500">{user?.email}</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => signOut()}
+                className="mt-2 w-full rounded-lg border border-zinc-200 px-3 py-2 text-xs font-semibold text-zinc-600 transition-colors hover:border-red-200 hover:bg-red-50 hover:text-red-600"
+              >
+                Sign out
+              </button>
+            </div>
           </div>
         </aside>
 
@@ -108,8 +125,10 @@ function NavItem({ icon, active, onClick, children }: { icon: ReactNode; active:
     <button
       type="button"
       onClick={onClick}
-      className={`flex shrink-0 items-center gap-2.5 rounded-lg px-3.5 py-2.5 text-sm font-medium transition-colors ${
-        active ? "bg-blue-50 text-blue-700" : "text-zinc-600 hover:bg-zinc-100"
+      className={`flex shrink-0 items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-sm font-medium transition-all ${
+        active
+          ? "bg-blue-600 text-white shadow-sm shadow-blue-600/25"
+          : "text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900"
       }`}
     >
       {icon}

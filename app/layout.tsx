@@ -7,6 +7,7 @@ import {
   Roboto,
   Lora,
   Source_Serif_4,
+  Playfair_Display,
 } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "./components/AuthProvider";
@@ -27,6 +28,9 @@ const poppins = Poppins({ variable: "--font-poppins", subsets: ["latin"], weight
 const roboto = Roboto({ variable: "--font-roboto", subsets: ["latin"], weight: ["400", "500", "700"] });
 const lora = Lora({ variable: "--font-lora", subsets: ["latin"] });
 const sourceSerif = Source_Serif_4({ variable: "--font-source-serif", subsets: ["latin"] });
+
+// Site heading font.
+const playfair = Playfair_Display({ variable: "--font-playfair", subsets: ["latin"] });
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.cvifyai.com"),
@@ -77,7 +81,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} ${poppins.variable} ${roboto.variable} ${lora.variable} ${sourceSerif.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} ${poppins.variable} ${roboto.variable} ${lora.variable} ${sourceSerif.variable} ${playfair.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
         <AuthProvider>{children}</AuthProvider>
