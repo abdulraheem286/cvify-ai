@@ -18,7 +18,7 @@ export default function BuildChooser() {
       <SiteHeader />
 
       <main className="flex flex-1 flex-col items-center justify-center px-6 py-20">
-        <div className="w-full max-w-5xl text-center">
+        <div className="w-full max-w-[1920px] text-center">
           <Reveal stagger>
             <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
               How do you want to build your CV?

@@ -1141,9 +1141,9 @@ function DragHandle({ bind }: { bind: { draggable: boolean; onDragStart: (e: Dra
       {...bind}
       title="Drag to reorder"
       aria-label="Drag to reorder"
-      className="flex cursor-grab items-center justify-center rounded p-1 text-zinc-400 transition-colors hover:text-zinc-700 active:cursor-grabbing"
+      className="flex cursor-grab items-center justify-center rounded-md border border-blue-200 bg-blue-50 p-1.5 text-blue-600 transition-colors hover:border-blue-300 hover:bg-blue-100 active:cursor-grabbing"
     >
-      <IconGrip className="h-4 w-4" />
+      <IconGrip className="h-[18px] w-[18px]" />
     </span>
   );
 }
