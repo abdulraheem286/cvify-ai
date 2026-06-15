@@ -1120,6 +1120,11 @@ function Panel({
             {icon}
           </span>
           <span className="font-medium text-zinc-900">{title}</span>
+          {hideable && hidden && (
+            <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-zinc-400">
+              Hidden
+            </span>
+          )}
         </button>
         <div className="flex items-center gap-1">
           {hideable && (
@@ -1137,9 +1142,7 @@ function Panel({
           </button>
         </div>
       </div>
-      {open && (
-        <div className={`border-t border-zinc-100 px-4 py-4 ${hidden ? "opacity-50" : ""}`}>{children}</div>
-      )}
+      {open && <div className="border-t border-zinc-100 px-4 py-4">{children}</div>}
     </div>
   );
 }
