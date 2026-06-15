@@ -17,7 +17,7 @@ export default function BuildChooser() {
     <div className="flex min-h-full flex-col bg-white text-zinc-900">
       <AppHeader />
 
-      <main className="flex flex-1 flex-col items-center justify-center px-[30px] py-20">
+      <main className="flex flex-1 flex-col items-center justify-center site-px py-20">
         <div className="w-full max-w-5xl text-center">
           <RequireAuth>
           <Reveal stagger>

@@ -106,7 +106,7 @@ export default function ImportClient() {
           backLabel="Back to import"
         />
       ) : (
-        <main className="flex flex-1 flex-col items-center px-[30px] py-10">
+        <main className="flex flex-1 flex-col items-center site-px py-10">
           <div className="w-full max-w-2xl">
             <button
               type="button"

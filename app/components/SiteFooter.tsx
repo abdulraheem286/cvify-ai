@@ -4,7 +4,7 @@ export function SiteFooter() {
   return (
     <footer className="bg-gradient-to-b from-zinc-50 to-zinc-100/50">
       <div className="h-1 w-full bg-gradient-to-r from-blue-600 via-indigo-500 to-blue-600" />
-      <div className="mx-auto max-w-[1920px] px-[30px] py-14">
+      <div className="mx-auto max-w-[1920px] site-px py-14">
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           <div>
             <Link href="/" className="text-lg font-bold tracking-tight text-zinc-900">

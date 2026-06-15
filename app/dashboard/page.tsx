@@ -72,10 +72,10 @@ function Dashboard() {
   return (
     <div className="flex min-h-full flex-1 flex-col bg-zinc-50 text-zinc-900">
       <AppHeader />
-      <div className="flex w-full flex-1 flex-col gap-8 px-[30px] py-8 lg:flex-row">
-        {/* Sidebar — sticky, full viewport height on desktop */}
-        <aside className="shrink-0 lg:sticky lg:top-[76px] lg:h-[calc(100vh-92px)] lg:w-64 lg:self-start">
-          <div className="flex h-full flex-col rounded-2xl border border-zinc-200 bg-white p-3 shadow-sm">
+      <div className="flex w-full flex-1 flex-col gap-8 site-px py-8 lg:flex-row">
+        {/* Sidebar — sticky; hugs its content so it doesn't stretch to the edge */}
+        <aside className="shrink-0 lg:sticky lg:top-[76px] lg:max-h-[calc(100vh-92px)] lg:w-64 lg:self-start">
+          <div className="flex flex-col rounded-2xl border border-zinc-200 bg-white p-3 shadow-sm">
             <p className="px-3 pb-2 pt-1.5 text-[11px] font-semibold uppercase tracking-wider text-zinc-400">Menu</p>
             <nav className="flex gap-1.5 overflow-x-auto lg:flex-col">
               <NavItem icon={<IconText className="h-[18px] w-[18px]" />} active={tab === "cvs"} onClick={() => setTab("cvs")}>
@@ -89,8 +89,8 @@ function Dashboard() {
               </NavItem>
             </nav>
 
-            {/* Account — pinned to the bottom on desktop */}
-            <div className="mt-auto hidden pt-6 lg:block">
+            {/* Account */}
+            <div className="hidden pt-6 lg:block">
               <div className="flex items-center gap-3 rounded-xl bg-zinc-50 p-3">
                 <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-blue-600 text-sm font-bold text-white">
                   {initial}
