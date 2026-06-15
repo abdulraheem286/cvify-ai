@@ -11,7 +11,7 @@ import { ConfirmDialog, PromptDialog } from "@/app/components/Dialog";
 import { listCvs, deleteCv, duplicateCv, renameCv, type CvRecord } from "@/app/lib/cvStore";
 import type { EditorForm } from "@/app/components/CvEditor";
 import type { CVResult } from "@/app/types";
-import { IconPlus, IconTrash, IconText, IconTools, IconUser, IconTarget, IconHistory } from "@/app/components/icons";
+import { IconPlus, IconTrash, IconText, IconTools, IconUser, IconHistory } from "@/app/components/icons";
 
 function ago(ts: number): string {
   if (!ts) return "";
@@ -60,20 +60,6 @@ function cvFromData(form: EditorForm, hidden: Record<string, boolean>): CVResult
           .map((s) => ({ heading: s.heading, items: s.items.filter((i) => i.title || i.description) }))
           .filter((s) => s.heading && s.items.length),
   };
-}
-
-// How "filled in" a single CV is, as a percentage of its key sections.
-function cvCompleteness(form: EditorForm, hidden: Record<string, boolean>): number {
-  const checks = [
-    !!(form.firstName || form.lastName),
-    !!form.jobTitle,
-    !!(form.email || form.phone || form.location),
-    !hidden.summary && !!form.summary.trim(),
-    !hidden.experience && form.experience.some((x) => x.role || x.company || x.bullets),
-    !hidden.education && form.education.some((x) => x.degree || x.institution),
-    !hidden.skills && !!form.skills.trim(),
-  ];
-  return Math.round((checks.filter(Boolean).length / checks.length) * 100);
 }
 
 type Tab = "cvs" | "templates" | "profile";
@@ -155,9 +141,6 @@ function CvsView() {
   const list = cvs ?? [];
   const count = list.length;
   const templatesUsed = new Set(list.map((c) => c.data.template)).size;
-  const avgComplete = list.length
-    ? Math.round(list.reduce((s, c) => s + cvCompleteness(c.data.form, c.data.hidden), 0) / list.length)
-    : 0;
   const mostRecent = list.length ? list.reduce((a, b) => (a.updatedAt > b.updatedAt ? a : b)) : null;
   const lastUpdated = mostRecent ? ago(mostRecent.updatedAt) : "—";
   const hour = new Date().getHours();
@@ -186,10 +169,9 @@ function CvsView() {
       </div>
 
       {/* Stat cards */}
-      <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard tint="slate" icon={<IconText className="h-5 w-5" />} value={String(count)} label="Total CVs" sub="In your account" />
+      <div className="mt-6 grid gap-4 sm:grid-cols-3">
+        <StatCard tint="blue" icon={<IconText className="h-5 w-5" />} value={String(count)} label="Total CVs" sub="In your account" />
         <StatCard tint="emerald" icon={<IconTools className="h-5 w-5" />} value={String(templatesUsed)} label="Templates used" sub="Different layouts" />
-        <StatCard tint="blue" icon={<IconTarget className="h-5 w-5" />} value={`${avgComplete}%`} label="Avg. complete" sub="Across your CVs" />
         <StatCard tint="amber" icon={<IconHistory className="h-5 w-5" />} value={lastUpdated} label="Last updated" sub={mostRecent?.title} />
       </div>
 
@@ -284,21 +266,21 @@ function CvsView() {
   );
 }
 
-const STAT_TINTS: Record<string, { card: string; icon: string }> = {
-  slate: { card: "from-slate-50 to-slate-100/50", icon: "text-slate-600" },
-  emerald: { card: "from-emerald-50 to-emerald-100/50", icon: "text-emerald-600" },
-  blue: { card: "from-blue-50 to-blue-100/50", icon: "text-blue-600" },
-  amber: { card: "from-amber-50 to-amber-100/50", icon: "text-amber-600" },
+const STAT_TINTS: Record<string, string> = {
+  blue: "bg-blue-50 text-blue-600",
+  emerald: "bg-emerald-50 text-emerald-600",
+  amber: "bg-amber-50 text-amber-600",
 };
 
 function StatCard({ tint, icon, value, label, sub }: { tint: keyof typeof STAT_TINTS; icon: ReactNode; value: string; label: string; sub?: string }) {
-  const t = STAT_TINTS[tint];
   return (
-    <div className={`rounded-2xl border border-zinc-200/70 bg-gradient-to-br ${t.card} p-5`}>
-      <div className={`flex h-10 w-10 items-center justify-center rounded-xl bg-white shadow-sm ${t.icon}`}>{icon}</div>
-      <p className="mt-4 text-2xl font-bold text-zinc-900">{value}</p>
-      <p className="text-sm font-medium text-zinc-600">{label}</p>
-      {sub && <p className="mt-0.5 text-xs text-zinc-400">{sub}</p>}
+    <div className="flex items-center gap-4 rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md">
+      <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl ${STAT_TINTS[tint]}`}>{icon}</div>
+      <div className="min-w-0">
+        <p className="truncate text-2xl font-bold leading-tight text-zinc-900">{value}</p>
+        <p className="truncate text-sm font-medium text-zinc-600">{label}</p>
+        {sub && <p className="truncate text-xs text-zinc-400">{sub}</p>}
+      </div>
     </div>
   );
 }

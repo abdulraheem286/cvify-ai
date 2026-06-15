@@ -5,6 +5,11 @@
   --foreground: #18181b;
 }
 
+/* Offset anchor-link jumps so section tops aren't hidden under the sticky header. */
+html {
+  scroll-padding-top: 100px;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
