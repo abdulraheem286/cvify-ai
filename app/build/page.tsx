@@ -18,10 +18,13 @@ export default function BuildChooser() {
       <AppHeader />
 
       <main className="flex flex-1 flex-col items-center justify-center px-6 py-20">
-        <div className="w-full max-w-[1920px] text-center">
+        <div className="w-full max-w-5xl text-center">
           <RequireAuth>
           <Reveal stagger>
-            <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
+            <span className="inline-block rounded-full border border-blue-100 bg-blue-50 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider text-blue-600">
+              Get started
+            </span>
+            <h1 className="mt-5 text-4xl font-bold tracking-tight sm:text-5xl">
               How do you want to build your CV?
             </h1>
             <p className="mt-3 text-zinc-600">
@@ -32,9 +35,12 @@ export default function BuildChooser() {
           <Reveal stagger delay={0.15} className="mt-12 grid gap-6 sm:grid-cols-3">
             <Link
               href="/build/ai"
-              className="group rounded-2xl border border-zinc-200 bg-white p-8 text-left shadow-sm transition-all hover:border-blue-300 hover:shadow-md"
+              className="group relative overflow-hidden rounded-2xl border border-zinc-200 bg-white p-7 text-left shadow-sm transition-all hover:-translate-y-1 hover:border-blue-300 hover:shadow-lg hover:shadow-blue-600/5"
             >
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+              <span className="absolute right-4 top-4 rounded-full bg-blue-600 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-white">
+                Popular
+              </span>
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-600/20">
                 <IconSparkles />
               </div>
               <h2 className="mt-5 text-xl font-semibold text-zinc-900">Build with AI</h2>
@@ -49,9 +55,9 @@ export default function BuildChooser() {
 
             <Link
               href="/build/manual"
-              className="group rounded-2xl border border-zinc-200 bg-white p-8 text-left shadow-sm transition-all hover:border-blue-300 hover:shadow-md"
+              className="group rounded-2xl border border-zinc-200 bg-white p-7 text-left shadow-sm transition-all hover:-translate-y-1 hover:border-blue-300 hover:shadow-lg hover:shadow-blue-600/5"
             >
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-600/20">
                 <IconPen />
               </div>
               <h2 className="mt-5 text-xl font-semibold text-zinc-900">Build manually</h2>
@@ -66,9 +72,9 @@ export default function BuildChooser() {
 
             <Link
               href="/build/import"
-              className="group rounded-2xl border border-zinc-200 bg-white p-8 text-left shadow-sm transition-all hover:border-blue-300 hover:shadow-md"
+              className="group rounded-2xl border border-zinc-200 bg-white p-7 text-left shadow-sm transition-all hover:-translate-y-1 hover:border-blue-300 hover:shadow-lg hover:shadow-blue-600/5"
             >
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-600/20">
                 <IconUpload />
               </div>
               <h2 className="mt-5 text-xl font-semibold text-zinc-900">Import existing CV</h2>
