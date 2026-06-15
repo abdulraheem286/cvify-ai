@@ -11,7 +11,7 @@ import { ConfirmDialog, PromptDialog } from "@/app/components/Dialog";
 import { listCvs, deleteCv, duplicateCv, renameCv, type CvRecord } from "@/app/lib/cvStore";
 import type { EditorForm } from "@/app/components/CvEditor";
 import type { CVResult } from "@/app/types";
-import { IconPlus, IconTrash, IconText, IconTools, IconUser, IconSparkles, IconHistory } from "@/app/components/icons";
+import { IconPlus, IconTrash, IconText, IconTools, IconUser, IconTarget, IconHistory } from "@/app/components/icons";
 
 function ago(ts: number): string {
   if (!ts) return "";
@@ -62,6 +62,20 @@ function cvFromData(form: EditorForm, hidden: Record<string, boolean>): CVResult
   };
 }
 
+// How "filled in" a single CV is, as a percentage of its key sections.
+function cvCompleteness(form: EditorForm, hidden: Record<string, boolean>): number {
+  const checks = [
+    !!(form.firstName || form.lastName),
+    !!form.jobTitle,
+    !!(form.email || form.phone || form.location),
+    !hidden.summary && !!form.summary.trim(),
+    !hidden.experience && form.experience.some((x) => x.role || x.company || x.bullets),
+    !hidden.education && form.education.some((x) => x.degree || x.institution),
+    !hidden.skills && !!form.skills.trim(),
+  ];
+  return Math.round((checks.filter(Boolean).length / checks.length) * 100);
+}
+
 type Tab = "cvs" | "templates" | "profile";
 
 function Dashboard() {
@@ -69,7 +83,7 @@ function Dashboard() {
   const [tab, setTab] = useState<Tab>("cvs");
 
   return (
-    <div className="flex min-h-full flex-col bg-zinc-50 text-zinc-900">
+    <div className="flex min-h-full flex-1 flex-col bg-zinc-50 text-zinc-900">
       <AppHeader />
       <div className="flex w-full flex-1 flex-col gap-8 px-6 py-8 lg:flex-row lg:px-8">
         {/* Sidebar */}
@@ -138,8 +152,14 @@ function CvsView() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
-  const count = cvs?.length ?? 0;
-  const lastUpdated = cvs && cvs.length ? ago(Math.max(...cvs.map((c) => c.updatedAt))) : "—";
+  const list = cvs ?? [];
+  const count = list.length;
+  const templatesUsed = new Set(list.map((c) => c.data.template)).size;
+  const avgComplete = list.length
+    ? Math.round(list.reduce((s, c) => s + cvCompleteness(c.data.form, c.data.hidden), 0) / list.length)
+    : 0;
+  const mostRecent = list.length ? list.reduce((a, b) => (a.updatedAt > b.updatedAt ? a : b)) : null;
+  const lastUpdated = mostRecent ? ago(mostRecent.updatedAt) : "—";
   const hour = new Date().getHours();
   const greeting = hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
   const firstName = (user?.displayName || "there").trim().split(" ")[0];
@@ -167,10 +187,10 @@ function CvsView() {
 
       {/* Stat cards */}
       <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard tint="slate" icon={<IconText className="h-5 w-5" />} value={String(count)} label="Total CVs" />
-        <StatCard tint="emerald" icon={<IconTools className="h-5 w-5" />} value="18" label="Templates" sub="Pick any layout" />
-        <StatCard tint="blue" icon={<IconSparkles className="h-5 w-5" />} value="3" label="AI tools" sub="Writer · Tailor · Import" />
-        <StatCard tint="amber" icon={<IconHistory className="h-5 w-5" />} value={lastUpdated} label="Last updated" />
+        <StatCard tint="slate" icon={<IconText className="h-5 w-5" />} value={String(count)} label="Total CVs" sub="In your account" />
+        <StatCard tint="emerald" icon={<IconTools className="h-5 w-5" />} value={String(templatesUsed)} label="Templates used" sub="Different layouts" />
+        <StatCard tint="blue" icon={<IconTarget className="h-5 w-5" />} value={`${avgComplete}%`} label="Avg. complete" sub="Across your CVs" />
+        <StatCard tint="amber" icon={<IconHistory className="h-5 w-5" />} value={lastUpdated} label="Last updated" sub={mostRecent?.title} />
       </div>
 
       {error && <p className="mt-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}
