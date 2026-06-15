@@ -17,7 +17,7 @@ import {
   IconDownload,
   IconHistory,
 } from "./components/icons";
-import type { CVResult } from "./types";
+import { SAMPLE_CV as sampleCv } from "./lib/sampleCv";
 
 export const metadata: Metadata = {
   title: "CVify AI — Free AI Resume & CV Builder | Build a Pro CV in Minutes",
@@ -76,48 +76,6 @@ const faqs = [
     a: "For most people, one page is ideal — two if you have many years of relevant experience. Focus on recent, relevant achievements and trim older or unrelated roles.",
   },
 ];
-
-const sampleCv: CVResult = {
-  fullName: "Sarah Johnson",
-  jobTitle: "Senior Product Designer",
-  contact: {
-    email: "sarah@example.com",
-    phone: "+1 (555) 123-4567",
-    location: "London, UK",
-    website: "sarahjohnson.design",
-  },
-  summary:
-    "Product designer with 6+ years crafting intuitive, user-centered digital experiences for fast-growing startups. Passionate about clean design systems and measurable impact.",
-  experience: [
-    {
-      role: "Senior Product Designer",
-      company: "DesignCo",
-      period: "2021 — Present",
-      bullets: [
-        "Led the redesign of the core product, lifting user activation by 32%.",
-        "Built and maintained the company design system used by 12 engineers.",
-      ],
-    },
-    {
-      role: "Product Designer",
-      company: "StartupX",
-      period: "2018 — 2021",
-      bullets: [
-        "Shipped 20+ features from research through high-fidelity design.",
-        "Ran usability tests that cut support tickets by 25%.",
-      ],
-    },
-  ],
-  education: [
-    { degree: "BA, Interaction Design", institution: "London College of Communication", period: "2014 — 2018" },
-  ],
-  skills: ["Figma", "Prototyping", "Design Systems", "UX Research", "UI Design"],
-  languages: [
-    { name: "English", level: "Native" },
-    { name: "Spanish", level: "Fluent" },
-  ],
-  certificates: [{ name: "Google UX Design Certificate", issuer: "Coursera", year: "2022" }],
-};
 
 export default function Home() {
   const jsonLd = {
@@ -206,7 +164,7 @@ export default function Home() {
 
         {/* Honest highlights */}
         <section className="border-b border-zinc-200 bg-white">
-          <div className="mx-auto grid max-w-[1920px] gap-4 px-6 py-10 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mx-auto grid max-w-[1920px] gap-5 px-6 py-14 sm:grid-cols-2 lg:grid-cols-4">
             <Stat value="100%" label="Free to use" />
             <Stat value="18" label="Distinct templates" />
             <Stat value="AI" label="Writes & improves it" />
@@ -423,9 +381,9 @@ function SectionHead({ eyebrow, title, subtitle }: { eyebrow: string; title: str
 
 function Stat({ value, label }: { value: string; label: string }) {
   return (
-    <div className="rounded-xl border border-zinc-200 bg-white p-5 text-center shadow-sm transition-colors hover:border-blue-200">
-      <p className="bg-gradient-to-r from-blue-600 to-indigo-500 bg-clip-text text-3xl font-bold text-transparent">{value}</p>
-      <p className="mt-1 text-sm text-zinc-500">{label}</p>
+    <div className="rounded-2xl border border-zinc-200 bg-white p-8 text-center shadow-sm transition-all hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-md">
+      <p className="bg-gradient-to-r from-blue-600 to-indigo-500 bg-clip-text text-4xl font-bold text-transparent sm:text-5xl">{value}</p>
+      <p className="mt-2 text-base font-medium text-zinc-500">{label}</p>
     </div>
   );
 }

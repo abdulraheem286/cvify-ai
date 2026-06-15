@@ -9,41 +9,8 @@ import {
   type Category,
   type TemplateId,
 } from "@/app/templates";
-import type { CVResult } from "@/app/types";
+import { SAMPLE_CV as SAMPLE } from "@/app/lib/sampleCv";
 import { IconArrowLeft } from "./icons";
-
-const SAMPLE: CVResult = {
-  fullName: "Sarah Johnson",
-  jobTitle: "Senior Product Designer",
-  contact: {
-    email: "sarah@example.com",
-    phone: "+1 (555) 123-4567",
-    location: "London, UK",
-    website: "sarahjohnson.design",
-  },
-  summary:
-    "Product designer with 6+ years crafting intuitive, user-centered digital experiences for fast-growing startups.",
-  experience: [
-    {
-      role: "Senior Product Designer",
-      company: "DesignCo",
-      period: "2021 — Present",
-      bullets: [
-        "Led the redesign of the core product, lifting activation by 32%.",
-        "Built the company design system used by 12 engineers.",
-      ],
-    },
-    {
-      role: "Product Designer",
-      company: "StartupX",
-      period: "2018 — 2021",
-      bullets: ["Shipped 20+ features from research through high-fidelity design."],
-    },
-  ],
-  education: [{ degree: "BA, Interaction Design", institution: "London College", period: "2014 — 2018" }],
-  skills: ["Figma", "Prototyping", "Design Systems", "UX Research", "UI Design"],
-  languages: [{ name: "English", level: "Native" }],
-};
 
 export function TemplateGallery({
   onSelect,

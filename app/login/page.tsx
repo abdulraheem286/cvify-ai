@@ -6,7 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/app/components/AuthProvider";
 import { ScaledPreview } from "@/app/components/ScaledPreview";
 import { ModernTemplate } from "@/app/templates/ModernTemplate";
-import type { CVResult } from "@/app/types";
+import { SAMPLE_CV as sampleCv } from "@/app/lib/sampleCv";
 
 function authMessage(code: string): string {
   if (code.includes("invalid-credential") || code.includes("wrong-password") || code.includes("user-not-found"))
@@ -17,39 +17,6 @@ function authMessage(code: string): string {
   if (code.includes("popup-closed")) return "Sign-in was cancelled.";
   return "Something went wrong. Please try again.";
 }
-
-// Sample CV shown in the marketing panel.
-const sampleCv: CVResult = {
-  fullName: "Sarah Johnson",
-  jobTitle: "Senior Product Designer",
-  contact: { email: "sarah@example.com", phone: "+1 (555) 123-4567", location: "London, UK", website: "sarahjohnson.design" },
-  summary:
-    "Product designer with 6+ years crafting intuitive, user-centered digital experiences for fast-growing startups.",
-  experience: [
-    {
-      role: "Senior Product Designer",
-      company: "DesignCo",
-      period: "2021 — Present",
-      bullets: [
-        "Led the redesign of the core product, lifting user activation by 32%.",
-        "Built and maintained the design system used by 12 engineers.",
-      ],
-    },
-    {
-      role: "Product Designer",
-      company: "StartupX",
-      period: "2018 — 2021",
-      bullets: ["Shipped 20+ features from research through high-fidelity design."],
-    },
-  ],
-  education: [{ degree: "BA, Interaction Design", institution: "London College of Communication", period: "2014 — 2018" }],
-  skills: ["Figma", "Prototyping", "Design Systems", "UX Research", "UI Design"],
-  languages: [
-    { name: "English", level: "Native" },
-    { name: "Spanish", level: "Fluent" },
-  ],
-  certificates: [{ name: "Google UX Design Certificate", issuer: "Coursera", year: "2022" }],
-};
 
 function LoginInner() {
   const router = useRouter();
