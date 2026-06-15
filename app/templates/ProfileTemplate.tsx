@@ -2,6 +2,7 @@ import type { CSSProperties } from "react";
 import type { CVResult } from "@/app/types";
 import { themeVars, DEFAULT_THEME, type Theme } from "./theme";
 import { CustomItems } from "./CustomItems";
+import { renderRich, renderInline } from "../lib/richtext";
 
 // Profile: content on the left, a primary right rail with photo, contact, skills, languages.
 export function ProfileTemplate({ cv, domId = "cv-document", theme = DEFAULT_THEME }: { cv: CVResult; domId?: string; theme?: Theme }) {
@@ -17,7 +18,7 @@ export function ProfileTemplate({ cv, domId = "cv-document", theme = DEFAULT_THE
           <p className="mt-1 text-lg font-medium text-[var(--primary)]">{cv.jobTitle}</p>
         </header>
 
-        {cv.summary && <p className="mt-5 text-sm leading-relaxed text-zinc-700">{cv.summary}</p>}
+        {cv.summary && <p className="mt-5 text-sm leading-relaxed text-zinc-700">{renderRich(cv.summary)}</p>}
 
         {cv.experience?.length > 0 && (
           <Section title="Experience">
@@ -29,7 +30,7 @@ export function ProfileTemplate({ cv, domId = "cv-document", theme = DEFAULT_THE
                 </div>
                 {job.company && <p className="text-sm font-medium text-[var(--primary)]">{job.company}</p>}
                 <ul className="mt-1.5 list-disc space-y-1 pl-5 text-sm text-zinc-700">
-                  {job.bullets?.map((b, j) => <li key={j}>{b}</li>)}
+                  {job.bullets?.map((b, j) => <li key={j}>{renderInline(b)}</li>)}
                 </ul>
               </div>
             ))}

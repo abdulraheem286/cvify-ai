@@ -2,6 +2,7 @@ import type { CSSProperties } from "react";
 import type { CVResult } from "@/app/types";
 import { themeVars, DEFAULT_THEME, type Theme } from "./theme";
 import { CustomItems } from "./CustomItems";
+import { renderRich, renderInline } from "../lib/richtext";
 
 // Gutter: section titles sit in a narrow left column, content on the right. Editorial / minimal.
 export function GutterTemplate({ cv, domId = "cv-document", theme = DEFAULT_THEME }: { cv: CVResult; domId?: string; theme?: Theme }) {
@@ -28,7 +29,7 @@ export function GutterTemplate({ cv, domId = "cv-document", theme = DEFAULT_THEM
 
         {cv.summary && (
           <Row label="Profile">
-            <p className="text-sm leading-relaxed text-zinc-700">{cv.summary}</p>
+            <p className="text-sm leading-relaxed text-zinc-700">{renderRich(cv.summary)}</p>
           </Row>
         )}
 
@@ -41,7 +42,7 @@ export function GutterTemplate({ cv, domId = "cv-document", theme = DEFAULT_THEM
                   {job.period && <span className="shrink-0 text-xs text-zinc-500">{job.period}</span>}
                 </div>
                 <ul className="mt-1.5 list-disc space-y-1 pl-5 text-sm text-zinc-700">
-                  {job.bullets?.map((b, j) => <li key={j}>{b}</li>)}
+                  {job.bullets?.map((b, j) => <li key={j}>{renderInline(b)}</li>)}
                 </ul>
               </div>
             ))}

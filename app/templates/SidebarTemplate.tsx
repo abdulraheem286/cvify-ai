@@ -2,6 +2,7 @@ import type { CSSProperties } from "react";
 import type { CVResult } from "@/app/types";
 import { themeVars, DEFAULT_THEME, type Theme } from "./theme";
 import { CustomItems } from "./CustomItems";
+import { renderRich, renderInline } from "../lib/richtext";
 
 type Props = { cv: CVResult; domId?: string; theme?: Theme };
 
@@ -54,7 +55,7 @@ export function SidebarTemplate({ cv, domId = "cv-document", theme = DEFAULT_THE
       </aside>
 
       <main className="w-[66%] p-7">
-        {cv.summary && <p className="text-sm leading-relaxed text-zinc-700">{cv.summary}</p>}
+        {cv.summary && <p className="text-sm leading-relaxed text-zinc-700">{renderRich(cv.summary)}</p>}
 
         {cv.experience?.length > 0 && (
           <Section title="Experience">
@@ -66,7 +67,7 @@ export function SidebarTemplate({ cv, domId = "cv-document", theme = DEFAULT_THE
                 </div>
                 {job.company && <p className="text-sm text-[var(--primary)]">{job.company}</p>}
                 <ul className="mt-1.5 list-disc space-y-1 pl-5 text-sm text-zinc-700">
-                  {job.bullets?.map((b, j) => <li key={j}>{b}</li>)}
+                  {job.bullets?.map((b, j) => <li key={j}>{renderInline(b)}</li>)}
                 </ul>
               </div>
             ))}

@@ -2,6 +2,7 @@ import type { CSSProperties } from "react";
 import type { CVResult } from "@/app/types";
 import { themeVars, DEFAULT_THEME, type Theme } from "./theme";
 import { CustomItems } from "./CustomItems";
+import { renderRich, renderInline } from "../lib/richtext";
 
 // Compact: dense single column with inline section labels — fits a lot on one page.
 export function CompactTemplate({ cv, domId = "cv-document", theme = DEFAULT_THEME }: { cv: CVResult; domId?: string; theme?: Theme }) {
@@ -24,7 +25,7 @@ export function CompactTemplate({ cv, domId = "cv-document", theme = DEFAULT_THE
         </header>
         {contactLine && <p className="mt-2 text-xs text-zinc-500">{contactLine}</p>}
 
-        {cv.summary && <p className="mt-3 text-[13px] leading-snug text-zinc-700">{cv.summary}</p>}
+        {cv.summary && <p className="mt-3 text-[13px] leading-snug text-zinc-700">{renderRich(cv.summary)}</p>}
 
         {cv.experience?.length > 0 && (
           <Section title="Experience">
@@ -35,7 +36,7 @@ export function CompactTemplate({ cv, domId = "cv-document", theme = DEFAULT_THE
                   {job.period && <span className="shrink-0 text-[11px] text-zinc-500">{job.period}</span>}
                 </div>
                 <ul className="mt-0.5 list-disc space-y-0.5 pl-4 text-[13px] leading-snug text-zinc-700">
-                  {job.bullets?.map((b, j) => <li key={j}>{b}</li>)}
+                  {job.bullets?.map((b, j) => <li key={j}>{renderInline(b)}</li>)}
                 </ul>
               </div>
             ))}

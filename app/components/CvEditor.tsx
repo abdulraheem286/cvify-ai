@@ -9,9 +9,9 @@ import { DEFAULT_TEMPLATE, getDefaultTheme, type TemplateId, type Theme } from "
 import { TemplateView } from "@/app/templates/TemplateView";
 import { downloadCvPdf } from "@/app/lib/pdf";
 import { aiSummary, aiBullets, aiSkills } from "@/app/lib/assist";
+import { RichTextarea } from "./RichTextarea";
 import {
   IconField,
-  FieldTextarea,
   nameError,
   emailError,
   phoneError,
@@ -746,7 +746,7 @@ export function CvEditor({
                   {form.summary.trim() ? "Improve with AI" : "Write with AI"}
                 </AiButton>
               </div>
-              <FieldTextarea label="Professional summary" value={form.summary} onChange={set("summary")} rows={3} placeholder="A short 2–3 sentence summary of who you are and what you do." />
+              <RichTextarea label="Professional summary" value={form.summary} onChange={set("summary")} rows={3} placeholder="A short 2–3 sentence summary of who you are and what you do." />
             </Panel>
 
             <Panel id="experience" title="Experience" icon={<IconBriefcase className="h-[18px] w-[18px]" />} open={!!open.experience} onToggleOpen={() => toggleOpen("experience")} hideable hidden={hidden.experience} onToggleHide={() => toggleHide("experience")}>
@@ -763,7 +763,7 @@ export function CvEditor({
                     <PlainInput label="Company" value={exp.company} onChange={(v) => updateList("experience", i, "company", v)} placeholder="TechCorp" />
                   </div>
                   <PlainInput label="Period" value={exp.period} onChange={(v) => updateList("experience", i, "period", v)} placeholder="2022 – Present" />
-                  <FieldTextarea label="Bullet points (one per line)" value={exp.bullets} onChange={(v) => updateList("experience", i, "bullets", v)} rows={3} placeholder={"Built the new dashboard\nImproved page speed by 40%"} />
+                  <RichTextarea label="Bullet points (one per line)" value={exp.bullets} onChange={(v) => updateList("experience", i, "bullets", v)} rows={3} placeholder={"Built the new dashboard\nImproved page speed by 40%"} list={false} />
                   <div className="flex items-center justify-between">
                     <AiButton onClick={() => handleAiBullets(i)} busy={aiBusy === `bullets-${i}`} disabled={!exp.bullets.trim()}>
                       Improve bullets
@@ -844,7 +844,7 @@ export function CvEditor({
                           <PlainInput label="Subtitle (optional)" value={it.subtitle} onChange={(v) => updateCustomItem(i, j, "subtitle", v)} placeholder="Role / issuer" />
                         </div>
                         <PlainInput label="Date (optional)" value={it.period} onChange={(v) => updateCustomItem(i, j, "period", v)} placeholder="2023" />
-                        <FieldTextarea label="Description (optional)" value={it.description} onChange={(v) => updateCustomItem(i, j, "description", v)} rows={2} placeholder="One or two lines about it." />
+                        <RichTextarea label="Description (optional)" value={it.description} onChange={(v) => updateCustomItem(i, j, "description", v)} rows={2} placeholder="One or two lines about it." />
                         {s.items.length > 1 && (
                           <div className="flex items-center justify-between">
                             <MoveBtns onUp={() => moveCustomItem(i, j, -1)} onDown={() => moveCustomItem(i, j, 1)} isFirst={j === 0} isLast={j === s.items.length - 1} />
@@ -1013,7 +1013,7 @@ function Panel({
               {hidden ? <IconEyeOff className="h-[18px] w-[18px]" /> : <IconEye className="h-[18px] w-[18px]" />}
             </button>
           )}
-          <button type="button" onClick={onToggleOpen} className="rounded p-1.5 text-zinc-400">
+          <button type="button" onClick={onToggleOpen} title={open ? "Collapse" : "Expand"} aria-label={open ? "Collapse" : "Expand"} className="rounded p-1.5 text-zinc-400 transition-colors hover:text-zinc-700">
             <IconChevron className={`h-[18px] w-[18px] transition-transform ${open ? "rotate-180" : ""}`} />
           </button>
         </div>

@@ -2,6 +2,7 @@ import type { CSSProperties } from "react";
 import type { CVResult } from "@/app/types";
 import { themeVars, DEFAULT_THEME, type Theme } from "./theme";
 import { CustomItems } from "./CustomItems";
+import { renderRich, renderInline } from "../lib/richtext";
 
 // Cards: each section is a soft rounded card — a modern dashboard feel.
 export function CardsTemplate({ cv, domId = "cv-document", theme = DEFAULT_THEME }: { cv: CVResult; domId?: string; theme?: Theme }) {
@@ -31,7 +32,7 @@ export function CardsTemplate({ cv, domId = "cv-document", theme = DEFAULT_THEME
 
         {cv.summary && (
           <Card title="Profile">
-            <p className="text-sm leading-relaxed text-zinc-700">{cv.summary}</p>
+            <p className="text-sm leading-relaxed text-zinc-700">{renderRich(cv.summary)}</p>
           </Card>
         )}
 
@@ -45,7 +46,7 @@ export function CardsTemplate({ cv, domId = "cv-document", theme = DEFAULT_THEME
                 </div>
                 {job.company && <p className="text-sm font-medium text-[var(--primary)]">{job.company}</p>}
                 <ul className="mt-1.5 list-disc space-y-1 pl-5 text-sm text-zinc-700">
-                  {job.bullets?.map((b, j) => <li key={j}>{b}</li>)}
+                  {job.bullets?.map((b, j) => <li key={j}>{renderInline(b)}</li>)}
                 </ul>
               </div>
             ))}
