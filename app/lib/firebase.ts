@@ -2,16 +2,16 @@ import { initializeApp, getApps, type FirebaseApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider, type Auth } from "firebase/auth";
 import { getFirestore, type Firestore } from "firebase/firestore";
 
-// Config comes from public env vars (safe to ship to the browser — security is
-// enforced by Firestore rules). Set these in Vercel + .env.local once the
-// Firebase project exists.
+// Public web config (safe to ship to the browser — these identify the project,
+// they are NOT secrets; security is enforced by Firestore rules + authorized
+// domains). Env vars override if set.
 const config = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "AIzaSyDi7lhNK85DKHyaViLX3RP0KFTQrmw25hw",
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || "cvify-ai-286.firebaseapp.com",
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "cvify-ai-286",
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || "cvify-ai-286.firebasestorage.app",
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || "1081775926061",
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || "1:1081775926061:web:e25e4ed4100d8a8d75c1a4",
 };
 
 // True once the project config is present. Until then, the app runs normally
