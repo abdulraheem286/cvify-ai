@@ -12,6 +12,7 @@ import { aiSummary, aiBullets, aiSkills } from "@/app/lib/assist";
 import { RichTextarea } from "./RichTextarea";
 import { useAuth } from "./AuthProvider";
 import { createCv, saveCv } from "@/app/lib/cvStore";
+import { ConfirmDialog } from "./Dialog";
 import {
   IconField,
   nameError,
@@ -294,8 +295,11 @@ export function CvEditor({
   const [tailoring, setTailoring] = useState(false);
   const [tailorError, setTailorError] = useState<string | null>(null);
   const [tailorResult, setTailorResult] = useState<{ missingSkills: string[]; notes: string } | null>(null);
+  const [confirmFresh, setConfirmFresh] = useState(false);
   const firstSave = useRef(true);
+  const firstCloud = useRef(true);
   const dragRef = useRef<{ kind: string; index: number } | null>(null);
+  const signedIn = authEnabled && !!user;
 
   const exportCv = formToCv(form, hidden); // clean — used for the PDF
   const previewCv = formToCv(form, hidden, true); // with placeholders — preview only
@@ -338,6 +342,22 @@ export function CvEditor({
     return () => clearTimeout(t);
   }, [form, template, theme, hidden]);
 
+  // Cloud auto-save (signed-in users): debounced; creates the CV doc on the
+  // first real edit, then keeps updating it. No manual Save button needed.
+  useEffect(() => {
+    if (!signedIn) return;
+    if (firstCloud.current) {
+      firstCloud.current = false;
+      return;
+    }
+    if (!formHasContent(form)) return;
+    const t = setTimeout(() => {
+      handleCloudSave();
+    }, 1200);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [form, template, theme, hidden, signedIn]);
+
   function restoreDraft() {
     if (!draft) return;
     setForm(draft.form);
@@ -350,8 +370,16 @@ export function CvEditor({
   function startFresh() {
     setForm(EMPTY_FORM);
     setDraft(null);
+    setCloudId(undefined);
+    setCloudSavedAt(null);
+    firstCloud.current = true;
     try {
       localStorage.removeItem(DRAFT_KEY);
+    } catch {
+      /* ignore */
+    }
+    try {
+      window.history.replaceState(null, "", window.location.pathname);
     } catch {
       /* ignore */
     }
@@ -695,13 +723,17 @@ export function CvEditor({
           <IconArrowLeft className="h-4 w-4" /> <span className="hidden sm:inline">{backLabel}</span>
         </button>
         <div className="flex items-center gap-2">
-          {savedAt && (
-            <button type="button" onClick={startFresh} className="hidden text-xs font-medium text-zinc-400 transition-colors hover:text-zinc-700 sm:inline">
+          {signedIn
+            ? (cloudSaving || cloudSavedAt) && (
+                <span className="hidden text-xs text-zinc-400 md:inline">{cloudSaving ? "Saving…" : "Saved ✓"}</span>
+              )
+            : (saving || savedAt) && (
+                <span className="hidden text-xs text-zinc-400 md:inline">{saving ? "Saving…" : "Saved ✓"}</span>
+              )}
+          {(savedAt || cloudSavedAt) && (
+            <button type="button" onClick={() => setConfirmFresh(true)} className="hidden text-xs font-medium text-zinc-400 transition-colors hover:text-zinc-700 sm:inline">
               Start fresh
             </button>
-          )}
-          {(saving || savedAt) && (
-            <span className="hidden text-xs text-zinc-400 md:inline">{saving ? "Saving…" : "Saved ✓"}</span>
           )}
           <button
             type="button"
@@ -713,18 +745,6 @@ export function CvEditor({
           </button>
           <TemplatePicker value={template} onChange={setTemplate} />
           <CustomizationPanel value={theme} onChange={setTheme} />
-          {authEnabled && user && (
-            <button
-              type="button"
-              onClick={handleCloudSave}
-              disabled={cloudSaving}
-              className="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-50 disabled:opacity-60"
-            >
-              {cloudSaving && <span className="h-4 w-4 animate-spin rounded-full border-2 border-zinc-300 border-t-blue-600" />}
-              <span className="hidden sm:inline">{cloudSaving ? "Saving…" : cloudSavedAt ? "Saved ✓" : "Save"}</span>
-              <span className="sm:hidden">{cloudSaving ? "…" : "Save"}</span>
-            </button>
-          )}
           <button
             type="button"
             onClick={handleDownload}
@@ -741,7 +761,7 @@ export function CvEditor({
         </div>
       </div>
 
-      {draft && (
+      {!signedIn && draft && (
         <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-blue-200 bg-blue-50 px-4 py-3 print:hidden">
           <p className="text-sm text-blue-900">
             You have an unsaved draft from {timeAgo(draft.savedAt)}. Restore it?
@@ -1089,6 +1109,18 @@ export function CvEditor({
           </div>
         </div>
       )}
+      <ConfirmDialog
+        open={confirmFresh}
+        title="Start fresh?"
+        message="This clears the editor and starts a new, blank CV. Your saved CVs aren't affected."
+        confirmLabel="Start fresh"
+        danger
+        onConfirm={() => {
+          startFresh();
+          setConfirmFresh(false);
+        }}
+        onClose={() => setConfirmFresh(false)}
+      />
     </main>
   );
 }
