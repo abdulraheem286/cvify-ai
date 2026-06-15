@@ -212,19 +212,6 @@ function formToCv(form: EditorForm, hidden: Record<SectionKey, boolean>, ph = fa
 
 const DRAFT_KEY = "cvify:draft:v1";
 
-const EXAMPLE = {
-  summary:
-    "Product designer with 6+ years crafting intuitive, user-centered experiences for fast-growing startups. I lead design-systems work and ship measurable improvements end to end.",
-  experience: {
-    role: "Senior Product Designer",
-    company: "DesignCo",
-    period: "2021 — Present",
-    bullets: "Led the redesign that lifted activation by 32%\nBuilt the design system used by 12 engineers",
-  },
-  education: { degree: "BA, Interaction Design", institution: "London College", period: "2014 — 2018" },
-  skills: "Figma, Prototyping, Design Systems, UX Research, UI Design",
-};
-
 type Draft = {
   form: EditorForm;
   template: TemplateId;
@@ -507,34 +494,6 @@ export function CvEditor({
   const toggleOpen = (k: string) => setOpen((p) => ({ ...p, [k]: !p[k] }));
   const PANEL_IDS = ["personal", "summary", "experience", "education", "skills", "languages", "certificates", "customSections"];
   const setAllOpen = (v: boolean) => setOpen(Object.fromEntries(PANEL_IDS.map((k) => [k, v])));
-
-  // ---- "See example" fills ----
-  const exampleSummary = () => setForm((p) => ({ ...p, summary: p.summary.trim() ? p.summary : EXAMPLE.summary }));
-  const exampleSkills = () => setForm((p) => ({ ...p, skills: p.skills.trim() ? p.skills : EXAMPLE.skills }));
-  function exampleExperience() {
-    setForm((p) => {
-      const f = p.experience[0];
-      const empty = f && !f.role && !f.company && !f.bullets;
-      if (empty) {
-        const l = [...p.experience];
-        l[0] = { ...EXAMPLE.experience };
-        return { ...p, experience: l };
-      }
-      return { ...p, experience: [...p.experience, { ...EXAMPLE.experience }] };
-    });
-  }
-  function exampleEducation() {
-    setForm((p) => {
-      const f = p.education[0];
-      const empty = f && !f.degree && !f.institution;
-      if (empty) {
-        const l = [...p.education];
-        l[0] = { ...EXAMPLE.education };
-        return { ...p, education: l };
-      }
-      return { ...p, education: [...p.education, { ...EXAMPLE.education }] };
-    });
-  }
 
   async function handleDownload() {
     setDownloading(true);
@@ -832,8 +791,7 @@ export function CvEditor({
             </Panel>
 
             <Panel id="summary" title="Summary" icon={<IconText className="h-[18px] w-[18px]" />} open={!!open.summary} onToggleOpen={() => toggleOpen("summary")} hideable hidden={hidden.summary} onToggleHide={() => toggleHide("summary")}>
-              <div className="mb-2 flex items-center justify-between">
-                <ExampleBtn onClick={exampleSummary} />
+              <div className="mb-2 flex justify-end">
                 <AiButton onClick={handleAiSummary} busy={aiBusy === "summary"}>
                   {form.summary.trim() ? "Improve with AI" : "Write with AI"}
                 </AiButton>
@@ -847,9 +805,7 @@ export function CvEditor({
                   {form.experience.length > 1 && (
                     <div className="flex items-center justify-between">
                       <span className="flex items-center gap-1.5 text-xs font-medium text-zinc-400">
-                        <span {...gripProps("experience", i)} title="Drag to reorder" className="cursor-grab text-zinc-300 transition-colors hover:text-zinc-500 active:cursor-grabbing">
-                          <IconGrip className="h-4 w-4" />
-                        </span>
+                        <DragHandle bind={gripProps("experience", i)} />
                         #{i + 1}
                       </span>
                       <MoveBtns onUp={() => moveItem("experience", i, -1)} onDown={() => moveItem("experience", i, 1)} isFirst={i === 0} isLast={i === form.experience.length - 1} />
@@ -871,10 +827,7 @@ export function CvEditor({
                   </div>
                 </div>
               ))}
-              <div className="flex items-center justify-between">
-                <AddBtn onClick={() => addItem("experience", { role: "", company: "", period: "", bullets: "" })}>Add job</AddBtn>
-                <ExampleBtn onClick={exampleExperience} />
-              </div>
+              <AddBtn onClick={() => addItem("experience", { role: "", company: "", period: "", bullets: "" })}>Add job</AddBtn>
             </Panel>
 
             <Panel id="education" title="Education" icon={<IconGraduation className="h-[18px] w-[18px]" />} open={!!open.education} onToggleOpen={() => toggleOpen("education")} hideable hidden={hidden.education} onToggleHide={() => toggleHide("education")}>
@@ -883,9 +836,7 @@ export function CvEditor({
                   {form.education.length > 1 && (
                     <div className="flex items-center justify-between">
                       <span className="flex items-center gap-1.5 text-xs font-medium text-zinc-400">
-                        <span {...gripProps("education", i)} title="Drag to reorder" className="cursor-grab text-zinc-300 transition-colors hover:text-zinc-500 active:cursor-grabbing">
-                          <IconGrip className="h-4 w-4" />
-                        </span>
+                        <DragHandle bind={gripProps("education", i)} />
                         #{i + 1}
                       </span>
                       <MoveBtns onUp={() => moveItem("education", i, -1)} onDown={() => moveItem("education", i, 1)} isFirst={i === 0} isLast={i === form.education.length - 1} />
@@ -899,16 +850,12 @@ export function CvEditor({
                   {form.education.length > 1 && <RemoveBtn onClick={() => removeItem("education", i)}>Remove entry</RemoveBtn>}
                 </div>
               ))}
-              <div className="flex items-center justify-between">
-                <AddBtn onClick={() => addItem("education", { degree: "", institution: "", period: "" })}>Add education</AddBtn>
-                <ExampleBtn onClick={exampleEducation} />
-              </div>
+              <AddBtn onClick={() => addItem("education", { degree: "", institution: "", period: "" })}>Add education</AddBtn>
             </Panel>
 
             <Panel id="skills" title="Skills" icon={<IconTools className="h-[18px] w-[18px]" />} open={!!open.skills} onToggleOpen={() => toggleOpen("skills")} hideable hidden={hidden.skills} onToggleHide={() => toggleHide("skills")}>
               <PlainInput label="Skills (separate with commas)" value={form.skills} onChange={set("skills")} placeholder="JavaScript, React, Figma, Team leadership" />
-              <div className="mt-2 flex items-center justify-between">
-                <ExampleBtn onClick={exampleSkills} />
+              <div className="mt-2">
                 <AiButton onClick={handleAiSkills} busy={aiBusy === "skills"}>Suggest skills</AiButton>
               </div>
             </Panel>
@@ -957,9 +904,7 @@ export function CvEditor({
                         {s.items.length > 1 && (
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
-                              <span {...gripProps(`item-${i}`, j)} title="Drag to reorder" className="cursor-grab text-zinc-300 transition-colors hover:text-zinc-500 active:cursor-grabbing">
-                                <IconGrip className="h-4 w-4" />
-                              </span>
+                              <DragHandle bind={gripProps(`item-${i}`, j)} />
                               <MoveBtns onUp={() => moveCustomItem(i, j, -1)} onDown={() => moveCustomItem(i, j, 1)} isFirst={j === 0} isLast={j === s.items.length - 1} />
                             </div>
                             <RemoveBtn onClick={() => removeCustomItem(i, j)}>Remove item</RemoveBtn>
@@ -973,9 +918,7 @@ export function CvEditor({
                     <div className="flex items-center gap-2">
                       {form.customSections.length > 1 && (
                         <>
-                          <span {...gripProps("section", i)} title="Drag to reorder" className="cursor-grab text-zinc-300 transition-colors hover:text-zinc-500 active:cursor-grabbing">
-                            <IconGrip className="h-4 w-4" />
-                          </span>
+                          <DragHandle bind={gripProps("section", i)} />
                           <MoveBtns onUp={() => moveCustomSection(i, -1)} onDown={() => moveCustomSection(i, 1)} isFirst={i === 0} isLast={i === form.customSections.length - 1} />
                         </>
                       )}
@@ -1188,6 +1131,19 @@ function RemoveBtn({ onClick, children }: { onClick: () => void; children: React
   );
 }
 
+function DragHandle({ bind }: { bind: { draggable: boolean; onDragStart: (e: DragEvent) => void; onDragEnd: () => void } }) {
+  return (
+    <span
+      {...bind}
+      title="Drag to reorder"
+      className="flex cursor-grab items-center gap-1 rounded-md border border-zinc-200 bg-white px-1.5 py-1 text-zinc-500 transition-colors hover:border-blue-300 hover:bg-blue-50 hover:text-blue-600 active:cursor-grabbing"
+    >
+      <IconGrip className="h-4 w-4" />
+      <span className="text-[10px] font-bold uppercase tracking-wide">Drag</span>
+    </span>
+  );
+}
+
 function MoveBtns({ onUp, onDown, isFirst, isLast }: { onUp: () => void; onDown: () => void; isFirst: boolean; isLast: boolean }) {
   return (
     <div className="flex items-center">
@@ -1198,14 +1154,6 @@ function MoveBtns({ onUp, onDown, isFirst, isLast }: { onUp: () => void; onDown:
         <IconChevron className="h-4 w-4" />
       </button>
     </div>
-  );
-}
-
-function ExampleBtn({ onClick }: { onClick: () => void }) {
-  return (
-    <button type="button" onClick={onClick} className="text-xs font-medium text-zinc-500 transition-colors hover:text-blue-600">
-      See example
-    </button>
   );
 }
 
