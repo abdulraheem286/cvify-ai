@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, type ChangeEvent, type ReactNode } from "react";
+import { useState, useEffect, useRef, type ChangeEvent, type ReactNode, type DragEvent } from "react";
 import type { CVResult } from "@/app/types";
 import { ScaledPreview } from "./ScaledPreview";
 import { TemplatePicker } from "./TemplatePicker";
@@ -37,6 +37,7 @@ import {
   IconLanguages,
   IconSparkles,
   IconTarget,
+  IconGrip,
 } from "./icons";
 
 export type ExpEntry = { role: string; company: string; period: string; bullets: string };
@@ -167,7 +168,7 @@ function formToCv(form: EditorForm, hidden: Record<SectionKey, boolean>, ph = fa
       role: x.role,
       company: x.company,
       period: x.period,
-      bullets: x.bullets.split("\n").map((b) => b.trim()).filter(Boolean),
+      bullets: x.bullets.split("\n").map((b) => b.trim().replace(/^[-*]\s+/, "")).filter(Boolean),
     }));
   const edu = form.education.filter((x) => x.degree || x.institution);
   const skills = form.skills.split(",").map((s) => s.trim()).filter(Boolean);
@@ -210,6 +211,19 @@ function formToCv(form: EditorForm, hidden: Record<SectionKey, boolean>, ph = fa
 }
 
 const DRAFT_KEY = "cvify:draft:v1";
+
+const EXAMPLE = {
+  summary:
+    "Product designer with 6+ years crafting intuitive, user-centered experiences for fast-growing startups. I lead design-systems work and ship measurable improvements end to end.",
+  experience: {
+    role: "Senior Product Designer",
+    company: "DesignCo",
+    period: "2021 — Present",
+    bullets: "Led the redesign that lifted activation by 32%\nBuilt the design system used by 12 engineers",
+  },
+  education: { degree: "BA, Interaction Design", institution: "London College", period: "2014 — 2018" },
+  skills: "Figma, Prototyping, Design Systems, UX Research, UI Design",
+};
 
 type Draft = {
   form: EditorForm;
@@ -277,6 +291,7 @@ export function CvEditor({
   const [tailorError, setTailorError] = useState<string | null>(null);
   const [tailorResult, setTailorResult] = useState<{ missingSkills: string[]; notes: string } | null>(null);
   const firstSave = useRef(true);
+  const dragRef = useRef<{ kind: string; index: number } | null>(null);
 
   const exportCv = formToCv(form, hidden); // clean — used for the PDF
   const previewCv = formToCv(form, hidden, true); // with placeholders — preview only
@@ -396,6 +411,39 @@ export function CvEditor({
     });
   }
 
+  // ---- drag-to-reorder (handle-based, native DnD) ----
+  function reorder<T>(arr: T[], from: number, to: number): T[] {
+    const l = [...arr];
+    const [it] = l.splice(from, 1);
+    l.splice(to, 0, it);
+    return l;
+  }
+  function gripProps(kind: string, index: number) {
+    return {
+      draggable: true,
+      onDragStart: (e: DragEvent) => {
+        dragRef.current = { kind, index };
+        e.dataTransfer.effectAllowed = "move";
+      },
+      onDragEnd: () => {
+        dragRef.current = null;
+      },
+    };
+  }
+  function dropProps(kind: string, index: number, onReorder: (from: number, to: number) => void) {
+    return {
+      onDragOver: (e: DragEvent) => {
+        if (dragRef.current?.kind === kind) e.preventDefault();
+      },
+      onDrop: (e: DragEvent) => {
+        e.preventDefault();
+        const d = dragRef.current;
+        if (d && d.kind === kind && d.index !== index) onReorder(d.index, index);
+        dragRef.current = null;
+      },
+    };
+  }
+
   // ---- custom sections (nested list) ----
   const blankCustomItem = (): CustomItem => ({ title: "", subtitle: "", period: "", description: "" });
   function addCustomSection() {
@@ -457,6 +505,36 @@ export function CvEditor({
 
   const toggleHide = (k: SectionKey) => setHidden((p) => ({ ...p, [k]: !p[k] }));
   const toggleOpen = (k: string) => setOpen((p) => ({ ...p, [k]: !p[k] }));
+  const PANEL_IDS = ["personal", "summary", "experience", "education", "skills", "languages", "certificates", "customSections"];
+  const setAllOpen = (v: boolean) => setOpen(Object.fromEntries(PANEL_IDS.map((k) => [k, v])));
+
+  // ---- "See example" fills ----
+  const exampleSummary = () => setForm((p) => ({ ...p, summary: p.summary.trim() ? p.summary : EXAMPLE.summary }));
+  const exampleSkills = () => setForm((p) => ({ ...p, skills: p.skills.trim() ? p.skills : EXAMPLE.skills }));
+  function exampleExperience() {
+    setForm((p) => {
+      const f = p.experience[0];
+      const empty = f && !f.role && !f.company && !f.bullets;
+      if (empty) {
+        const l = [...p.experience];
+        l[0] = { ...EXAMPLE.experience };
+        return { ...p, experience: l };
+      }
+      return { ...p, experience: [...p.experience, { ...EXAMPLE.experience }] };
+    });
+  }
+  function exampleEducation() {
+    setForm((p) => {
+      const f = p.education[0];
+      const empty = f && !f.degree && !f.institution;
+      if (empty) {
+        const l = [...p.education];
+        l[0] = { ...EXAMPLE.education };
+        return { ...p, education: l };
+      }
+      return { ...p, education: [...p.education, { ...EXAMPLE.education }] };
+    });
+  }
 
   async function handleDownload() {
     setDownloading(true);
@@ -703,7 +781,20 @@ export function CvEditor({
             </div>
           )}
 
-          <div className="mt-6 space-y-3">
+          <div className="mt-6 flex items-center justify-between">
+            <p className="text-xs font-medium uppercase tracking-wide text-zinc-400">Sections</p>
+            <div className="flex items-center gap-2 text-xs">
+              <button type="button" onClick={() => setAllOpen(true)} className="font-medium text-zinc-500 transition-colors hover:text-blue-600">
+                Expand all
+              </button>
+              <span className="text-zinc-300">·</span>
+              <button type="button" onClick={() => setAllOpen(false)} className="font-medium text-zinc-500 transition-colors hover:text-blue-600">
+                Collapse all
+              </button>
+            </div>
+          </div>
+
+          <div className="mt-3 space-y-3">
             <Panel id="personal" title="Personal Details" icon={<IconUser className="h-[18px] w-[18px]" />} open={!!open.personal} onToggleOpen={() => toggleOpen("personal")}>
               <div className="space-y-4">
                 <div>
@@ -741,7 +832,8 @@ export function CvEditor({
             </Panel>
 
             <Panel id="summary" title="Summary" icon={<IconText className="h-[18px] w-[18px]" />} open={!!open.summary} onToggleOpen={() => toggleOpen("summary")} hideable hidden={hidden.summary} onToggleHide={() => toggleHide("summary")}>
-              <div className="mb-2 flex justify-end">
+              <div className="mb-2 flex items-center justify-between">
+                <ExampleBtn onClick={exampleSummary} />
                 <AiButton onClick={handleAiSummary} busy={aiBusy === "summary"}>
                   {form.summary.trim() ? "Improve with AI" : "Write with AI"}
                 </AiButton>
@@ -751,10 +843,15 @@ export function CvEditor({
 
             <Panel id="experience" title="Experience" icon={<IconBriefcase className="h-[18px] w-[18px]" />} open={!!open.experience} onToggleOpen={() => toggleOpen("experience")} hideable hidden={hidden.experience} onToggleHide={() => toggleHide("experience")}>
               {form.experience.map((exp, i) => (
-                <div key={i} className="mb-3 space-y-3 rounded-lg border border-zinc-200 bg-zinc-50 p-3">
+                <div key={i} {...dropProps("experience", i, (f, t) => setForm((p) => ({ ...p, experience: reorder(p.experience, f, t) })))} className="mb-3 space-y-3 rounded-lg border border-zinc-200 bg-zinc-50 p-3">
                   {form.experience.length > 1 && (
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-medium text-zinc-400">#{i + 1}</span>
+                      <span className="flex items-center gap-1.5 text-xs font-medium text-zinc-400">
+                        <span {...gripProps("experience", i)} title="Drag to reorder" className="cursor-grab text-zinc-300 transition-colors hover:text-zinc-500 active:cursor-grabbing">
+                          <IconGrip className="h-4 w-4" />
+                        </span>
+                        #{i + 1}
+                      </span>
                       <MoveBtns onUp={() => moveItem("experience", i, -1)} onDown={() => moveItem("experience", i, 1)} isFirst={i === 0} isLast={i === form.experience.length - 1} />
                     </div>
                   )}
@@ -763,7 +860,7 @@ export function CvEditor({
                     <PlainInput label="Company" value={exp.company} onChange={(v) => updateList("experience", i, "company", v)} placeholder="TechCorp" />
                   </div>
                   <PlainInput label="Period" value={exp.period} onChange={(v) => updateList("experience", i, "period", v)} placeholder="2022 – Present" />
-                  <RichTextarea label="Bullet points (one per line)" value={exp.bullets} onChange={(v) => updateList("experience", i, "bullets", v)} rows={3} placeholder={"Built the new dashboard\nImproved page speed by 40%"} list={false} />
+                  <RichTextarea label="Bullet points" value={exp.bullets} onChange={(v) => updateList("experience", i, "bullets", v)} rows={3} placeholder={"Built the new dashboard\nImproved page speed by 40%"} list={false} bulletList />
                   <div className="flex items-center justify-between">
                     <AiButton onClick={() => handleAiBullets(i)} busy={aiBusy === `bullets-${i}`} disabled={!exp.bullets.trim()}>
                       Improve bullets
@@ -774,15 +871,23 @@ export function CvEditor({
                   </div>
                 </div>
               ))}
-              <AddBtn onClick={() => addItem("experience", { role: "", company: "", period: "", bullets: "" })}>Add job</AddBtn>
+              <div className="flex items-center justify-between">
+                <AddBtn onClick={() => addItem("experience", { role: "", company: "", period: "", bullets: "" })}>Add job</AddBtn>
+                <ExampleBtn onClick={exampleExperience} />
+              </div>
             </Panel>
 
             <Panel id="education" title="Education" icon={<IconGraduation className="h-[18px] w-[18px]" />} open={!!open.education} onToggleOpen={() => toggleOpen("education")} hideable hidden={hidden.education} onToggleHide={() => toggleHide("education")}>
               {form.education.map((ed, i) => (
-                <div key={i} className="mb-3 space-y-3 rounded-lg border border-zinc-200 bg-zinc-50 p-3">
+                <div key={i} {...dropProps("education", i, (f, t) => setForm((p) => ({ ...p, education: reorder(p.education, f, t) })))} className="mb-3 space-y-3 rounded-lg border border-zinc-200 bg-zinc-50 p-3">
                   {form.education.length > 1 && (
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-medium text-zinc-400">#{i + 1}</span>
+                      <span className="flex items-center gap-1.5 text-xs font-medium text-zinc-400">
+                        <span {...gripProps("education", i)} title="Drag to reorder" className="cursor-grab text-zinc-300 transition-colors hover:text-zinc-500 active:cursor-grabbing">
+                          <IconGrip className="h-4 w-4" />
+                        </span>
+                        #{i + 1}
+                      </span>
                       <MoveBtns onUp={() => moveItem("education", i, -1)} onDown={() => moveItem("education", i, 1)} isFirst={i === 0} isLast={i === form.education.length - 1} />
                     </div>
                   )}
@@ -794,12 +899,16 @@ export function CvEditor({
                   {form.education.length > 1 && <RemoveBtn onClick={() => removeItem("education", i)}>Remove entry</RemoveBtn>}
                 </div>
               ))}
-              <AddBtn onClick={() => addItem("education", { degree: "", institution: "", period: "" })}>Add education</AddBtn>
+              <div className="flex items-center justify-between">
+                <AddBtn onClick={() => addItem("education", { degree: "", institution: "", period: "" })}>Add education</AddBtn>
+                <ExampleBtn onClick={exampleEducation} />
+              </div>
             </Panel>
 
             <Panel id="skills" title="Skills" icon={<IconTools className="h-[18px] w-[18px]" />} open={!!open.skills} onToggleOpen={() => toggleOpen("skills")} hideable hidden={hidden.skills} onToggleHide={() => toggleHide("skills")}>
               <PlainInput label="Skills (separate with commas)" value={form.skills} onChange={set("skills")} placeholder="JavaScript, React, Figma, Team leadership" />
-              <div className="mt-2">
+              <div className="mt-2 flex items-center justify-between">
+                <ExampleBtn onClick={exampleSkills} />
                 <AiButton onClick={handleAiSkills} busy={aiBusy === "skills"}>Suggest skills</AiButton>
               </div>
             </Panel>
@@ -834,11 +943,11 @@ export function CvEditor({
                 Add your own sections — name them anything (Projects, Awards, Volunteering, Publications…).
               </p>
               {form.customSections.map((s, i) => (
-                <div key={i} className="mb-4 rounded-lg border border-zinc-200 bg-zinc-50 p-3">
+                <div key={i} {...dropProps("section", i, (f, t) => setForm((p) => ({ ...p, customSections: reorder(p.customSections, f, t) })))} className="mb-4 rounded-lg border border-zinc-200 bg-zinc-50 p-3">
                   <PlainInput label="Section name" value={s.heading} onChange={(v) => updateCustomHeading(i, v)} placeholder="Projects, Awards, Volunteering…" />
                   <div className="mt-3 space-y-3">
                     {s.items.map((it, j) => (
-                      <div key={j} className="space-y-2 rounded-lg border border-zinc-200 bg-white p-3">
+                      <div key={j} {...dropProps(`item-${i}`, j, (f, t) => setForm((p) => { const cs = [...p.customSections]; cs[i] = { ...cs[i], items: reorder(cs[i].items, f, t) }; return { ...p, customSections: cs }; }))} className="space-y-2 rounded-lg border border-zinc-200 bg-white p-3">
                         <div className="grid gap-2 sm:grid-cols-2">
                           <PlainInput label="Title" value={it.title} onChange={(v) => updateCustomItem(i, j, "title", v)} placeholder="Project / award name" />
                           <PlainInput label="Subtitle (optional)" value={it.subtitle} onChange={(v) => updateCustomItem(i, j, "subtitle", v)} placeholder="Role / issuer" />
@@ -847,7 +956,12 @@ export function CvEditor({
                         <RichTextarea label="Description (optional)" value={it.description} onChange={(v) => updateCustomItem(i, j, "description", v)} rows={2} placeholder="One or two lines about it." />
                         {s.items.length > 1 && (
                           <div className="flex items-center justify-between">
-                            <MoveBtns onUp={() => moveCustomItem(i, j, -1)} onDown={() => moveCustomItem(i, j, 1)} isFirst={j === 0} isLast={j === s.items.length - 1} />
+                            <div className="flex items-center gap-2">
+                              <span {...gripProps(`item-${i}`, j)} title="Drag to reorder" className="cursor-grab text-zinc-300 transition-colors hover:text-zinc-500 active:cursor-grabbing">
+                                <IconGrip className="h-4 w-4" />
+                              </span>
+                              <MoveBtns onUp={() => moveCustomItem(i, j, -1)} onDown={() => moveCustomItem(i, j, 1)} isFirst={j === 0} isLast={j === s.items.length - 1} />
+                            </div>
                             <RemoveBtn onClick={() => removeCustomItem(i, j)}>Remove item</RemoveBtn>
                           </div>
                         )}
@@ -858,7 +972,12 @@ export function CvEditor({
                     <AddBtn onClick={() => addCustomItem(i)}>Add item</AddBtn>
                     <div className="flex items-center gap-2">
                       {form.customSections.length > 1 && (
-                        <MoveBtns onUp={() => moveCustomSection(i, -1)} onDown={() => moveCustomSection(i, 1)} isFirst={i === 0} isLast={i === form.customSections.length - 1} />
+                        <>
+                          <span {...gripProps("section", i)} title="Drag to reorder" className="cursor-grab text-zinc-300 transition-colors hover:text-zinc-500 active:cursor-grabbing">
+                            <IconGrip className="h-4 w-4" />
+                          </span>
+                          <MoveBtns onUp={() => moveCustomSection(i, -1)} onDown={() => moveCustomSection(i, 1)} isFirst={i === 0} isLast={i === form.customSections.length - 1} />
+                        </>
                       )}
                       <RemoveBtn onClick={() => removeCustomSection(i)}>Remove section</RemoveBtn>
                     </div>
@@ -1076,6 +1195,14 @@ function MoveBtns({ onUp, onDown, isFirst, isLast }: { onUp: () => void; onDown:
         <IconChevron className="h-4 w-4" />
       </button>
     </div>
+  );
+}
+
+function ExampleBtn({ onClick }: { onClick: () => void }) {
+  return (
+    <button type="button" onClick={onClick} className="text-xs font-medium text-zinc-500 transition-colors hover:text-blue-600">
+      See example
+    </button>
   );
 }
 

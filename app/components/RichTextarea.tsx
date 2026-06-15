@@ -12,6 +12,7 @@ export function RichTextarea({
   rows = 3,
   placeholder,
   list = true,
+  bulletList = false,
 }: {
   label: string;
   value: string;
@@ -19,6 +20,7 @@ export function RichTextarea({
   rows?: number;
   placeholder?: string;
   list?: boolean;
+  bulletList?: boolean;
 }) {
   const ref = useRef<HTMLTextAreaElement>(null);
 
@@ -72,9 +74,53 @@ export function RichTextarea({
       if (k === "b") {
         e.preventDefault();
         wrap("**");
-      } else if (k === "i") {
+        return;
+      }
+      if (k === "i") {
         e.preventDefault();
         wrap("*");
+        return;
+      }
+    }
+
+    // Enter → continue the bullet list (and start one in a pure bullet field).
+    if (e.key === "Enter" && !e.shiftKey && (bulletList || list)) {
+      const ta = ref.current;
+      if (!ta || ta.selectionStart !== ta.selectionEnd) return;
+      const pos = ta.selectionStart;
+      const lineStart = value.lastIndexOf("\n", pos - 1) + 1;
+      let lineEnd = value.indexOf("\n", pos);
+      if (lineEnd === -1) lineEnd = value.length;
+      const line = value.slice(lineStart, lineEnd);
+      const m = line.match(/^(\s*)[-*]\s+(.*)$/);
+      if (m) {
+        e.preventDefault();
+        if (m[2].trim() === "") {
+          // empty bullet → exit the list
+          const next = value.slice(0, lineStart) + value.slice(lineEnd);
+          onChange(next);
+          restore(lineStart, lineStart);
+          return;
+        }
+        const insert = `\n${m[1] || ""}- `;
+        const next = value.slice(0, pos) + insert + value.slice(pos);
+        onChange(next);
+        restore(pos + insert.length, pos + insert.length);
+        return;
+      }
+      if (bulletList) {
+        e.preventDefault();
+        const needPrefix = !/^\s*[-*]\s+/.test(line);
+        let next = value;
+        let cursor = pos;
+        if (needPrefix) {
+          next = value.slice(0, lineStart) + "- " + value.slice(lineStart);
+          cursor = pos + 2;
+        }
+        const insert = "\n- ";
+        next = next.slice(0, cursor) + insert + next.slice(cursor);
+        onChange(next);
+        restore(cursor + insert.length, cursor + insert.length);
       }
     }
   }
@@ -107,10 +153,6 @@ export function RichTextarea({
         placeholder={placeholder}
         className="w-full resize-y rounded-b-lg border border-zinc-300 bg-white px-4 py-2.5 text-zinc-900 placeholder-zinc-400 outline-none [field-sizing:content] focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
       />
-      <p className="mt-1 text-xs text-zinc-400">
-        Formatting: <span className="font-bold">**bold**</span>, <span className="italic">*italic*</span>
-        {list ? ", - bullet" : ""}, [text](url)
-      </p>
     </div>
   );
 }
