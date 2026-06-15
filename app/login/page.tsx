@@ -245,21 +245,20 @@ function LoginInner() {
               Turn rough notes into a polished, professional CV in minutes — 18 templates, AI writing, and an instant
               PDF download.
             </p>
+            <div className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-sm font-medium text-blue-100">
+              <span className="inline-flex items-center gap-1.5">✓ Free forever</span>
+              <span className="inline-flex items-center gap-1.5">✓ 18 templates</span>
+              <span className="inline-flex items-center gap-1.5">✓ ATS-ready PDF</span>
+            </div>
           </div>
 
-          {/* CV preview peeking in */}
+          {/* CV preview peeking in from the bottom */}
           <div className="relative z-10 mt-8 flex-1">
-            <div className="absolute inset-x-2 top-2 origin-top rotate-2 drop-shadow-2xl">
+            <div className="absolute inset-x-2 top-0 origin-top rotate-2 drop-shadow-2xl">
               <ScaledPreview>
                 <ModernTemplate cv={sampleCv} domId="login-preview" />
               </ScaledPreview>
             </div>
-          </div>
-
-          <div className="relative z-10 mt-6 flex flex-wrap gap-x-5 gap-y-2 text-sm font-medium text-blue-100">
-            <span className="inline-flex items-center gap-1.5">✓ Free forever</span>
-            <span className="inline-flex items-center gap-1.5">✓ 18 templates</span>
-            <span className="inline-flex items-center gap-1.5">✓ ATS-ready PDF</span>
           </div>
         </div>
       </div>
