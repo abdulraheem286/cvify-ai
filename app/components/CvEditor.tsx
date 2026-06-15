@@ -410,7 +410,7 @@ export function CvEditor({
       draggable: true,
       onDragStart: (e: DragEvent) => {
         dragRef.current = { kind, index };
-        e.dataTransfer.effectAllowed = "move";
+        if (e.dataTransfer) e.dataTransfer.effectAllowed = "move";
       },
       onDragEnd: () => {
         dragRef.current = null;
@@ -804,11 +804,13 @@ export function CvEditor({
                 <div key={i} {...dropProps("experience", i, (f, t) => setForm((p) => ({ ...p, experience: reorder(p.experience, f, t) })))} className="mb-3 space-y-3 rounded-lg border border-zinc-200 bg-zinc-50 p-3">
                   {form.experience.length > 1 && (
                     <div className="flex items-center justify-between">
-                      <span className="flex items-center gap-2">
-                        <DragHandle bind={gripProps("experience", i)} />
-                        <span className="text-sm font-bold text-zinc-800">#{i + 1}</span>
+                      <span className="flex h-6 min-w-6 items-center justify-center rounded-md bg-white px-1.5 text-xs font-semibold text-zinc-500 ring-1 ring-inset ring-zinc-200">
+                        {i + 1}
                       </span>
-                      <MoveBtns onUp={() => moveItem("experience", i, -1)} onDown={() => moveItem("experience", i, 1)} isFirst={i === 0} isLast={i === form.experience.length - 1} />
+                      <div className="flex items-center">
+                        <MoveBtns onUp={() => moveItem("experience", i, -1)} onDown={() => moveItem("experience", i, 1)} isFirst={i === 0} isLast={i === form.experience.length - 1} />
+                        <DragHandle bind={gripProps("experience", i)} />
+                      </div>
                     </div>
                   )}
                   <div className="grid gap-3 sm:grid-cols-2">
@@ -835,11 +837,13 @@ export function CvEditor({
                 <div key={i} {...dropProps("education", i, (f, t) => setForm((p) => ({ ...p, education: reorder(p.education, f, t) })))} className="mb-3 space-y-3 rounded-lg border border-zinc-200 bg-zinc-50 p-3">
                   {form.education.length > 1 && (
                     <div className="flex items-center justify-between">
-                      <span className="flex items-center gap-2">
-                        <DragHandle bind={gripProps("education", i)} />
-                        <span className="text-sm font-bold text-zinc-800">#{i + 1}</span>
+                      <span className="flex h-6 min-w-6 items-center justify-center rounded-md bg-white px-1.5 text-xs font-semibold text-zinc-500 ring-1 ring-inset ring-zinc-200">
+                        {i + 1}
                       </span>
-                      <MoveBtns onUp={() => moveItem("education", i, -1)} onDown={() => moveItem("education", i, 1)} isFirst={i === 0} isLast={i === form.education.length - 1} />
+                      <div className="flex items-center">
+                        <MoveBtns onUp={() => moveItem("education", i, -1)} onDown={() => moveItem("education", i, 1)} isFirst={i === 0} isLast={i === form.education.length - 1} />
+                        <DragHandle bind={gripProps("education", i)} />
+                      </div>
                     </div>
                   )}
                   <PlainInput label="Degree" value={ed.degree} onChange={(v) => updateList("education", i, "degree", v)} placeholder="BS Computer Science" />
@@ -903,9 +907,9 @@ export function CvEditor({
                         <RichTextarea label="Description (optional)" value={it.description} onChange={(v) => updateCustomItem(i, j, "description", v)} rows={2} placeholder="One or two lines about it." />
                         {s.items.length > 1 && (
                           <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-2">
-                              <DragHandle bind={gripProps(`item-${i}`, j)} />
+                            <div className="flex items-center">
                               <MoveBtns onUp={() => moveCustomItem(i, j, -1)} onDown={() => moveCustomItem(i, j, 1)} isFirst={j === 0} isLast={j === s.items.length - 1} />
+                              <DragHandle bind={gripProps(`item-${i}`, j)} />
                             </div>
                             <RemoveBtn onClick={() => removeCustomItem(i, j)}>Remove item</RemoveBtn>
                           </div>
@@ -918,8 +922,8 @@ export function CvEditor({
                     <div className="flex items-center gap-2">
                       {form.customSections.length > 1 && (
                         <>
-                          <DragHandle bind={gripProps("section", i)} />
                           <MoveBtns onUp={() => moveCustomSection(i, -1)} onDown={() => moveCustomSection(i, 1)} isFirst={i === 0} isLast={i === form.customSections.length - 1} />
+                          <DragHandle bind={gripProps("section", i)} />
                         </>
                       )}
                       <RemoveBtn onClick={() => removeCustomSection(i)}>Remove section</RemoveBtn>
@@ -1136,10 +1140,10 @@ function DragHandle({ bind }: { bind: { draggable: boolean; onDragStart: (e: Dra
     <span
       {...bind}
       title="Drag to reorder"
-      className="flex cursor-grab items-center gap-1 rounded-md border border-zinc-200 bg-white px-1.5 py-1 text-zinc-500 transition-colors hover:border-blue-300 hover:bg-blue-50 hover:text-blue-600 active:cursor-grabbing"
+      aria-label="Drag to reorder"
+      className="flex cursor-grab items-center justify-center rounded p-1 text-zinc-400 transition-colors hover:text-zinc-700 active:cursor-grabbing"
     >
       <IconGrip className="h-4 w-4" />
-      <span className="text-[10px] font-bold uppercase tracking-wide">Drag</span>
     </span>
   );
 }
