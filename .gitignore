@@ -43,3 +43,6 @@ next-env.d.ts
 # Personal notes
 Notes.txt
 ROADMAP.md
+
+# local screenshot scripts
+.shoot/
