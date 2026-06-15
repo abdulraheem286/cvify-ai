@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { HeaderAuth } from "./HeaderAuth";
 
 export function SiteHeader() {
   return (
@@ -13,12 +14,7 @@ export function SiteHeader() {
           <a href="/#how" className="transition-colors hover:text-zinc-900">How it works</a>
           <a href="/#faq" className="transition-colors hover:text-zinc-900">FAQ</a>
         </nav>
-        <Link
-          href="/build"
-          className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-700"
-        >
-          Create my CV
-        </Link>
+        <HeaderAuth />
       </div>
     </header>
   );

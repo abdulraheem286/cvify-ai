@@ -10,6 +10,8 @@ import { TemplateView } from "@/app/templates/TemplateView";
 import { downloadCvPdf } from "@/app/lib/pdf";
 import { aiSummary, aiBullets, aiSkills } from "@/app/lib/assist";
 import { RichTextarea } from "./RichTextarea";
+import { useAuth } from "./AuthProvider";
+import { createCv, saveCv } from "@/app/lib/cvStore";
 import {
   IconField,
   nameError,
@@ -243,27 +245,42 @@ function timeAgo(ts: number): string {
 export function CvEditor({
   initial,
   initialTemplate = DEFAULT_TEMPLATE,
+  initialTheme,
+  initialHidden,
+  cvId,
+  initialTitle,
   onBack,
   backLabel,
 }: {
   initial: EditorForm;
   initialTemplate?: TemplateId;
+  initialTheme?: Theme;
+  initialHidden?: Record<string, boolean>;
+  cvId?: string;
+  initialTitle?: string;
   onBack: () => void;
   backLabel: string;
 }) {
+  const { user, enabled: authEnabled } = useAuth();
   const [form, setForm] = useState<EditorForm>(initial);
-  const [hidden, setHidden] = useState<Record<SectionKey, boolean>>({
-    summary: false,
-    experience: false,
-    education: false,
-    skills: false,
-    languages: true, // off by default — opt in
-    certificates: true,
-    customSections: false,
-  });
+  const [hidden, setHidden] = useState<Record<SectionKey, boolean>>(
+    () =>
+      (initialHidden as Record<SectionKey, boolean>) ?? {
+        summary: false,
+        experience: false,
+        education: false,
+        skills: false,
+        languages: true, // off by default — opt in
+        certificates: true,
+        customSections: false,
+      },
+  );
   const [open, setOpen] = useState<Record<string, boolean>>({ personal: true });
   const [template, setTemplate] = useState<TemplateId>(initialTemplate);
-  const [theme, setTheme] = useState<Theme>(() => getDefaultTheme(initialTemplate));
+  const [theme, setTheme] = useState<Theme>(() => initialTheme ?? getDefaultTheme(initialTemplate));
+  const [cloudId, setCloudId] = useState<string | undefined>(cvId);
+  const [cloudSaving, setCloudSaving] = useState(false);
+  const [cloudSavedAt, setCloudSavedAt] = useState<number | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [downloading, setDownloading] = useState(false);
   const [aiBusy, setAiBusy] = useState<string | null>(null); // which AI action is running
@@ -528,6 +545,31 @@ export function CvEditor({
     }
   }
 
+  async function handleCloudSave() {
+    if (!user) return;
+    setCloudSaving(true);
+    try {
+      const title = (exportCv.fullName || "Untitled CV").trim() || "Untitled CV";
+      const data = { form, template, theme, hidden };
+      if (cloudId) {
+        await saveCv(user.uid, cloudId, title, data);
+      } else {
+        const id = await createCv(user.uid, title, data);
+        setCloudId(id);
+        try {
+          window.history.replaceState(null, "", `?cv=${id}`);
+        } catch {
+          /* ignore */
+        }
+      }
+      setCloudSavedAt(Date.now());
+    } catch (err) {
+      console.error("Cloud save failed:", err);
+    } finally {
+      setCloudSaving(false);
+    }
+  }
+
   // ---- AI assist (in-editor) ----
   async function runAi(key: string, fn: () => Promise<void>) {
     setAiBusy(key);
@@ -671,6 +713,18 @@ export function CvEditor({
           </button>
           <TemplatePicker value={template} onChange={setTemplate} />
           <CustomizationPanel value={theme} onChange={setTheme} />
+          {authEnabled && user && (
+            <button
+              type="button"
+              onClick={handleCloudSave}
+              disabled={cloudSaving}
+              className="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-50 disabled:opacity-60"
+            >
+              {cloudSaving && <span className="h-4 w-4 animate-spin rounded-full border-2 border-zinc-300 border-t-blue-600" />}
+              <span className="hidden sm:inline">{cloudSaving ? "Saving…" : cloudSavedAt ? "Saved ✓" : "Save"}</span>
+              <span className="sm:hidden">{cloudSaving ? "…" : "Save"}</span>
+            </button>
+          )}
           <button
             type="button"
             onClick={handleDownload}

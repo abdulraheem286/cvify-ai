@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import BuildClient from "./BuildClient";
+import { RequireAuth } from "@/app/components/RequireAuth";
 
 // On-page SEO for the AI builder.
 export const metadata: Metadata = {
@@ -17,5 +18,9 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <BuildClient />;
+  return (
+    <RequireAuth>
+      <BuildClient />
+    </RequireAuth>
+  );
 }

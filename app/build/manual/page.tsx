@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import ManualClient from "./ManualClient";
+import { RequireAuth } from "@/app/components/RequireAuth";
 
 // On-page SEO for the manual builder.
 export const metadata: Metadata = {
@@ -17,5 +18,9 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <ManualClient />;
+  return (
+    <RequireAuth>
+      <ManualClient />
+    </RequireAuth>
+  );
 }

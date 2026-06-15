@@ -3,6 +3,7 @@ import Link from "next/link";
 import { SiteHeader } from "../components/SiteHeader";
 import { SiteFooter } from "../components/SiteFooter";
 import { Reveal } from "../components/Reveal";
+import { RequireAuth } from "../components/RequireAuth";
 
 // On-page SEO for the build chooser.
 export const metadata: Metadata = {
@@ -19,6 +20,7 @@ export default function BuildChooser() {
 
       <main className="flex flex-1 flex-col items-center justify-center px-6 py-20">
         <div className="w-full max-w-[1920px] text-center">
+          <RequireAuth>
           <Reveal stagger>
             <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
               How do you want to build your CV?
@@ -80,6 +82,7 @@ export default function BuildChooser() {
               </span>
             </Link>
           </Reveal>
+          </RequireAuth>
         </div>
       </main>
 

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import ImportClient from "./ImportClient";
+import { RequireAuth } from "@/app/components/RequireAuth";
 
 // On-page SEO for the import flow.
 export const metadata: Metadata = {
@@ -17,5 +18,9 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <ImportClient />;
+  return (
+    <RequireAuth>
+      <ImportClient />
+    </RequireAuth>
+  );
 }
