@@ -115,7 +115,7 @@ export default function Home() {
             aria-hidden
             className="pointer-events-none absolute -top-32 left-1/2 h-[520px] w-[900px] -translate-x-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(59,130,246,0.18),transparent)] blur-2xl"
           />
-          <div className="relative mx-auto grid max-w-[1920px] items-center gap-10 site-px py-16 lg:grid-cols-2 lg:py-24">
+          <div className="relative mx-auto grid max-w-[1920px] items-center gap-10 site-px py-12 lg:grid-cols-2 lg:py-16">
             <Reveal stagger>
               <span className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-white/70 px-3 py-1 text-xs font-semibold text-blue-700 shadow-sm backdrop-blur">
                 <span className="relative flex h-1.5 w-1.5">
@@ -124,11 +124,11 @@ export default function Home() {
                 </span>
                 Free AI resume builder
               </span>
-              <h1 className="mt-4 max-w-2xl text-5xl font-bold leading-[1.05] tracking-tight sm:text-6xl">
+              <h1 className="mt-4 max-w-xl text-4xl font-bold leading-[1.1] tracking-tight sm:text-5xl">
                 Build your resume in minutes with{" "}
                 <span className="bg-gradient-to-r from-blue-600 to-indigo-500 bg-clip-text text-transparent">AI</span>
               </h1>
-              <p className="mt-5 max-w-md text-lg text-zinc-600">
+              <p className="mt-4 max-w-md text-base text-zinc-600">
                 CVify AI turns simple notes into a professional resume. Edit every detail, choose from
                 18 templates, and land more interviews.
               </p>
@@ -154,7 +154,7 @@ export default function Home() {
                 className="absolute inset-x-4 inset-y-8 rounded-[2rem] bg-gradient-to-tr from-blue-400/20 to-indigo-400/20 blur-2xl"
               />
               <div className="relative rotate-1 transition-transform duration-300 hover:rotate-0">
-                <ScaledPreview>
+                <ScaledPreview maxHeight={500} capClassName="max-h-[78vh]">
                   <ModernTemplate cv={sampleCv} domId="hero-preview" />
                 </ScaledPreview>
               </div>
@@ -245,7 +245,7 @@ export default function Home() {
             <div className="relative w-full">
               <div aria-hidden className="pointer-events-none absolute inset-x-6 inset-y-8 rounded-[2rem] bg-gradient-to-tr from-blue-400/15 to-indigo-400/15 blur-2xl" />
               <div className="relative">
-                <ScaledPreview>
+                <ScaledPreview maxHeight={520} capClassName="max-h-[78vh]">
                   <ModernTemplate cv={sampleCv} domId="row-modern" />
                 </ScaledPreview>
               </div>
@@ -259,7 +259,7 @@ export default function Home() {
             <div className="relative order-2 w-full lg:order-1">
               <div aria-hidden className="pointer-events-none absolute inset-x-6 inset-y-8 rounded-[2rem] bg-gradient-to-tr from-indigo-400/15 to-blue-400/15 blur-2xl" />
               <div className="relative">
-                <ScaledPreview>
+                <ScaledPreview maxHeight={520} capClassName="max-h-[78vh]">
                   <SidebarTemplate cv={sampleCv} domId="row-sidebar" />
                 </ScaledPreview>
               </div>

@@ -20,12 +20,15 @@ export function ScaledPreview({
   children,
   maxHeight,
   fixed = false,
+  capClassName = "",
 }: {
   children: ReactNode;
   maxHeight?: number;
   // When true (with maxHeight), the box is ALWAYS maxHeight tall — so a row of
   // cards share one uniform height regardless of each CV's length.
   fixed?: boolean;
+  // Extra classes for the outer box, e.g. a viewport cap like "max-h-[80vh]".
+  capClassName?: string;
 }) {
   const outerRef = useRef<HTMLDivElement>(null);
   const innerRef = useRef<HTMLDivElement>(null);
@@ -61,7 +64,7 @@ export function ScaledPreview({
   return (
     <div
       ref={outerRef}
-      className="relative w-full overflow-hidden rounded-xl bg-white shadow-md ring-1 ring-zinc-200"
+      className={`relative w-full overflow-hidden rounded-xl bg-white shadow-md ring-1 ring-zinc-200 ${capClassName}`}
       style={{ height }}
     >
       <div
