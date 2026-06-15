@@ -707,14 +707,14 @@ export function CvEditor({
   }
 
   return (
-    <main className="mx-auto w-full max-w-[1920px] flex-1 px-4 py-8 sm:px-6 print:p-0">
+    <main className="mx-auto w-full max-w-[1920px] flex-1 px-[30px] py-8 print:p-0">
       {/* Off-screen full-size render for crisp PDF export */}
       <div aria-hidden className="pointer-events-none fixed left-[-9999px] top-0 print:static print:left-0">
         <TemplateView id={template} cv={exportCv} domId="cv-document" theme={theme} />
       </div>
 
       {/* Toolbar */}
-      <div className="-mx-4 mb-6 flex items-center justify-between gap-3 border-b border-zinc-200 bg-white px-4 py-3 print:hidden sm:-mx-6 sm:px-6">
+      <div className="-mx-[30px] mb-6 flex items-center justify-between gap-3 border-b border-zinc-200 bg-white px-[30px] py-3 print:hidden">
         <button
           type="button"
           onClick={onBack}

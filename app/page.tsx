@@ -115,7 +115,7 @@ export default function Home() {
             aria-hidden
             className="pointer-events-none absolute -top-32 left-1/2 h-[520px] w-[900px] -translate-x-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(59,130,246,0.18),transparent)] blur-2xl"
           />
-          <div className="relative mx-auto grid max-w-[1920px] items-center gap-10 px-6 py-16 lg:grid-cols-2 lg:py-24">
+          <div className="relative mx-auto grid max-w-[1920px] items-center gap-10 px-[30px] py-16 lg:grid-cols-2 lg:py-24">
             <Reveal stagger>
               <span className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-white/70 px-3 py-1 text-xs font-semibold text-blue-700 shadow-sm backdrop-blur">
                 <span className="relative flex h-1.5 w-1.5">
@@ -164,7 +164,7 @@ export default function Home() {
 
         {/* Honest highlights */}
         <section className="border-b border-zinc-200 bg-white">
-          <div className="mx-auto grid max-w-[1920px] gap-5 px-6 py-14 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mx-auto grid max-w-[1920px] gap-5 px-[30px] py-14 sm:grid-cols-2 lg:grid-cols-4">
             <Stat value="100%" label="Free to use" />
             <Stat value="18" label="Distinct templates" />
             <Stat value="AI" label="Writes & improves it" />
@@ -174,7 +174,7 @@ export default function Home() {
 
         {/* Features */}
         <section id="features" className="bg-zinc-50">
-          <div className="mx-auto max-w-[1920px] px-6 py-20">
+          <div className="mx-auto max-w-[1920px] px-[30px] py-20">
             <SectionHead
               eyebrow="Features"
               title="Everything you need to land the interview"
@@ -193,7 +193,7 @@ export default function Home() {
 
         {/* Templates showcase — single tabbed preview */}
         <section id="templates" className="border-y border-zinc-200 bg-gradient-to-b from-white to-zinc-50">
-          <div className="mx-auto max-w-[1920px] px-6 py-20">
+          <div className="mx-auto max-w-[1920px] px-[30px] py-20">
             <SectionHead
               eyebrow="Templates"
               title="18 templates across professional, minimal & creative"
@@ -210,7 +210,7 @@ export default function Home() {
 
         {/* How it works */}
         <section id="how" className="bg-gradient-to-b from-blue-50 to-white">
-          <div className="mx-auto max-w-[1920px] px-6 py-20">
+          <div className="mx-auto max-w-[1920px] px-[30px] py-20">
             <SectionHead eyebrow="Process" title="Four simple steps" subtitle="From a blank page to a polished resume in minutes." />
             <Reveal stagger className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
               <Step n={1} title="Add your info" text="Paste rough notes or share a few details about your work history." />
@@ -223,7 +223,7 @@ export default function Home() {
 
         {/* Feature row 1 — AI draft */}
         <section className="border-t border-zinc-200 bg-white">
-          <div className="mx-auto grid max-w-[1920px] items-center gap-12 px-6 py-20 lg:grid-cols-2">
+          <div className="mx-auto grid max-w-[1920px] items-center gap-12 px-[30px] py-20 lg:grid-cols-2">
             <div className="max-w-xl">
               <span className="inline-block rounded-full border border-blue-100 bg-blue-50 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider text-blue-600">AI draft</span>
               <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
@@ -255,7 +255,7 @@ export default function Home() {
 
         {/* Feature row 2 — edit & switch */}
         <section className="border-t border-zinc-200 bg-zinc-50">
-          <div className="mx-auto grid max-w-[1920px] items-center gap-12 px-6 py-20 lg:grid-cols-2">
+          <div className="mx-auto grid max-w-[1920px] items-center gap-12 px-[30px] py-20 lg:grid-cols-2">
             <div className="relative order-2 w-full lg:order-1">
               <div aria-hidden className="pointer-events-none absolute inset-x-6 inset-y-8 rounded-[2rem] bg-gradient-to-tr from-indigo-400/15 to-blue-400/15 blur-2xl" />
               <div className="relative">
@@ -287,7 +287,7 @@ export default function Home() {
 
         {/* Who it's for */}
         <section className="border-t border-zinc-200 bg-white">
-          <div className="mx-auto max-w-[1920px] px-6 py-20">
+          <div className="mx-auto max-w-[1920px] px-[30px] py-20">
             <SectionHead
               eyebrow="Who it's for"
               title="Built for every kind of job seeker"
@@ -304,7 +304,7 @@ export default function Home() {
 
         {/* Resume writing tips */}
         <section id="tips" className="border-t border-zinc-200 bg-zinc-50">
-          <div className="mx-auto max-w-[1920px] px-6 py-20">
+          <div className="mx-auto max-w-[1920px] px-[30px] py-20">
             <SectionHead
               eyebrow="Resume tips"
               title="How to write a resume that gets interviews"
@@ -323,7 +323,7 @@ export default function Home() {
 
         {/* FAQ */}
         <section id="faq" className="border-t border-zinc-200 bg-white">
-          <div className="mx-auto max-w-3xl px-6 py-20">
+          <div className="mx-auto max-w-3xl px-[30px] py-20">
             <SectionHead eyebrow="FAQ" title="Frequently asked questions" subtitle="Answers to questions about building, optimizing, and exporting your resume." />
             <div className="mt-12 divide-y divide-zinc-200 border-y border-zinc-200">
               {faqs.map((f) => (
@@ -340,7 +340,7 @@ export default function Home() {
         </section>
 
         {/* CTA */}
-        <section className="mx-auto max-w-[1920px] px-6 pb-20">
+        <section className="mx-auto max-w-[1920px] px-[30px] pb-20">
           <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-blue-600 to-indigo-600 px-6 py-16 text-center text-white shadow-xl shadow-blue-600/20">
             <div aria-hidden className="pointer-events-none absolute -right-16 -top-24 h-72 w-72 rounded-full bg-white/10 blur-2xl" />
             <div aria-hidden className="pointer-events-none absolute -bottom-24 -left-16 h-72 w-72 rounded-full bg-indigo-300/20 blur-2xl" />

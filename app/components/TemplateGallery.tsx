@@ -25,7 +25,7 @@ export function TemplateGallery({
   const templates = templatesByCategory(cat);
 
   return (
-    <main className="mx-auto w-full max-w-[1920px] flex-1 px-6 py-10">
+    <main className="mx-auto w-full max-w-[1920px] flex-1 px-[30px] py-10">
       <button
         type="button"
         onClick={onBack}

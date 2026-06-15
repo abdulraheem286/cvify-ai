@@ -16,7 +16,7 @@ export function AppHeader() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-zinc-200 bg-white/80 backdrop-blur print:hidden">
-      <div className="flex w-full items-center justify-between px-6 py-3 lg:px-8">
+      <div className="flex w-full items-center justify-between px-[30px] py-3">
         <Link href="/" className="text-lg font-bold tracking-tight text-zinc-900">
           CVify <span className="bg-gradient-to-r from-blue-600 to-indigo-500 bg-clip-text text-transparent">AI</span>
         </Link>

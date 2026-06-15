@@ -72,7 +72,7 @@ function Dashboard() {
   return (
     <div className="flex min-h-full flex-1 flex-col bg-zinc-50 text-zinc-900">
       <AppHeader />
-      <div className="flex w-full flex-1 flex-col gap-8 px-6 py-8 lg:flex-row lg:px-8">
+      <div className="flex w-full flex-1 flex-col gap-8 px-[30px] py-8 lg:flex-row">
         {/* Sidebar — sticky, full viewport height on desktop */}
         <aside className="shrink-0 lg:sticky lg:top-[76px] lg:h-[calc(100vh-92px)] lg:w-64 lg:self-start">
           <div className="flex h-full flex-col rounded-2xl border border-zinc-200 bg-white p-3 shadow-sm">
