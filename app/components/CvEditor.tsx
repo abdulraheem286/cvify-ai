@@ -872,7 +872,7 @@ export function CvEditor({
                     <PlainInput label="Company" value={exp.company} onChange={(v) => updateList("experience", i, "company", v)} placeholder="TechCorp" />
                   </div>
                   <PlainInput label="Period" value={exp.period} onChange={(v) => updateList("experience", i, "period", v)} placeholder="2022 – Present" />
-                  <RichTextarea label="Bullet points" value={exp.bullets} onChange={(v) => updateList("experience", i, "bullets", v)} rows={3} placeholder={"Built the new dashboard\nImproved page speed by 40%"} list={false} bulletList />
+                  <RichTextarea label="Bullet points (one per line)" value={exp.bullets} onChange={(v) => updateList("experience", i, "bullets", v)} rows={3} placeholder={"Built the new dashboard\nImproved page speed by 40%"} list={false} />
                   <div className="flex items-center justify-between">
                     <AiButton onClick={() => handleAiBullets(i)} busy={aiBusy === `bullets-${i}`} disabled={!exp.bullets.trim()}>
                       Improve bullets

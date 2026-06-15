@@ -19,9 +19,10 @@ function LoginInner() {
   const router = useRouter();
   const params = useSearchParams();
   const next = params.get("next") || "/dashboard";
-  const { user, loading, enabled, signInGoogle, signInEmail, signUpEmail } = useAuth();
+  const { user, loading, enabled, signInGoogle, signInEmail, signUpEmail, resetPassword } = useAuth();
 
-  const [mode, setMode] = useState<"signin" | "signup">("signin");
+  const [mode, setMode] = useState<"signin" | "signup" | "reset">("signin");
+  const [resetSent, setResetSent] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -46,8 +47,21 @@ function LoginInner() {
     }
   }
 
-  function onSubmit(e: FormEvent) {
+  async function onSubmit(e: FormEvent) {
     e.preventDefault();
+    if (mode === "reset") {
+      setBusy(true);
+      setError(null);
+      try {
+        await resetPassword(email);
+        setResetSent(true);
+      } catch (err) {
+        setError(authMessage(err instanceof Error ? err.message : String(err)));
+      } finally {
+        setBusy(false);
+      }
+      return;
+    }
     withBusy(() => (mode === "signin" ? signInEmail(email, password) : signUpEmail(name, email, password)));
   }
 
@@ -59,10 +73,14 @@ function LoginInner() {
 
       <div className="mt-8 w-full max-w-sm rounded-2xl border border-zinc-200 bg-white p-7 shadow-sm">
         <h1 className="text-xl font-bold tracking-tight text-zinc-900">
-          {mode === "signin" ? "Welcome back" : "Create your account"}
+          {mode === "signin" ? "Welcome back" : mode === "signup" ? "Create your account" : "Reset your password"}
         </h1>
         <p className="mt-1 text-sm text-zinc-500">
-          {mode === "signin" ? "Sign in to access your CVs." : "Save and manage your CVs."}
+          {mode === "signin"
+            ? "Sign in to access your CVs."
+            : mode === "signup"
+              ? "Save and manage your CVs."
+              : "We'll email you a link to set a new password."}
         </p>
 
         {!enabled && (
@@ -71,55 +89,106 @@ function LoginInner() {
           </p>
         )}
 
-        <button
-          type="button"
-          onClick={() => withBusy(signInGoogle)}
-          disabled={busy || !enabled}
-          className="mt-6 flex w-full items-center justify-center gap-2 rounded-lg border border-zinc-300 bg-white px-4 py-2.5 text-sm font-semibold text-zinc-700 transition-colors hover:bg-zinc-50 disabled:opacity-60"
-        >
-          <GoogleIcon /> Continue with Google
-        </button>
+        {mode === "reset" ? (
+          resetSent ? (
+            <p className="mt-6 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-800">
+              Reset link sent to {email}. Check your inbox (and spam folder).
+            </p>
+          ) : (
+            <form onSubmit={onSubmit} className="mt-6 space-y-3">
+              <Field label="Email" value={email} onChange={setEmail} placeholder="you@example.com" type="email" autoComplete="email" />
+              <button
+                type="submit"
+                disabled={busy || !enabled}
+                className="flex w-full items-center justify-center rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-700 disabled:opacity-60"
+              >
+                {busy ? "Sending…" : "Send reset link"}
+              </button>
+            </form>
+          )
+        ) : (
+          <>
+            <button
+              type="button"
+              onClick={() => withBusy(signInGoogle)}
+              disabled={busy || !enabled}
+              className="mt-6 flex w-full items-center justify-center gap-2 rounded-lg border border-zinc-300 bg-white px-4 py-2.5 text-sm font-semibold text-zinc-700 transition-colors hover:bg-zinc-50 disabled:opacity-60"
+            >
+              <GoogleIcon /> Continue with Google
+            </button>
 
-        <div className="my-5 flex items-center gap-3 text-xs font-medium uppercase tracking-wide text-zinc-400">
-          <span className="h-px flex-1 bg-zinc-200" /> or <span className="h-px flex-1 bg-zinc-200" />
-        </div>
+            <div className="my-5 flex items-center gap-3 text-xs font-medium uppercase tracking-wide text-zinc-400">
+              <span className="h-px flex-1 bg-zinc-200" /> or <span className="h-px flex-1 bg-zinc-200" />
+            </div>
 
-        <form onSubmit={onSubmit} className="space-y-3">
-          {mode === "signup" && (
-            <Field label="Name" value={name} onChange={setName} placeholder="Your name" autoComplete="name" />
-          )}
-          <Field label="Email" value={email} onChange={setEmail} placeholder="you@example.com" type="email" autoComplete="email" />
-          <Field
-            label="Password"
-            value={password}
-            onChange={setPassword}
-            placeholder="••••••••"
-            type="password"
-            autoComplete={mode === "signin" ? "current-password" : "new-password"}
-          />
-          <button
-            type="submit"
-            disabled={busy || !enabled}
-            className="flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-700 disabled:opacity-60"
-          >
-            {busy ? "Please wait…" : mode === "signin" ? "Sign in" : "Create account"}
-          </button>
-        </form>
+            <form onSubmit={onSubmit} className="space-y-3">
+              {mode === "signup" && (
+                <Field label="Name" value={name} onChange={setName} placeholder="Your name" autoComplete="name" />
+              )}
+              <Field label="Email" value={email} onChange={setEmail} placeholder="you@example.com" type="email" autoComplete="email" />
+              <Field
+                label="Password"
+                value={password}
+                onChange={setPassword}
+                placeholder="••••••••"
+                type="password"
+                autoComplete={mode === "signin" ? "current-password" : "new-password"}
+              />
+              {mode === "signin" && (
+                <div className="text-right">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setMode("reset");
+                      setError(null);
+                      setResetSent(false);
+                    }}
+                    className="text-xs font-medium text-blue-600 hover:text-blue-700"
+                  >
+                    Forgot password?
+                  </button>
+                </div>
+              )}
+              <button
+                type="submit"
+                disabled={busy || !enabled}
+                className="flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-700 disabled:opacity-60"
+              >
+                {busy ? "Please wait…" : mode === "signin" ? "Sign in" : "Create account"}
+              </button>
+            </form>
+          </>
+        )}
 
         {error && <p className="mt-4 text-sm text-red-600">{error}</p>}
 
         <p className="mt-6 text-center text-sm text-zinc-500">
-          {mode === "signin" ? "New here? " : "Already have an account? "}
-          <button
-            type="button"
-            onClick={() => {
-              setMode(mode === "signin" ? "signup" : "signin");
-              setError(null);
-            }}
-            className="font-semibold text-blue-600 hover:text-blue-700"
-          >
-            {mode === "signin" ? "Create an account" : "Sign in"}
-          </button>
+          {mode === "reset" ? (
+            <button
+              type="button"
+              onClick={() => {
+                setMode("signin");
+                setError(null);
+              }}
+              className="font-semibold text-blue-600 hover:text-blue-700"
+            >
+              ← Back to sign in
+            </button>
+          ) : (
+            <>
+              {mode === "signin" ? "New here? " : "Already have an account? "}
+              <button
+                type="button"
+                onClick={() => {
+                  setMode(mode === "signin" ? "signup" : "signin");
+                  setError(null);
+                }}
+                className="font-semibold text-blue-600 hover:text-blue-700"
+              >
+                {mode === "signin" ? "Create an account" : "Sign in"}
+              </button>
+            </>
+          )}
         </p>
       </div>
     </div>

@@ -7,6 +7,7 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   updateProfile,
+  sendPasswordResetEmail,
   signOut as fbSignOut,
   type User,
 } from "firebase/auth";
@@ -19,6 +20,7 @@ type AuthContextValue = {
   signInGoogle: () => Promise<void>;
   signInEmail: (email: string, password: string) => Promise<void>;
   signUpEmail: (name: string, email: string, password: string) => Promise<void>;
+  resetPassword: (email: string) => Promise<void>;
   signOut: () => Promise<void>;
 };
 
@@ -53,6 +55,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (name) await updateProfile(cred.user, { displayName: name });
     setUser({ ...cred.user });
   }
+  async function resetPassword(email: string) {
+    if (!auth) throw new Error("Accounts aren't available yet.");
+    await sendPasswordResetEmail(auth, email);
+  }
   async function signOut() {
     if (!auth) return;
     await fbSignOut(auth);
@@ -60,7 +66,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   return (
     <AuthContext.Provider
-      value={{ user, loading, enabled: firebaseEnabled, signInGoogle, signInEmail, signUpEmail, signOut }}
+      value={{ user, loading, enabled: firebaseEnabled, signInGoogle, signInEmail, signUpEmail, resetPassword, signOut }}
     >
       {children}
     </AuthContext.Provider>

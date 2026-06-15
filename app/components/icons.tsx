@@ -67,6 +67,9 @@ export const IconTarget = ({ className }: IconProps) =>
 export const IconGrip = ({ className }: IconProps) =>
   base(<path d="M9 5h.01M9 12h.01M9 19h.01M15 5h.01M15 12h.01M15 19h.01" />, className);
 
+export const IconList = ({ className }: IconProps) =>
+  base(<path d="M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01" />, className);
+
 export const IconPlus = ({ className }: IconProps) =>
   base(<path d="M12 5v14M5 12h14" />, className);
 

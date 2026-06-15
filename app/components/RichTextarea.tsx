@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, type KeyboardEvent } from "react";
+import { IconList } from "./icons";
 
 // Textarea with a small formatting toolbar (bold / italic / bullet / link),
 // keyboard shortcuts, and auto-grow. Stores lightweight markdown that the CV
@@ -136,8 +137,8 @@ export function RichTextarea({
           <span className="italic">I</span>
         </ToolBtn>
         {list && (
-          <ToolBtn label="Bullet point" onClick={bulletLine}>
-            <span className="text-base leading-none">•</span>
+          <ToolBtn label="Bullet list" onClick={bulletLine}>
+            <IconList className="h-4 w-4" />
           </ToolBtn>
         )}
         <ToolBtn label="Insert link" onClick={link}>
