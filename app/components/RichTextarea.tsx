@@ -25,12 +25,28 @@ export function RichTextarea({
 }) {
   const ref = useRef<HTMLTextAreaElement>(null);
 
-  function restore(start: number, end: number) {
+  // Apply an edit through the browser's native editing pipeline (execCommand)
+  // instead of rebuilding the string with onChange. This keeps the change in
+  // the textarea's own undo history, so Ctrl+Z works after using the toolbar.
+  // The textarea's onChange still fires (execCommand dispatches an input event),
+  // which syncs React state. Falls back to a plain setState where unsupported.
+  function replaceRange(from: number, to: number, text: string, caretStart: number, caretEnd?: number) {
+    const ta = ref.current;
+    if (!ta) return;
+    ta.focus();
+    ta.setSelectionRange(from, to);
+    let ok = false;
+    try {
+      ok = text ? document.execCommand("insertText", false, text) : document.execCommand("delete");
+    } catch {
+      ok = false;
+    }
+    if (!ok) onChange(value.slice(0, from) + text + value.slice(to));
     requestAnimationFrame(() => {
-      const ta = ref.current;
-      if (!ta) return;
-      ta.focus();
-      ta.setSelectionRange(start, end);
+      const t = ref.current;
+      if (!t) return;
+      t.focus();
+      t.setSelectionRange(caretStart, caretEnd ?? caretStart);
     });
   }
 
@@ -40,9 +56,7 @@ export function RichTextarea({
     const start = ta.selectionStart;
     const end = ta.selectionEnd;
     const sel = value.slice(start, end) || "text";
-    const next = value.slice(0, start) + token + sel + token + value.slice(end);
-    onChange(next);
-    restore(start + token.length, start + token.length + sel.length);
+    replaceRange(start, end, token + sel + token, start + token.length, start + token.length + sel.length);
   }
 
   function bulletLine() {
@@ -50,9 +64,7 @@ export function RichTextarea({
     if (!ta) return;
     const start = ta.selectionStart;
     const lineStart = value.lastIndexOf("\n", start - 1) + 1;
-    const next = value.slice(0, lineStart) + "- " + value.slice(lineStart);
-    onChange(next);
-    restore(start + 2, start + 2);
+    replaceRange(lineStart, lineStart, "- ", start + 2, start + 2);
   }
 
   function link() {
@@ -62,11 +74,9 @@ export function RichTextarea({
     const end = ta.selectionEnd;
     const sel = value.slice(start, end) || "link text";
     const ins = `[${sel}](https://)`;
-    const next = value.slice(0, start) + ins + value.slice(end);
-    onChange(next);
     // place cursor inside the URL parens
     const urlPos = start + ins.length - 1;
-    restore(urlPos, urlPos);
+    replaceRange(start, end, ins, urlPos, urlPos);
   }
 
   function onKeyDown(e: KeyboardEvent<HTMLTextAreaElement>) {
@@ -98,30 +108,23 @@ export function RichTextarea({
         e.preventDefault();
         if (m[2].trim() === "") {
           // empty bullet → exit the list
-          const next = value.slice(0, lineStart) + value.slice(lineEnd);
-          onChange(next);
-          restore(lineStart, lineStart);
+          replaceRange(lineStart, lineEnd, "", lineStart);
           return;
         }
         const insert = `\n${m[1] || ""}- `;
-        const next = value.slice(0, pos) + insert + value.slice(pos);
-        onChange(next);
-        restore(pos + insert.length, pos + insert.length);
+        replaceRange(pos, pos, insert, pos + insert.length);
         return;
       }
       if (bulletList) {
         e.preventDefault();
         const needPrefix = !/^\s*[-*]\s+/.test(line);
-        let next = value;
-        let cursor = pos;
         if (needPrefix) {
-          next = value.slice(0, lineStart) + "- " + value.slice(lineStart);
-          cursor = pos + 2;
+          // prefix this line and open a new bullet in one edit
+          const lineText = value.slice(lineStart, pos);
+          replaceRange(lineStart, pos, `- ${lineText}\n- `, pos + 4);
+        } else {
+          replaceRange(pos, pos, "\n- ", pos + 3);
         }
-        const insert = "\n- ";
-        next = next.slice(0, cursor) + insert + next.slice(cursor);
-        onChange(next);
-        restore(cursor + insert.length, cursor + insert.length);
       }
     }
   }

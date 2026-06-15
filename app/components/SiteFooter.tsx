@@ -3,7 +3,7 @@ import Link from "next/link";
 export function SiteFooter() {
   return (
     <footer className="border-t border-zinc-200 bg-gradient-to-b from-zinc-50 to-zinc-100/50">
-      <div className="mx-auto max-w-[1920px] px-6 py-14">
+      <div className="mx-auto max-w-7xl px-6 py-14">
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           <div>
             <Link href="/" className="text-lg font-bold tracking-tight text-zinc-900">

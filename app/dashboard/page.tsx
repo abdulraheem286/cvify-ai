@@ -71,7 +71,7 @@ function Dashboard() {
   return (
     <div className="flex min-h-full flex-col bg-zinc-50 text-zinc-900">
       <AppHeader />
-      <div className="mx-auto flex w-full max-w-[1920px] flex-1 flex-col gap-8 px-6 py-8 lg:flex-row">
+      <div className="mx-auto flex w-full max-w-screen-2xl flex-1 flex-col gap-8 px-6 py-8 lg:flex-row">
         {/* Sidebar */}
         <aside className="shrink-0 lg:w-60">
           <nav className="flex gap-2 overflow-x-auto lg:flex-col lg:gap-1">

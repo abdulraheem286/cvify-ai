@@ -14,11 +14,11 @@ export const metadata: Metadata = {
 
 export default function BuildChooser() {
   return (
-    <div className="flex min-h-full flex-col bg-white text-zinc-900">
+    <div className="flex min-h-full flex-col bg-gradient-to-b from-zinc-50 via-white to-zinc-50 text-zinc-900">
       <AppHeader />
 
       <main className="flex flex-1 flex-col items-center justify-center px-6 py-20">
-        <div className="w-full max-w-[1920px] text-center">
+        <div className="w-full max-w-5xl text-center">
           <RequireAuth>
           <Reveal stagger>
             <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
