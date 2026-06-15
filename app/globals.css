@@ -12,10 +12,51 @@
   --font-mono: var(--font-geist-mono);
 }
 
+/* ============================================================
+   DESIGN TOKENS — single source of truth for the whole site.
+   Change the brand colour or fonts HERE and it updates everywhere.
+   ============================================================ */
+@theme {
+  /* Brand colour. We remap the whole `blue` scale to the brand (#4053ee),
+     so every existing `blue-*` utility across the site becomes the brand
+     colour. To rebrand the site, edit these values (mainly --color-blue-600). */
+  --color-blue-50: #eef0fe;
+  --color-blue-100: #e1e4fd;
+  --color-blue-200: #c7ccfb;
+  --color-blue-300: #a3aaf8;
+  --color-blue-400: #7c84f4;
+  --color-blue-500: #5562f0;
+  --color-blue-600: #4053ee; /* ← primary brand colour */
+  --color-blue-700: #3340c9;
+  --color-blue-800: #2b36a1;
+  --color-blue-900: #28327f;
+  --color-blue-950: #191e4a;
+
+  /* Semantic alias of the brand colour for new code (bg-brand / text-brand). */
+  --color-brand: #4053ee;
+
+  /* Extra breakpoint for full-bleed layouts on large monitors. */
+  --breakpoint-3xl: 1800px;
+
+  /* Site typography. Headings use --font-display, body uses --font-text.
+     Swap these to restyle every heading / paragraph on the site at once.
+     (CV templates keep their own --font-heading/--font-body, untouched.) */
+  --font-display: var(--font-poppins);
+  --font-text: var(--font-inter);
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  font-family: var(--font-text), Arial, Helvetica, sans-serif;
+}
+
+/* Site headings use the display font automatically. Templates override this
+   with their own class-based font utilities, so CV typography is unaffected. */
+@layer base {
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+  }
 }
 
 /* Tailwind v4 dropped the default pointer cursor on buttons. Restore it on
