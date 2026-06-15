@@ -4,8 +4,7 @@ import { useState, type ChangeEvent, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import type { CVResult } from "@/app/types";
 import { Reveal } from "@/app/components/Reveal";
-import { SiteHeader } from "@/app/components/SiteHeader";
-import { SiteFooter } from "@/app/components/SiteFooter";
+import { AppHeader } from "@/app/components/AppHeader";
 import { CvEditor, cvToForm, type EditorForm } from "@/app/components/CvEditor";
 import { TemplateGallery } from "@/app/components/TemplateGallery";
 import { DEFAULT_TEMPLATE, type TemplateId } from "@/app/templates";
@@ -88,9 +87,7 @@ export default function ImportClient() {
 
   return (
     <div className="flex min-h-full flex-col bg-zinc-50 text-zinc-900 print:bg-white">
-      <div className="print:hidden">
-        <SiteHeader />
-      </div>
+      <AppHeader />
 
       {step === "template" ? (
         <TemplateGallery
@@ -192,9 +189,6 @@ export default function ImportClient() {
         </main>
       )}
 
-      <div className="print:hidden">
-        <SiteFooter />
-      </div>
     </div>
   );
 }

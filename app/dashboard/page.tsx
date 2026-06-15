@@ -2,7 +2,7 @@
 
 import { useEffect, useState, type ReactNode } from "react";
 import Link from "next/link";
-import { SiteHeader } from "@/app/components/SiteHeader";
+import { AppHeader } from "@/app/components/AppHeader";
 import { RequireAuth } from "@/app/components/RequireAuth";
 import { useAuth } from "@/app/components/AuthProvider";
 import { ScaledPreview } from "@/app/components/ScaledPreview";
@@ -70,7 +70,7 @@ function Dashboard() {
 
   return (
     <div className="flex min-h-full flex-col bg-zinc-50 text-zinc-900">
-      <SiteHeader />
+      <AppHeader />
       <div className="mx-auto flex w-full max-w-[1920px] flex-1 flex-col gap-8 px-6 py-8 lg:flex-row">
         {/* Sidebar */}
         <aside className="shrink-0 lg:w-60">

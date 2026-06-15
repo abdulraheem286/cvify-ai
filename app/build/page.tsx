@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { SiteHeader } from "../components/SiteHeader";
-import { SiteFooter } from "../components/SiteFooter";
+import { AppHeader } from "../components/AppHeader";
 import { Reveal } from "../components/Reveal";
 import { RequireAuth } from "../components/RequireAuth";
 
@@ -16,7 +15,7 @@ export const metadata: Metadata = {
 export default function BuildChooser() {
   return (
     <div className="flex min-h-full flex-col bg-white text-zinc-900">
-      <SiteHeader />
+      <AppHeader />
 
       <main className="flex flex-1 flex-col items-center justify-center px-6 py-20">
         <div className="w-full max-w-[1920px] text-center">
@@ -85,8 +84,6 @@ export default function BuildChooser() {
           </RequireAuth>
         </div>
       </main>
-
-      <SiteFooter />
     </div>
   );
 }

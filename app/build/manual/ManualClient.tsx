@@ -2,8 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { SiteHeader } from "@/app/components/SiteHeader";
-import { SiteFooter } from "@/app/components/SiteFooter";
+import { AppHeader } from "@/app/components/AppHeader";
 import { CvEditor, EMPTY_FORM } from "@/app/components/CvEditor";
 import { TemplateGallery } from "@/app/components/TemplateGallery";
 import { DEFAULT_TEMPLATE, type TemplateId } from "@/app/templates";
@@ -40,9 +39,7 @@ export default function ManualClient() {
 
   return (
     <div className="flex min-h-full flex-col bg-zinc-50 text-zinc-900 print:bg-white">
-      <div className="print:hidden">
-        <SiteHeader />
-      </div>
+      <AppHeader />
 
       {showLoader ? (
         <div className="flex flex-1 items-center justify-center py-32">
@@ -76,10 +73,6 @@ export default function ManualClient() {
           backLabel="Back to templates"
         />
       )}
-
-      <div className="print:hidden">
-        <SiteFooter />
-      </div>
     </div>
   );
 }
