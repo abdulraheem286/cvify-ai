@@ -804,9 +804,9 @@ export function CvEditor({
                 <div key={i} {...dropProps("experience", i, (f, t) => setForm((p) => ({ ...p, experience: reorder(p.experience, f, t) })))} className="mb-3 space-y-3 rounded-lg border border-zinc-200 bg-zinc-50 p-3">
                   {form.experience.length > 1 && (
                     <div className="flex items-center justify-between">
-                      <span className="flex items-center gap-1.5 text-xs font-medium text-zinc-400">
+                      <span className="flex items-center gap-2">
                         <DragHandle bind={gripProps("experience", i)} />
-                        #{i + 1}
+                        <span className="text-sm font-bold text-zinc-800">#{i + 1}</span>
                       </span>
                       <MoveBtns onUp={() => moveItem("experience", i, -1)} onDown={() => moveItem("experience", i, 1)} isFirst={i === 0} isLast={i === form.experience.length - 1} />
                     </div>
@@ -835,9 +835,9 @@ export function CvEditor({
                 <div key={i} {...dropProps("education", i, (f, t) => setForm((p) => ({ ...p, education: reorder(p.education, f, t) })))} className="mb-3 space-y-3 rounded-lg border border-zinc-200 bg-zinc-50 p-3">
                   {form.education.length > 1 && (
                     <div className="flex items-center justify-between">
-                      <span className="flex items-center gap-1.5 text-xs font-medium text-zinc-400">
+                      <span className="flex items-center gap-2">
                         <DragHandle bind={gripProps("education", i)} />
-                        #{i + 1}
+                        <span className="text-sm font-bold text-zinc-800">#{i + 1}</span>
                       </span>
                       <MoveBtns onUp={() => moveItem("education", i, -1)} onDown={() => moveItem("education", i, 1)} isFirst={i === 0} isLast={i === form.education.length - 1} />
                     </div>
