@@ -18,7 +18,7 @@ import { UnderlineTemplate } from "./UnderlineTemplate";
 import { CompactTemplate } from "./CompactTemplate";
 import { ProfileTemplate } from "./ProfileTemplate";
 import { BoldTemplate } from "./BoldTemplate";
-import { DEFAULT_THEME, type Theme } from "./theme";
+import { DEFAULT_THEME, DEFAULT_DATE_PLACEMENT, type Theme, type DatePlacement } from "./theme";
 
 // Re-export the theme model so consumers can import everything from "@/app/templates".
 export * from "./theme";
@@ -31,7 +31,12 @@ export const CATEGORIES: Category[] = ["Professional", "Minimal", "Creative"];
 export type LayoutId = string;
 export type TemplateId = string;
 
-export type LayoutComp = (props: { cv: CVResult; domId?: string; theme?: Theme }) => ReactElement;
+export type LayoutComp = (props: {
+  cv: CVResult;
+  domId?: string;
+  theme?: Theme;
+  datePlacement?: DatePlacement;
+}) => ReactElement;
 
 type LayoutDef = {
   id: LayoutId;
@@ -40,6 +45,9 @@ type LayoutDef = {
   Component: LayoutComp;
   // The look this layout ships with (used for gallery previews + as the editor's starting theme).
   defaultTheme: Theme;
+  // Where entry dates sit for this layout's design. Defaults to "below" (DEFAULT_DATE_PLACEMENT).
+  // Change this ONE line to flip any template between "below" and "inline" — both are ATS-safe.
+  datePlacement?: DatePlacement;
 };
 
 function theme(partial: Partial<Theme>): Theme {
@@ -88,6 +96,7 @@ const LAYOUT_LIST: LayoutDef[] = [
     category: "Professional",
     Component: ColumnsTemplate,
     defaultTheme: theme({ primary: "#1d4ed8", secondary: "#0f172a" }),
+    datePlacement: "inline",
   },
   {
     id: "classic",
@@ -101,6 +110,7 @@ const LAYOUT_LIST: LayoutDef[] = [
       fontBody: "var(--font-source-serif)",
       fontHeading: "var(--font-lora)",
     }),
+    datePlacement: "inline",
   },
   {
     id: "minimal",
@@ -115,6 +125,7 @@ const LAYOUT_LIST: LayoutDef[] = [
     category: "Minimal",
     Component: GutterTemplate,
     defaultTheme: theme({ primary: "#475569", secondary: "#0f172a" }),
+    datePlacement: "inline",
   },
   {
     id: "hairline",
@@ -122,6 +133,7 @@ const LAYOUT_LIST: LayoutDef[] = [
     category: "Minimal",
     Component: HairlineTemplate,
     defaultTheme: theme({ primary: "#44403c", secondary: "#1c1917", bg: "#fdfbf6", fontHeading: "var(--font-lora)" }),
+    datePlacement: "inline",
   },
   {
     id: "underline",
@@ -136,6 +148,7 @@ const LAYOUT_LIST: LayoutDef[] = [
     category: "Minimal",
     Component: CompactTemplate,
     defaultTheme: theme({ primary: "#475569", secondary: "#0f172a" }),
+    datePlacement: "inline",
   },
   {
     id: "aurora",
@@ -212,6 +225,10 @@ export function getLayoutComponent(id: LayoutId): LayoutComp {
 
 export function getDefaultTheme(id: TemplateId): Theme {
   return (LAYOUTS[id] ?? LAYOUT_LIST[0]).defaultTheme;
+}
+
+export function getDatePlacement(id: TemplateId): DatePlacement {
+  return (LAYOUTS[id] ?? LAYOUT_LIST[0]).datePlacement ?? DEFAULT_DATE_PLACEMENT;
 }
 
 export function templatesByCategory(category: Category): TemplateDef[] {

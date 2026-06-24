@@ -11,6 +11,11 @@ export type Theme = {
   fontHeading: string; // CSS font-family value
 };
 
+// Where an entry's date sits. Both are ATS-safe (parse cleanly); "right-aligned"
+// is intentionally NOT an option because it breaks PDF/ATS reading order.
+export type DatePlacement = "below" | "inline";
+export const DEFAULT_DATE_PLACEMENT: DatePlacement = "below";
+
 export const DEFAULT_THEME: Theme = {
   primary: "#2563eb",
   secondary: "#0f172a",

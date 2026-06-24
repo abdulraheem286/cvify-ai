@@ -1,5 +1,5 @@
 import type { CVResult } from "@/app/types";
-import { getLayoutComponent, getDefaultTheme, type TemplateId } from "./index";
+import { getLayoutComponent, getDefaultTheme, getDatePlacement, type TemplateId } from "./index";
 import type { Theme } from "./theme";
 
 // Renders a layout (template) with a theme applied on top.
@@ -16,5 +16,5 @@ export function TemplateView({
   theme?: Theme;
 }) {
   const Layout = getLayoutComponent(id);
-  return <Layout cv={cv} domId={domId} theme={theme ?? getDefaultTheme(id)} />;
+  return <Layout cv={cv} domId={domId} theme={theme ?? getDefaultTheme(id)} datePlacement={getDatePlacement(id)} />;
 }

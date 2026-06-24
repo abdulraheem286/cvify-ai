@@ -1,11 +1,12 @@
 import type { CSSProperties } from "react";
 import type { CVResult } from "@/app/types";
-import { themeVars, DEFAULT_THEME, type Theme } from "./theme";
+import { themeVars, DEFAULT_THEME, type Theme, type DatePlacement } from "./theme";
 import { CustomItems } from "./CustomItems";
+import { InlineDate, StackedDate } from "./EntryDate";
 import { renderRich, renderInline } from "../lib/richtext";
 
 // Hairline: airy single column, full-width hairline rules between sections.
-export function HairlineTemplate({ cv, domId = "cv-document", theme = DEFAULT_THEME }: { cv: CVResult; domId?: string; theme?: Theme }) {
+export function HairlineTemplate({ cv, domId = "cv-document", theme = DEFAULT_THEME, datePlacement = "below" }: { cv: CVResult; domId?: string; theme?: Theme; datePlacement?: DatePlacement }) {
   const contactLine = [cv.contact?.email, cv.contact?.phone, cv.contact?.location, cv.contact?.website, cv.contact?.linkedin]
     .filter(Boolean)
     .join("   ·   ");
@@ -32,8 +33,8 @@ export function HairlineTemplate({ cv, domId = "cv-document", theme = DEFAULT_TH
           <Section title="Experience">
             {cv.experience.map((job, i) => (
               <div key={i} className="mb-4 last:mb-0">
-                <h3 className="font-semibold text-zinc-900">{job.role}{job.company && <span className="font-normal text-zinc-600"> — {job.company}</span>}</h3>
-                {job.period && <p className="mt-0.5 text-xs text-zinc-400">{job.period}</p>}
+                <h3 className="font-semibold text-zinc-900">{job.role}{job.company && <span className="font-normal text-zinc-600"> — {job.company}</span>}<InlineDate period={job.period} placement={datePlacement} className="text-zinc-400" /></h3>
+                <StackedDate period={job.period} placement={datePlacement} className="text-zinc-400" />
                 <ul className="mt-1.5 list-disc space-y-1 pl-5 text-sm text-zinc-700">
                   {job.bullets?.map((b, j) => <li key={j}>{renderInline(b)}</li>)}
                 </ul>
@@ -49,8 +50,9 @@ export function HairlineTemplate({ cv, domId = "cv-document", theme = DEFAULT_TH
                 <p className="text-sm">
                   <span className="font-semibold text-zinc-900">{ed.degree}</span>
                   {ed.institution && <span className="text-zinc-600"> — {ed.institution}</span>}
+                  <InlineDate period={ed.period} placement={datePlacement} className="text-zinc-400" />
                 </p>
-                {ed.period && <p className="mt-0.5 text-xs text-zinc-400">{ed.period}</p>}
+                <StackedDate period={ed.period} placement={datePlacement} className="text-zinc-400" />
               </div>
             ))}
           </Section>
@@ -85,7 +87,7 @@ export function HairlineTemplate({ cv, domId = "cv-document", theme = DEFAULT_TH
         {cv.customSections?.map((s, ci) =>
           s.heading && s.items?.length ? (
             <Section key={`cs-${ci}`} title={s.heading}>
-              <CustomItems items={s.items} />
+              <CustomItems items={s.items} datePlacement={datePlacement} />
             </Section>
           ) : null,
         )}

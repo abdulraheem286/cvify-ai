@@ -1,13 +1,14 @@
 import type { CSSProperties } from "react";
 import type { CVResult } from "@/app/types";
-import { themeVars, DEFAULT_THEME, type Theme } from "./theme";
+import { themeVars, DEFAULT_THEME, type Theme, type DatePlacement } from "./theme";
 import { CustomItems } from "./CustomItems";
+import { InlineDate, StackedDate } from "./EntryDate";
 import { renderRich, renderInline } from "../lib/richtext";
 
-type Props = { cv: CVResult; domId?: string; theme?: Theme };
+type Props = { cv: CVResult; domId?: string; theme?: Theme; datePlacement?: DatePlacement };
 
 // Classic: traditional, heading-font titles, full-width section rules.
-export function ClassicTemplate({ cv, domId = "cv-document", theme = DEFAULT_THEME }: Props) {
+export function ClassicTemplate({ cv, domId = "cv-document", theme = DEFAULT_THEME, datePlacement = "below" }: Props) {
   const contactLine = [
     cv.contact?.email,
     cv.contact?.phone,
@@ -40,8 +41,9 @@ export function ClassicTemplate({ cv, domId = "cv-document", theme = DEFAULT_THE
                 <h3 className="font-semibold text-zinc-900">
                   {job.role}
                   {job.company && <span className="font-normal italic text-zinc-600"> , {job.company}</span>}
+                  <InlineDate period={job.period} placement={datePlacement} className="text-zinc-500" />
                 </h3>
-                {job.period && <p className="mt-0.5 text-xs text-zinc-500">{job.period}</p>}
+                <StackedDate period={job.period} placement={datePlacement} className="text-zinc-500" />
                 <ul className="mt-1.5 list-disc space-y-1 pl-5 text-sm text-zinc-700">
                   {job.bullets?.map((b, j) => <li key={j}>{renderInline(b)}</li>)}
                 </ul>
@@ -57,8 +59,9 @@ export function ClassicTemplate({ cv, domId = "cv-document", theme = DEFAULT_THE
                 <p className="text-sm">
                   <span className="font-semibold text-zinc-900">{ed.degree}</span>
                   {ed.institution && <span className="italic text-zinc-600"> , {ed.institution}</span>}
+                  <InlineDate period={ed.period} placement={datePlacement} className="text-zinc-500" />
                 </p>
-                {ed.period && <p className="mt-0.5 text-xs text-zinc-500">{ed.period}</p>}
+                <StackedDate period={ed.period} placement={datePlacement} className="text-zinc-500" />
               </div>
             ))}
           </Section>
@@ -93,7 +96,7 @@ export function ClassicTemplate({ cv, domId = "cv-document", theme = DEFAULT_THE
         {cv.customSections?.map((s, ci) =>
           s.heading && s.items?.length ? (
             <Section key={`cs-${ci}`} title={s.heading}>
-              <CustomItems items={s.items} />
+              <CustomItems items={s.items} datePlacement={datePlacement} />
             </Section>
           ) : null,
         )}
