@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, type KeyboardEvent } from "react";
+import { useRef, type KeyboardEvent, type ReactNode } from "react";
 import { IconList } from "./icons";
 
 // Textarea with a small formatting toolbar (bold / italic / bullet / link),
@@ -14,6 +14,7 @@ export function RichTextarea({
   placeholder,
   list = true,
   bulletList = false,
+  action,
 }: {
   label: string;
   value: string;
@@ -22,6 +23,7 @@ export function RichTextarea({
   placeholder?: string;
   list?: boolean;
   bulletList?: boolean;
+  action?: ReactNode;
 }) {
   const ref = useRef<HTMLTextAreaElement>(null);
 
@@ -131,7 +133,10 @@ export function RichTextarea({
 
   return (
     <div>
-      <label className="mb-1.5 block text-sm font-medium text-zinc-700">{label}</label>
+      <div className="mb-1.5 flex items-center justify-between gap-2">
+        <label className="block text-sm font-medium text-zinc-700">{label}</label>
+        {action}
+      </div>
       <div className="flex items-center gap-1 rounded-t-lg border border-b-0 border-zinc-300 bg-zinc-50 px-1.5 py-1">
         <ToolBtn label="Bold (Ctrl+B)" onClick={() => wrap("**")}>
           <span className="font-bold">B</span>

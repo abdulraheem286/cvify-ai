@@ -868,12 +868,18 @@ export function CvEditor({
             </Panel>
 
             <Panel id="summary" title="Summary" icon={<IconText className="h-[18px] w-[18px]" />} open={!!open.summary} onToggleOpen={() => toggleOpen("summary")} hideable hidden={hidden.summary} onToggleHide={() => toggleHide("summary")}>
-              <div className="mb-2 flex justify-end">
-                <AiButton onClick={handleAiSummary} busy={aiBusy === "summary"}>
-                  {form.summary.trim() ? "Improve with AI" : "Write with AI"}
-                </AiButton>
-              </div>
-              <RichTextarea label="Professional summary" value={form.summary} onChange={set("summary")} rows={3} placeholder="A short 2–3 sentence summary of who you are and what you do." />
+              <RichTextarea
+                label="Professional summary"
+                value={form.summary}
+                onChange={set("summary")}
+                rows={3}
+                placeholder="A short 2–3 sentence summary of who you are and what you do."
+                action={
+                  <AiButton onClick={handleAiSummary} busy={aiBusy === "summary"}>
+                    {form.summary.trim() ? "Improve with AI" : "Write with AI"}
+                  </AiButton>
+                }
+              />
             </Panel>
 
             <Panel id="experience" title="Experience" icon={<IconBriefcase className="h-[18px] w-[18px]" />} open={!!open.experience} onToggleOpen={() => toggleOpen("experience")} hideable hidden={hidden.experience} onToggleHide={() => toggleHide("experience")}>
@@ -895,15 +901,24 @@ export function CvEditor({
                     <PlainInput label="Company" value={exp.company} onChange={(v) => updateList("experience", i, "company", v)} placeholder="TechCorp" />
                   </div>
                   <PlainInput label="Period" value={exp.period} onChange={(v) => updateList("experience", i, "period", v)} placeholder="2022 – Present" />
-                  <RichTextarea label="Bullet points (one per line)" value={exp.bullets} onChange={(v) => updateList("experience", i, "bullets", v)} rows={3} placeholder={"Built the new dashboard\nImproved page speed by 40%"} list={false} />
-                  <div className="flex items-center justify-between">
-                    <AiButton onClick={() => handleAiBullets(i)} busy={aiBusy === `bullets-${i}`} disabled={!exp.bullets.trim()}>
-                      Improve bullets
-                    </AiButton>
-                    {form.experience.length > 1 && (
+                  <RichTextarea
+                    label="Bullet points (one per line)"
+                    value={exp.bullets}
+                    onChange={(v) => updateList("experience", i, "bullets", v)}
+                    rows={3}
+                    placeholder={"Built the new dashboard\nImproved page speed by 40%"}
+                    list={false}
+                    action={
+                      <AiButton onClick={() => handleAiBullets(i)} busy={aiBusy === `bullets-${i}`} disabled={!exp.bullets.trim()}>
+                        Improve bullets
+                      </AiButton>
+                    }
+                  />
+                  {form.experience.length > 1 && (
+                    <div className="flex justify-end">
                       <RemoveBtn onClick={() => removeItem("experience", i)}>Remove job</RemoveBtn>
-                    )}
-                  </div>
+                    </div>
+                  )}
                 </div>
               ))}
               <AddBtn onClick={() => addItem("experience", { role: "", company: "", period: "", bullets: "" })}>Add job</AddBtn>
@@ -928,25 +943,38 @@ export function CvEditor({
                     <PlainInput label="Institution" value={ed.institution} onChange={(v) => updateList("education", i, "institution", v)} placeholder="State University" />
                     <PlainInput label="Period" value={ed.period} onChange={(v) => updateList("education", i, "period", v)} placeholder="2014 – 2018" />
                   </div>
-                  {form.education.length > 1 && <RemoveBtn onClick={() => removeItem("education", i)}>Remove entry</RemoveBtn>}
+                  {form.education.length > 1 && (
+                    <div className="flex justify-end">
+                      <RemoveBtn onClick={() => removeItem("education", i)}>Remove entry</RemoveBtn>
+                    </div>
+                  )}
                 </div>
               ))}
               <AddBtn onClick={() => addItem("education", { degree: "", institution: "", period: "" })}>Add education</AddBtn>
             </Panel>
 
             <Panel id="skills" title="Skills" icon={<IconTools className="h-[18px] w-[18px]" />} open={!!open.skills} onToggleOpen={() => toggleOpen("skills")} hideable hidden={hidden.skills} onToggleHide={() => toggleHide("skills")}>
-              <PlainInput label="Skills (separate with commas)" value={form.skills} onChange={set("skills")} placeholder="JavaScript, React, Figma, Team leadership" />
-              <div className="mt-2">
-                <AiButton onClick={handleAiSkills} busy={aiBusy === "skills"}>Suggest skills</AiButton>
-              </div>
+              <PlainInput
+                label="Skills (separate with commas)"
+                value={form.skills}
+                onChange={set("skills")}
+                placeholder="JavaScript, React, Figma, Team leadership"
+                action={<AiButton onClick={handleAiSkills} busy={aiBusy === "skills"}>Suggest skills</AiButton>}
+              />
             </Panel>
 
             <Panel id="languages" title="Languages" icon={<IconLanguages className="h-[18px] w-[18px]" />} open={!!open.languages} onToggleOpen={() => toggleOpen("languages")} hideable hidden={hidden.languages} onToggleHide={() => toggleHide("languages")}>
               {form.languages.map((l, i) => (
-                <div key={i} className="mb-3 grid items-end gap-3 sm:grid-cols-[1fr_1fr_auto]">
-                  <PlainInput label="Language" value={l.name} onChange={(v) => updateList("languages", i, "name", v)} placeholder="English" />
-                  <PlainInput label="Level" value={l.level} onChange={(v) => updateList("languages", i, "level", v)} placeholder="Native" />
-                  {form.languages.length > 1 && <RemoveBtn onClick={() => removeItem("languages", i)}>Remove</RemoveBtn>}
+                <div key={i} className="mb-3 space-y-3 rounded-lg border border-zinc-200 bg-zinc-50 p-3">
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <PlainInput label="Language" value={l.name} onChange={(v) => updateList("languages", i, "name", v)} placeholder="English" />
+                    <PlainInput label="Level" value={l.level} onChange={(v) => updateList("languages", i, "level", v)} placeholder="Native" />
+                  </div>
+                  {form.languages.length > 1 && (
+                    <div className="flex justify-end">
+                      <RemoveBtn onClick={() => removeItem("languages", i)}>Remove</RemoveBtn>
+                    </div>
+                  )}
                 </div>
               ))}
               <AddBtn onClick={() => addItem("languages", { name: "", level: "" })}>Add language</AddBtn>
@@ -960,7 +988,11 @@ export function CvEditor({
                     <PlainInput label="Issuer" value={c.issuer} onChange={(v) => updateList("certificates", i, "issuer", v)} placeholder="Coursera" />
                     <PlainInput label="Year" value={c.year} onChange={(v) => updateList("certificates", i, "year", v)} placeholder="2022" />
                   </div>
-                  {form.certificates.length > 1 && <RemoveBtn onClick={() => removeItem("certificates", i)}>Remove</RemoveBtn>}
+                  {form.certificates.length > 1 && (
+                    <div className="flex justify-end">
+                      <RemoveBtn onClick={() => removeItem("certificates", i)}>Remove</RemoveBtn>
+                    </div>
+                  )}
                 </div>
               ))}
               <AddBtn onClick={() => addItem("certificates", { name: "", issuer: "", year: "" })}>Add certificate</AddBtn>
@@ -1188,15 +1220,20 @@ function PlainInput({
   value,
   onChange,
   placeholder,
+  action,
 }: {
   label: string;
   value: string;
   onChange: (v: string) => void;
   placeholder?: string;
+  action?: ReactNode;
 }) {
   return (
     <div>
-      <label className="mb-1.5 block text-sm font-medium text-zinc-700">{label}</label>
+      <div className="mb-1.5 flex items-center justify-between gap-2">
+        <label className="block text-sm font-medium text-zinc-700">{label}</label>
+        {action}
+      </div>
       <input
         type="text"
         value={value}
