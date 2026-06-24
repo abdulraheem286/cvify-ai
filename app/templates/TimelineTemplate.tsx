@@ -37,11 +37,9 @@ export function TimelineTemplate({ cv, domId = "cv-document", theme = DEFAULT_TH
               {cv.experience.map((job, i) => (
                 <div key={i} className="relative mb-5 last:mb-0">
                   <span className="absolute -left-[31px] top-1 h-3 w-3 rounded-full bg-[var(--primary)] ring-4 ring-[var(--bg)]" />
-                  <div className="flex items-baseline justify-between gap-3">
-                    <h3 className="font-semibold text-zinc-900">{job.role}</h3>
-                    {job.period && <span className="shrink-0 text-xs text-zinc-500">{job.period}</span>}
-                  </div>
+                  <h3 className="font-semibold text-zinc-900">{job.role}</h3>
                   {job.company && <p className="text-sm font-medium text-[var(--primary)]">{job.company}</p>}
+                  {job.period && <p className="mt-0.5 text-xs text-zinc-500">{job.period}</p>}
                   <ul className="mt-1.5 list-disc space-y-1 pl-5 text-sm text-zinc-700">
                     {job.bullets?.map((b, j) => <li key={j}>{renderInline(b)}</li>)}
                   </ul>
@@ -57,11 +55,9 @@ export function TimelineTemplate({ cv, domId = "cv-document", theme = DEFAULT_TH
               {cv.education.map((ed, i) => (
                 <div key={i} className="relative mb-3 last:mb-0">
                   <span className="absolute -left-[31px] top-1 h-3 w-3 rounded-full bg-[var(--primary)] ring-4 ring-[var(--bg)]" />
-                  <div className="flex items-baseline justify-between gap-3">
-                    <p className="text-sm font-semibold text-zinc-900">{ed.degree}</p>
-                    {ed.period && <span className="shrink-0 text-xs text-zinc-500">{ed.period}</span>}
-                  </div>
+                  <p className="text-sm font-semibold text-zinc-900">{ed.degree}</p>
                   {ed.institution && <p className="text-sm text-zinc-600">{ed.institution}</p>}
+                  {ed.period && <p className="mt-0.5 text-xs text-zinc-500">{ed.period}</p>}
                 </div>
               ))}
             </div>

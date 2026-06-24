@@ -32,11 +32,9 @@ export function ExecutiveTemplate({ cv, domId = "cv-document", theme = DEFAULT_T
               <Section title="Experience">
                 {cv.experience.map((job, i) => (
                   <div key={i} className="mb-4">
-                    <div className="flex items-baseline justify-between gap-3">
-                      <h3 className="font-semibold text-zinc-900">{job.role}</h3>
-                      {job.period && <span className="shrink-0 text-xs text-zinc-500">{job.period}</span>}
-                    </div>
+                    <h3 className="font-semibold text-zinc-900">{job.role}</h3>
                     {job.company && <p className="text-sm font-medium text-[var(--primary)]">{job.company}</p>}
+                    {job.period && <p className="mt-0.5 text-xs text-zinc-500">{job.period}</p>}
                     <ul className="mt-1.5 list-disc space-y-1 pl-5 text-sm text-zinc-700">
                       {job.bullets?.map((b, j) => <li key={j}>{renderInline(b)}</li>)}
                     </ul>

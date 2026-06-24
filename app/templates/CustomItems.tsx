@@ -10,14 +10,11 @@ export function CustomItems({ items, center = false }: { items: Item[]; center?:
     <>
       {items.map((it, j) => (
         <div key={j} className={`mb-3 last:mb-0 ${center ? "text-center" : ""}`}>
-          <div className={`flex items-baseline gap-3 ${center ? "justify-center" : "justify-between"}`}>
-            <h3 className="font-semibold text-zinc-900">
-              {renderInline(it.title)}
-              {it.subtitle && <span className="font-normal text-zinc-600"> · {renderInline(it.subtitle)}</span>}
-            </h3>
-            {!center && it.period && <span className="shrink-0 text-xs text-zinc-500">{it.period}</span>}
-          </div>
-          {center && it.period && <p className="text-xs text-zinc-500">{it.period}</p>}
+          <h3 className="font-semibold text-zinc-900">
+            {renderInline(it.title)}
+            {it.subtitle && <span className="font-normal text-zinc-600"> · {renderInline(it.subtitle)}</span>}
+          </h3>
+          {it.period && <p className="mt-0.5 text-xs text-zinc-500">{it.period}</p>}
           {it.description && <p className="mt-0.5 text-sm leading-relaxed text-zinc-700">{renderRich(it.description)}</p>}
         </div>
       ))}

@@ -37,10 +37,8 @@ export function GutterTemplate({ cv, domId = "cv-document", theme = DEFAULT_THEM
           <Row label="Experience">
             {cv.experience.map((job, i) => (
               <div key={i} className="mb-4 last:mb-0">
-                <div className="flex items-baseline justify-between gap-3">
-                  <h3 className="font-semibold text-zinc-900">{job.role}{job.company && <span className="font-normal text-zinc-600"> · {job.company}</span>}</h3>
-                  {job.period && <span className="shrink-0 text-xs text-zinc-500">{job.period}</span>}
-                </div>
+                <h3 className="font-semibold text-zinc-900">{job.role}{job.company && <span className="font-normal text-zinc-600"> · {job.company}</span>}</h3>
+                {job.period && <p className="mt-0.5 text-xs text-zinc-500">{job.period}</p>}
                 <ul className="mt-1.5 list-disc space-y-1 pl-5 text-sm text-zinc-700">
                   {job.bullets?.map((b, j) => <li key={j}>{renderInline(b)}</li>)}
                 </ul>
@@ -52,12 +50,12 @@ export function GutterTemplate({ cv, domId = "cv-document", theme = DEFAULT_THEM
         {cv.education?.length > 0 && (
           <Row label="Education">
             {cv.education.map((ed, i) => (
-              <div key={i} className="mb-2 last:mb-0 flex items-baseline justify-between gap-3">
+              <div key={i} className="mb-2 last:mb-0">
                 <p className="text-sm">
                   <span className="font-semibold text-zinc-900">{ed.degree}</span>
                   {ed.institution && <span className="text-zinc-600"> · {ed.institution}</span>}
                 </p>
-                {ed.period && <span className="shrink-0 text-xs text-zinc-500">{ed.period}</span>}
+                {ed.period && <p className="mt-0.5 text-xs text-zinc-500">{ed.period}</p>}
               </div>
             ))}
           </Row>

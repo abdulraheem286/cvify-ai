@@ -31,10 +31,8 @@ export function CompactTemplate({ cv, domId = "cv-document", theme = DEFAULT_THE
           <Section title="Experience">
             {cv.experience.map((job, i) => (
               <div key={i} className="mb-2.5 last:mb-0">
-                <div className="flex items-baseline justify-between gap-3">
-                  <h3 className="text-[13px] font-semibold text-zinc-900">{job.role}{job.company && <span className="font-normal text-zinc-600"> · {job.company}</span>}</h3>
-                  {job.period && <span className="shrink-0 text-[11px] text-zinc-500">{job.period}</span>}
-                </div>
+                <h3 className="text-[13px] font-semibold text-zinc-900">{job.role}{job.company && <span className="font-normal text-zinc-600"> · {job.company}</span>}</h3>
+                {job.period && <p className="mt-0.5 text-[11px] text-zinc-500">{job.period}</p>}
                 <ul className="mt-0.5 list-disc space-y-0.5 pl-4 text-[13px] leading-snug text-zinc-700">
                   {job.bullets?.map((b, j) => <li key={j}>{renderInline(b)}</li>)}
                 </ul>
@@ -46,9 +44,9 @@ export function CompactTemplate({ cv, domId = "cv-document", theme = DEFAULT_THE
         {cv.education?.length > 0 && (
           <Section title="Education">
             {cv.education.map((ed, i) => (
-              <div key={i} className="flex items-baseline justify-between gap-3 text-[13px]">
+              <div key={i} className="text-[13px]">
                 <p><span className="font-semibold text-zinc-900">{ed.degree}</span>{ed.institution && <span className="text-zinc-600"> · {ed.institution}</span>}</p>
-                {ed.period && <span className="shrink-0 text-[11px] text-zinc-500">{ed.period}</span>}
+                {ed.period && <p className="mt-0.5 text-[11px] text-zinc-500">{ed.period}</p>}
               </div>
             ))}
           </Section>
