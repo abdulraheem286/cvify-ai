@@ -798,8 +798,11 @@ export function CvEditor({
       <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,480px)] xl:grid-cols-[minmax(0,1fr)_minmax(0,640px)]">
         {/* EDITOR */}
         <div className={`print:hidden ${mobileView === "preview" ? "hidden lg:block" : ""}`}>
-          <h1 className="text-2xl font-bold tracking-tight">Build your CV</h1>
-          <p className="mt-1 text-sm text-zinc-600">
+          <span className="inline-block rounded-full border border-blue-100 bg-blue-50 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider text-blue-600">
+            CV Editor
+          </span>
+          <h1 className="mt-3 text-3xl font-bold tracking-tight">Build your CV</h1>
+          <p className="mt-2 text-sm text-zinc-600">
             Fill in the sections below — your preview updates live. Use the eye icon to hide a
             section from the CV. Look for the <span className="font-medium text-blue-600">AI buttons</span> to
             write or improve content.
@@ -1013,10 +1016,10 @@ export function CvEditor({
         {/* LIVE PREVIEW */}
         <div className={`print:hidden ${mobileView === "edit" ? "hidden lg:block" : ""}`}>
           <div className="lg:sticky lg:top-6">
-            <p className="mb-2 flex items-center gap-2 text-xs font-medium uppercase tracking-wide text-zinc-400">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" /> Live preview
+            <p className="mb-2 inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-emerald-700">
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500" /> Live preview
             </p>
-            <div className="rounded-2xl bg-zinc-100 p-4 ring-1 ring-zinc-200">
+            <div className="rounded-2xl bg-gradient-to-br from-zinc-100 to-zinc-50 p-4 ring-1 ring-zinc-200">
               <ScaledPreview maxHeight={800}>
                 <TemplateView id={template} cv={previewCv} domId="live-cv" theme={theme} />
               </ScaledPreview>
@@ -1149,7 +1152,7 @@ function Panel({
     <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm transition-shadow hover:shadow-md">
       <div className="flex items-center justify-between gap-2 px-4 py-3">
         <button type="button" onClick={onToggleOpen} className="flex flex-1 items-center gap-3 text-left">
-          <span className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors ${open ? "bg-blue-600 text-white" : "bg-blue-50 text-blue-600"}`}>
+          <span className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors ${open ? "bg-gradient-to-br from-blue-600 to-indigo-600 text-white shadow-sm shadow-blue-600/25" : "bg-blue-50 text-blue-600"}`}>
             {icon}
           </span>
           <span className="font-medium text-zinc-900">{title}</span>
