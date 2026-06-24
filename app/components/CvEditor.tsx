@@ -1070,7 +1070,7 @@ export function CvEditor({
               type="button"
               onClick={() => setPreviewOpen(true)}
               title="Click to expand"
-              className="group relative block w-full cursor-zoom-in rounded-2xl bg-gradient-to-br from-zinc-100 to-zinc-50 p-4 shadow-lg shadow-zinc-200/60 ring-1 ring-zinc-200 transition-shadow hover:shadow-xl"
+              className="group relative block w-full cursor-zoom-in rounded-2xl bg-gradient-to-br from-zinc-100 to-zinc-50 p-4 text-left shadow-lg shadow-zinc-200/60 ring-1 ring-zinc-200 transition-shadow hover:shadow-xl"
             >
               <ScaledPreview maxHeight={800}>
                 <TemplateView id={template} cv={previewCv} domId="live-cv" theme={theme} />
