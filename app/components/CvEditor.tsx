@@ -539,6 +539,8 @@ export function CvEditor({
   const toggleOpen = (k: string) => setOpen((p) => ({ ...p, [k]: !p[k] }));
   const PANEL_IDS = ["personal", "summary", "experience", "education", "skills", "languages", "certificates", "customSections"];
   const setAllOpen = (v: boolean) => setOpen(Object.fromEntries(PANEL_IDS.map((k) => [k, v])));
+  const allOpen = PANEL_IDS.every((k) => open[k]);
+  const allClosed = PANEL_IDS.every((k) => !open[k]);
 
   async function handleDownload() {
     setDownloading(true);
@@ -820,11 +822,11 @@ export function CvEditor({
           <div className="mt-6 flex items-center justify-between">
             <p className="text-xs font-medium uppercase tracking-wide text-zinc-400">Sections</p>
             <div className="flex items-center gap-2 text-xs">
-              <button type="button" onClick={() => setAllOpen(true)} className="font-medium text-zinc-500 transition-colors hover:text-blue-600">
+              <button type="button" onClick={() => setAllOpen(true)} disabled={allOpen} className="font-medium text-zinc-500 transition-colors hover:text-blue-600 disabled:cursor-not-allowed disabled:text-zinc-300 disabled:hover:text-zinc-300">
                 Expand all
               </button>
               <span className="text-zinc-300">·</span>
-              <button type="button" onClick={() => setAllOpen(false)} className="font-medium text-zinc-500 transition-colors hover:text-blue-600">
+              <button type="button" onClick={() => setAllOpen(false)} disabled={allClosed} className="font-medium text-zinc-500 transition-colors hover:text-blue-600 disabled:cursor-not-allowed disabled:text-zinc-300 disabled:hover:text-zinc-300">
                 Collapse all
               </button>
             </div>
