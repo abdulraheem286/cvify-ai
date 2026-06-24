@@ -751,7 +751,7 @@ export function CvEditor({
             type="button"
             onClick={handleDownload}
             disabled={downloading}
-            className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-700 disabled:opacity-60"
+            className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-blue-600/25 transition-all hover:-translate-y-px hover:shadow-md hover:shadow-blue-600/30 disabled:opacity-60 disabled:hover:translate-y-0"
           >
             {downloading ? (
               <span className="h-[18px] w-[18px] animate-spin rounded-full border-2 border-white/40 border-t-white" />
@@ -780,18 +780,18 @@ export function CvEditor({
       )}
 
       {/* Mobile Edit / Preview toggle */}
-      <div className="mb-5 flex rounded-xl border border-zinc-200 bg-white p-1 lg:hidden print:hidden">
+      <div className="mb-5 flex rounded-full border border-zinc-200 bg-white p-1 lg:hidden print:hidden">
         <button
           type="button"
           onClick={() => setMobileView("edit")}
-          className={`flex-1 rounded-lg py-2 text-sm font-semibold transition-colors ${mobileView === "edit" ? "bg-blue-600 text-white shadow-sm" : "text-zinc-600"}`}
+          className={`flex-1 rounded-full py-2 text-sm font-semibold transition-all ${mobileView === "edit" ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-sm shadow-blue-600/25" : "text-zinc-600"}`}
         >
           Edit
         </button>
         <button
           type="button"
           onClick={() => setMobileView("preview")}
-          className={`flex-1 rounded-lg py-2 text-sm font-semibold transition-colors ${mobileView === "preview" ? "bg-blue-600 text-white shadow-sm" : "text-zinc-600"}`}
+          className={`flex-1 rounded-full py-2 text-sm font-semibold transition-all ${mobileView === "preview" ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-sm shadow-blue-600/25" : "text-zinc-600"}`}
         >
           Preview
         </button>
@@ -1029,7 +1029,7 @@ export function CvEditor({
                     ))}
                   </div>
                   <div className="mt-3 flex items-center justify-between">
-                    <AddBtn onClick={() => addCustomItem(i)}>Add item</AddBtn>
+                    <AddBtn onClick={() => addCustomItem(i)} compact>Add item</AddBtn>
                     <div className="flex items-center gap-2">
                       {form.customSections.length > 1 && (
                         <>
@@ -1053,7 +1053,7 @@ export function CvEditor({
             <p className="mb-2 inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-emerald-700">
               <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500" /> Live preview
             </p>
-            <div className="rounded-2xl bg-gradient-to-br from-zinc-100 to-zinc-50 p-4 ring-1 ring-zinc-200">
+            <div className="rounded-2xl bg-gradient-to-br from-zinc-100 to-zinc-50 p-4 shadow-lg shadow-zinc-200/60 ring-1 ring-zinc-200">
               <ScaledPreview maxHeight={800}>
                 <TemplateView id={template} cv={previewCv} domId="live-cv" theme={theme} />
               </ScaledPreview>
@@ -1247,9 +1247,20 @@ function PlainInput({
   );
 }
 
-function AddBtn({ onClick, children }: { onClick: () => void; children: ReactNode }) {
+function AddBtn({ onClick, children, compact }: { onClick: () => void; children: ReactNode; compact?: boolean }) {
+  if (compact) {
+    return (
+      <button type="button" onClick={onClick} className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-600 transition-colors hover:text-blue-700">
+        <IconPlus className="h-4 w-4" /> {children}
+      </button>
+    );
+  }
   return (
-    <button type="button" onClick={onClick} className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-600 hover:text-blue-700">
+    <button
+      type="button"
+      onClick={onClick}
+      className="inline-flex w-full items-center justify-center gap-1.5 rounded-lg border border-dashed border-zinc-300 py-2.5 text-sm font-semibold text-blue-600 transition-colors hover:border-blue-400 hover:bg-blue-50"
+    >
       <IconPlus className="h-4 w-4" /> {children}
     </button>
   );
