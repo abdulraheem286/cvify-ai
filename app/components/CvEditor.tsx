@@ -41,6 +41,8 @@ import {
   IconSparkles,
   IconTarget,
   IconGrip,
+  IconExpand,
+  IconX,
 } from "./icons";
 
 export type ExpEntry = { role: string; company: string; period: string; bullets: string };
@@ -290,6 +292,7 @@ export function CvEditor({
   const [savedAt, setSavedAt] = useState<number | null>(null);
   const [draft, setDraft] = useState<Draft | null>(null); // a recoverable saved draft
   const [mobileView, setMobileView] = useState<"edit" | "preview">("edit");
+  const [previewOpen, setPreviewOpen] = useState(false);
   const [tailorOpen, setTailorOpen] = useState(false);
   const [jd, setJd] = useState("");
   const [tailoring, setTailoring] = useState(false);
@@ -316,6 +319,16 @@ export function CvEditor({
       /* ignore unreadable draft */
     }
   }, []);
+
+  // Close the full-screen preview on Escape.
+  useEffect(() => {
+    if (!previewOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setPreviewOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [previewOpen]);
 
   // Auto-save the editor state to the browser (debounced). Skips the first mount.
   useEffect(() => {
@@ -1053,11 +1066,21 @@ export function CvEditor({
             <p className="mb-2 inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-emerald-700">
               <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500" /> Live preview
             </p>
-            <div className="rounded-2xl bg-gradient-to-br from-zinc-100 to-zinc-50 p-4 shadow-lg shadow-zinc-200/60 ring-1 ring-zinc-200">
+            <button
+              type="button"
+              onClick={() => setPreviewOpen(true)}
+              title="Click to expand"
+              className="group relative block w-full cursor-zoom-in rounded-2xl bg-gradient-to-br from-zinc-100 to-zinc-50 p-4 shadow-lg shadow-zinc-200/60 ring-1 ring-zinc-200 transition-shadow hover:shadow-xl"
+            >
               <ScaledPreview maxHeight={800}>
                 <TemplateView id={template} cv={previewCv} domId="live-cv" theme={theme} />
               </ScaledPreview>
-            </div>
+              <span className="pointer-events-none absolute inset-4 flex items-center justify-center rounded-xl opacity-0 transition-opacity group-hover:opacity-100">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-zinc-900/80 px-3.5 py-1.5 text-xs font-semibold text-white shadow-lg backdrop-blur">
+                  <IconExpand className="h-4 w-4" /> Click to expand
+                </span>
+              </span>
+            </button>
           </div>
         </div>
       </div>
@@ -1142,6 +1165,53 @@ export function CvEditor({
               >
                 {tailorResult ? "Done" : "Close"}
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {previewOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 print:hidden">
+          <button
+            aria-hidden
+            tabIndex={-1}
+            onClick={() => setPreviewOpen(false)}
+            className="absolute inset-0 cursor-default bg-black/60 backdrop-blur-sm"
+          />
+          <div className="relative z-10 flex max-h-[94vh] w-full max-w-3xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl">
+            <div className="flex items-center justify-between gap-3 border-b border-zinc-200 px-5 py-3">
+              <p className="flex items-center gap-2 text-sm font-semibold text-zinc-700">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" /> CV preview
+              </p>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={handleDownload}
+                  disabled={downloading}
+                  className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 px-3.5 py-2 text-sm font-semibold text-white shadow-sm shadow-blue-600/25 transition-all hover:-translate-y-px hover:shadow-md disabled:opacity-60 disabled:hover:translate-y-0"
+                >
+                  {downloading ? (
+                    <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />
+                  ) : (
+                    <IconDownload className="h-4 w-4" />
+                  )}
+                  <span className="hidden sm:inline">{downloading ? "Preparing…" : "Download PDF"}</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setPreviewOpen(false)}
+                  aria-label="Close preview"
+                  className="rounded-lg p-2 text-zinc-400 transition-colors hover:bg-zinc-100 hover:text-zinc-700"
+                >
+                  <IconX className="h-5 w-5" />
+                </button>
+              </div>
+            </div>
+            <div className="overflow-y-auto bg-zinc-100 p-4 sm:p-6">
+              <div className="mx-auto max-w-[800px]">
+                <ScaledPreview>
+                  <TemplateView id={template} cv={previewCv} domId="modal-cv" theme={theme} />
+                </ScaledPreview>
+              </div>
             </div>
           </div>
         </div>

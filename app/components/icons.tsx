@@ -96,3 +96,9 @@ export const IconAward = ({ className }: IconProps) =>
 
 export const IconLanguages = ({ className }: IconProps) =>
   base(<path d="M4 5h7M9 3v2c0 4-2 7-5 9M5 9c0 3 3 5 6 6M14 21l4-9 4 9M16.5 16h5" />, className);
+
+export const IconExpand = ({ className }: IconProps) =>
+  base(<path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />, className);
+
+export const IconX = ({ className }: IconProps) =>
+  base(<path d="M18 6 6 18M6 6l12 12" />, className);
