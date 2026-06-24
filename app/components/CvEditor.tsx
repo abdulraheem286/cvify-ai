@@ -1150,7 +1150,7 @@ function Panel({
 }) {
   return (
     <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm transition-shadow hover:shadow-md">
-      <div className="flex items-center justify-between gap-2 px-4 py-3">
+      <div className={`flex items-center justify-between gap-2 px-4 py-3 transition-colors ${open ? "bg-blue-50/50" : ""}`}>
         <button type="button" onClick={onToggleOpen} className="flex flex-1 items-center gap-3 text-left">
           <span className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors ${open ? "bg-gradient-to-br from-blue-600 to-indigo-600 text-white shadow-sm shadow-blue-600/25" : "bg-blue-50 text-blue-600"}`}>
             {icon}
@@ -1202,7 +1202,7 @@ function PlainInput({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="w-full rounded-lg border border-zinc-300 bg-white px-4 py-2.5 text-zinc-900 placeholder-zinc-400 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+        className="w-full rounded-lg border border-zinc-300 bg-white px-4 py-2.5 text-zinc-900 placeholder-zinc-400 outline-none transition-colors hover:border-zinc-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
       />
     </div>
   );
@@ -1266,7 +1266,7 @@ function AiButton({
       type="button"
       onClick={onClick}
       disabled={busy || disabled}
-      className="inline-flex items-center gap-1.5 rounded-lg border border-blue-200 bg-blue-50 px-2.5 py-1.5 text-xs font-semibold text-blue-700 transition-colors hover:bg-blue-100 disabled:cursor-not-allowed disabled:opacity-50"
+      className="inline-flex items-center gap-1.5 rounded-lg border border-blue-200 bg-blue-50 px-2.5 py-1.5 text-xs font-semibold text-blue-700 shadow-sm transition-all hover:-translate-y-px hover:bg-blue-100 hover:shadow disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-sm"
     >
       {busy ? (
         <span className="inline-block h-3.5 w-3.5 animate-spin rounded-full border-2 border-blue-300 border-t-blue-600" />

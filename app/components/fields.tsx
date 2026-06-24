@@ -37,10 +37,10 @@ export function IconField({
           onBlur={onBlur}
           placeholder={placeholder}
           aria-invalid={!!error}
-          className={`w-full rounded-lg border bg-white py-2.5 pl-10 pr-4 text-zinc-900 placeholder-zinc-400 outline-none focus:ring-1 ${
+          className={`w-full rounded-lg border bg-white py-2.5 pl-10 pr-4 text-zinc-900 placeholder-zinc-400 outline-none transition-colors focus:ring-1 ${
             error
               ? "border-red-400 focus:border-red-500 focus:ring-red-500"
-              : "border-zinc-300 focus:border-blue-500 focus:ring-blue-500"
+              : "border-zinc-300 hover:border-zinc-400 focus:border-blue-500 focus:ring-blue-500"
           }`}
         />
       </div>
@@ -77,10 +77,10 @@ export function FieldTextarea({
         rows={rows}
         placeholder={placeholder}
         aria-invalid={!!error}
-        className={`w-full rounded-lg border bg-white px-4 py-3 text-zinc-900 placeholder-zinc-400 outline-none focus:ring-1 ${
+        className={`w-full rounded-lg border bg-white px-4 py-3 text-zinc-900 placeholder-zinc-400 outline-none transition-colors focus:ring-1 ${
           error
             ? "border-red-400 focus:border-red-500 focus:ring-red-500"
-            : "border-zinc-300 focus:border-blue-500 focus:ring-blue-500"
+            : "border-zinc-300 hover:border-zinc-400 focus:border-blue-500 focus:ring-blue-500"
         }`}
       />
       {error && <p className="mt-1 text-xs text-red-600">{error}</p>}
