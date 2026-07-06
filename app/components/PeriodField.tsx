@@ -67,7 +67,8 @@ function Select({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         disabled={disabled}
-        className="w-full appearance-none rounded-lg border border-zinc-300 bg-white py-2.5 pl-3 pr-9 text-sm text-zinc-900 outline-none transition-colors hover:border-zinc-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 disabled:cursor-not-allowed disabled:bg-zinc-50 disabled:text-zinc-400"
+        style={{ appearance: "none", WebkitAppearance: "none", MozAppearance: "none" }}
+        className="w-full appearance-none rounded-lg border border-zinc-300 bg-white py-2.5 pl-3 pr-10 text-sm text-zinc-900 outline-none transition-colors hover:border-zinc-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 disabled:cursor-not-allowed disabled:bg-zinc-50 disabled:text-zinc-400"
       >
         <option value="">{placeholder}</option>
         {options.map((o) => (
@@ -84,7 +85,7 @@ function Select({
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
-        className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400"
+        className="pointer-events-none absolute right-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400"
       >
         <path d="M6 9l6 6 6-6" />
       </svg>
