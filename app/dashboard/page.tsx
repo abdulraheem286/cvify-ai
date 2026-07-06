@@ -72,6 +72,13 @@ function Dashboard() {
   const [tab, setTab] = useState<Tab>("cvs");
   const initial = (user?.displayName || user?.email || "?").charAt(0).toUpperCase();
 
+  // Allow deep-linking to a tab, e.g. /dashboard?tab=templates (used after saving
+  // a template on /customize).
+  useEffect(() => {
+    const t = new URLSearchParams(window.location.search).get("tab");
+    if (t === "templates" || t === "profile" || t === "cvs") setTab(t);
+  }, []);
+
   return (
     <div className="flex min-h-full flex-1 flex-col bg-zinc-50 text-zinc-900">
       <AppHeader />
@@ -323,7 +330,12 @@ function TemplatesView() {
           <h1 className="text-2xl font-bold tracking-tight">My Templates</h1>
           <p className="mt-1 text-sm text-zinc-600">Saved layout + colour styles you can reuse on any CV.</p>
         </div>
-        <span className="rounded-full bg-zinc-100 px-2.5 py-1 text-xs font-semibold text-zinc-600">{templates.length}</span>
+        <Link
+          href="/customize"
+          className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-700"
+        >
+          <IconPlus className="h-4 w-4" /> Create template
+        </Link>
       </div>
 
       <div className="mt-6">
@@ -360,6 +372,7 @@ function TemplatesView() {
                       Use →
                     </Link>
                     <div className="flex items-center gap-2.5">
+                      <Link href={`/customize?tpl=${t.id}`} className="font-medium text-zinc-500 hover:text-zinc-800">Edit</Link>
                       <button type="button" onClick={() => setRenaming(t)} className="font-medium text-zinc-500 hover:text-zinc-800">Rename</button>
                       <button type="button" onClick={() => setDeleting(t)} className="text-zinc-400 hover:text-red-600" title="Delete">
                         <IconTrash className="h-4 w-4" />

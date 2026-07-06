@@ -1,6 +1,6 @@
 import { initializeApp, getApps, type FirebaseApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider, type Auth } from "firebase/auth";
-import { getFirestore, type Firestore } from "firebase/firestore";
+import { getFirestore, initializeFirestore, type Firestore } from "firebase/firestore";
 
 // Public web config (safe to ship to the browser — these identify the project,
 // they are NOT secrets; security is enforced by Firestore rules + authorized
@@ -25,7 +25,14 @@ let dbInstance: Firestore | null = null;
 if (firebaseEnabled) {
   app = getApps().length ? getApps()[0] : initializeApp(config);
   authInstance = getAuth(app);
-  dbInstance = getFirestore(app);
+  // ignoreUndefinedProperties lets us store objects with optional fields (e.g. a
+  // theme where `text`/`density` are unset) without Firestore throwing on
+  // `undefined`. Fall back to getFirestore if Firestore was already initialized.
+  try {
+    dbInstance = initializeFirestore(app, { ignoreUndefinedProperties: true });
+  } catch {
+    dbInstance = getFirestore(app);
+  }
 }
 
 export const auth = authInstance;

@@ -4,8 +4,8 @@ import { useState, useEffect, useRef, type ChangeEvent, type ReactNode, type Dra
 import type { CVResult } from "@/app/types";
 import { ScaledPreview } from "./ScaledPreview";
 import { TemplatePicker } from "./TemplatePicker";
-import { CustomizationPanel } from "./CustomizationPanel";
-import { DEFAULT_TEMPLATE, getDefaultTheme, getTemplate, type TemplateId, type Theme } from "@/app/templates";
+import { QuickPresets } from "./QuickPresets";
+import { DEFAULT_TEMPLATE, getDefaultTheme, type TemplateId, type Theme } from "@/app/templates";
 import { TemplateView } from "@/app/templates/TemplateView";
 import { downloadCvPdf } from "@/app/lib/pdf";
 import { aiSummary, aiBullets, aiSkills } from "@/app/lib/assist";
@@ -14,7 +14,7 @@ import { PeriodField } from "./PeriodField";
 import { useAuth } from "./AuthProvider";
 import { createCv, saveCv } from "@/app/lib/cvStore";
 import { useMyTemplates } from "@/app/lib/useMyTemplates";
-import { ConfirmDialog, PromptDialog } from "./Dialog";
+import { ConfirmDialog } from "./Dialog";
 import {
   IconField,
   nameError,
@@ -46,7 +46,6 @@ import {
   IconExpand,
   IconX,
   IconFileText,
-  IconBookmark,
 } from "./icons";
 
 export type ExpEntry = { role: string; company: string; period: string; bullets: string };
@@ -321,9 +320,7 @@ export function CvEditor({
   const [draft, setDraft] = useState<Draft | null>(null); // a recoverable saved draft
   const [mobileView, setMobileView] = useState<"edit" | "preview">("edit");
   const [previewOpen, setPreviewOpen] = useState(false);
-  const { templates: myTemplates, save: saveMyTemplate } = useMyTemplates();
-  const [saveTplOpen, setSaveTplOpen] = useState(false);
-  const [tplSavedAt, setTplSavedAt] = useState<number | null>(null);
+  const { templates: myTemplates } = useMyTemplates();
   const [earlierDismissed, setEarlierDismissed] = useState(false);
   const [tailorOpen, setTailorOpen] = useState(false);
   const [jd, setJd] = useState("");
@@ -889,18 +886,7 @@ export function CvEditor({
               setTheme(t.theme);
             }}
           />
-          <CustomizationPanel value={theme} onChange={setTheme} />
-          {signedIn && (
-            <button
-              type="button"
-              onClick={() => setSaveTplOpen(true)}
-              title="Save this layout + colours as a reusable template"
-              className="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-50"
-            >
-              <IconBookmark className="h-[18px] w-[18px] text-blue-600" />
-              <span className="hidden lg:inline">{tplSavedAt ? "Saved ✓" : "Save style"}</span>
-            </button>
-          )}
+          <QuickPresets value={theme} onChange={setTheme} />
           {/* Word (.docx) export is ON HOLD — Download is PDF-only for now.
               The docx code (handleDownloadDocx, app/lib/docxBuild.ts, the menu)
               is kept so it can be re-enabled quickly. */}
@@ -1412,20 +1398,6 @@ export function CvEditor({
           setConfirmFresh(false);
         }}
         onClose={() => setConfirmFresh(false)}
-      />
-
-      <PromptDialog
-        open={saveTplOpen}
-        title="Save as template"
-        label="Template name"
-        defaultValue={`${getTemplate(template).name} style`}
-        confirmLabel="Save template"
-        onConfirm={async (name) => {
-          setSaveTplOpen(false);
-          await saveMyTemplate(name.trim() || `${getTemplate(template).name} style`, template, theme);
-          setTplSavedAt(Date.now());
-        }}
-        onClose={() => setSaveTplOpen(false)}
       />
     </main>
   );

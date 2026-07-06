@@ -84,6 +84,11 @@ export async function createTemplate(uid: string, name: string, layout: Template
   return ref.id;
 }
 
+export async function updateTemplate(uid: string, id: string, name: string, layout: TemplateId, theme: Theme): Promise<void> {
+  writeCache(uid, readCache(uid).map((t) => (t.id === id ? { ...t, name, layout, theme, updatedAt: Date.now() } : t)));
+  if (db) await updateDoc(doc(db, "users", uid, "templates", id), { name, layout, theme, updatedAt: serverTimestamp() });
+}
+
 export async function renameTemplate(uid: string, id: string, name: string): Promise<void> {
   writeCache(uid, readCache(uid).map((t) => (t.id === id ? { ...t, name } : t)));
   if (db) await updateDoc(doc(db, "users", uid, "templates", id), { name, updatedAt: serverTimestamp() });

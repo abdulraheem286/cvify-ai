@@ -3,12 +3,25 @@
 //   --primary, --secondary, --bg, --font-body, --font-heading
 // This file has NO component imports, so layouts can import it freely.
 
+export type Density = "compact" | "normal" | "roomy";
+export type HeadingCase = "as-designed" | "upper";
+
 export type Theme = {
   primary: string; // main accent colour
-  secondary: string; // secondary accent / strong text colour
+  secondary: string; // secondary accent / strong text colour (name, headings)
   bg: string; // document surface background
   fontBody: string; // CSS font-family value, e.g. "var(--font-inter)"
   fontHeading: string; // CSS font-family value
+
+  // --- Extended options (all OPTIONAL) ---
+  // Every field below is optional so any theme saved before these existed still
+  // renders byte-identically: buildCvCss() only emits a rule when a field is set.
+  text?: string; // main body-text colour (overrides the darker zinc greys)
+  muted?: string; // secondary / meta text colour (overrides the lighter greys)
+  fontScale?: number; // multiplier on all text sizes, e.g. 0.9–1.15 (1 = default)
+  lineHeight?: number; // unitless line-height applied to body text (e.g. 1.3–1.75)
+  headingCase?: HeadingCase; // "upper" forces UPPERCASE headings
+  density?: Density; // overall compactness (maps to a document zoom)
 };
 
 // Where an entry's date sits. Both are ATS-safe (parse cleanly); "right-aligned"
@@ -34,6 +47,68 @@ export function themeVars(theme: Theme): Record<string, string> {
     "--font-heading": theme.fontHeading,
   };
 }
+
+// Density → document zoom. Compact fits more on a page; roomy breathes more.
+const DENSITY_ZOOM: Record<Density, number> = { compact: 0.93, normal: 1, roomy: 1.08 };
+
+// Base rem sizes for the Tailwind text utilities the templates actually use.
+// Scaling these (scoped to one CV) changes text size everywhere without touching
+// any template — the id selector out-specifies Tailwind's own `.text-*` rules.
+const TEXT_SIZES: [string, number][] = [
+  ["text-xs", 0.75],
+  ["text-sm", 0.875],
+  ["text-base", 1],
+  ["text-lg", 1.125],
+  ["text-xl", 1.25],
+  ["text-2xl", 1.5],
+  ["text-3xl", 1.875],
+  ["text-4xl", 2.25],
+  ["text-5xl", 3],
+];
+
+// Build a scoped stylesheet that applies a theme's EXTENDED options to one CV
+// (identified by its DOM id). Returns "" when nothing extended is set, so the
+// common case injects no markup at all.
+export function buildCvCss(domId: string, t: Theme): string {
+  const sel = `#${domId}`;
+  const rules: string[] = [];
+
+  // Density → zoom the whole document.
+  const zoom = t.density ? DENSITY_ZOOM[t.density] : 1;
+  if (zoom !== 1) rules.push(`${sel}{zoom:${zoom}}`);
+
+  // Typography: font scale and/or custom line-height on the text utilities.
+  const scale = t.fontScale && t.fontScale > 0 ? t.fontScale : 1;
+  const lh = t.lineHeight;
+  if (scale !== 1 || lh) {
+    for (const [cls, rem] of TEXT_SIZES) {
+      const decl: string[] = [];
+      if (scale !== 1) decl.push(`font-size:${(rem * scale).toFixed(4)}rem`);
+      if (lh) decl.push(`line-height:${lh}`);
+      rules.push(`${sel} .${cls}{${decl.join(";")}}`);
+    }
+    // Neutralise fixed leading utilities so a custom line-height wins.
+    if (lh) rules.push(`${sel} .leading-tight,${sel} .leading-snug,${sel} .leading-relaxed{line-height:${lh}}`);
+  }
+
+  // Heading case.
+  if (t.headingCase === "upper") rules.push(`${sel} h1,${sel} h2,${sel} h3{text-transform:uppercase}`);
+
+  // Colour depth: remap the grey text scale to custom colours.
+  if (t.text) rules.push(`${sel} .text-zinc-900,${sel} .text-zinc-800,${sel} .text-zinc-700{color:${t.text}}`);
+  if (t.muted) rules.push(`${sel} .text-zinc-600,${sel} .text-zinc-500,${sel} .text-zinc-400{color:${t.muted}}`);
+
+  return rules.join("");
+}
+
+// Slider/segment option metadata used by the customization studio.
+export const FONT_SCALE_RANGE = { min: 0.9, max: 1.15, step: 0.05, default: 1 };
+export const LINE_HEIGHT_RANGE = { min: 1.3, max: 1.8, step: 0.05, default: 1.5 };
+export const DENSITIES: { id: Density; name: string }[] = [
+  { id: "compact", name: "Compact" },
+  { id: "normal", name: "Normal" },
+  { id: "roomy", name: "Roomy" },
+];
 
 // Fonts loaded in app/layout.tsx via next/font, exposed as CSS variables.
 export type FontOption = { id: string; name: string; value: string; kind: "Sans" | "Serif" };
