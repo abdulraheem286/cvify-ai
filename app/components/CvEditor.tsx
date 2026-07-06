@@ -608,7 +608,7 @@ export function CvEditor({
     try {
       // Build the .docx in the browser (code-split: only loads on first use).
       const { buildCvDocx } = await import("@/app/lib/docxBuild");
-      const blob = await buildCvDocx(exportCv, theme);
+      const blob = await buildCvDocx(exportCv, theme, template);
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
