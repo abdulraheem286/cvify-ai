@@ -9,6 +9,9 @@ import {
 } from "docx";
 import type { CVResult } from "@/app/types";
 
+// Generated in the BROWSER (Packer.toBlob) — no serverless function, so it can't
+// interfere with the PDF function's bundling/tracing and always has its deps.
+
 // Only the accent colours are used from the theme; the .docx is a clean,
 // single-column, ATS-friendly layout (not a pixel copy of the visual template).
 type ThemeLike = { primary?: string; secondary?: string };
@@ -68,7 +71,7 @@ function richBlock(text: string): Paragraph[] {
 }
 
 // Sizes are half-points (e.g. 22 = 11pt). Twips for spacing (20 = 1pt).
-export async function buildCvDocx(cv: CVResult, theme?: ThemeLike): Promise<Buffer> {
+export async function buildCvDocx(cv: CVResult, theme?: ThemeLike): Promise<Blob> {
   const primary = hex(theme?.primary, "2563EB");
   const secondary = hex(theme?.secondary, "0F172A");
   const gray = "555555";
@@ -184,5 +187,5 @@ export async function buildCvDocx(cv: CVResult, theme?: ThemeLike): Promise<Buff
     sections: [section],
   });
 
-  return Packer.toBuffer(doc);
+  return Packer.toBlob(doc);
 }

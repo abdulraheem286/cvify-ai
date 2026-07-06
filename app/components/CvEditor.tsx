@@ -606,13 +606,9 @@ export function CvEditor({
     setDocxBusy(true);
     const name = exportCv.fullName.replace(/\s+/g, "-") || "cv";
     try {
-      const res = await fetch("/api/docx", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ cv: exportCv, theme, fileName: name }),
-      });
-      if (!res.ok) throw new Error("docx failed");
-      const blob = await res.blob();
+      // Build the .docx in the browser (code-split: only loads on first use).
+      const { buildCvDocx } = await import("@/app/lib/docxBuild");
+      const blob = await buildCvDocx(exportCv, theme);
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
