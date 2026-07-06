@@ -235,6 +235,27 @@ function formHasContent(f: EditorForm): boolean {
   );
 }
 
+// Rough total career length in years, parsed from free-text experience periods
+// ("2020 — Present", "2014 – 2018", etc.): the span from the earliest start year
+// to the latest end year (or the current year for ongoing roles).
+function careerYears(experience: ExpEntry[]): number {
+  const now = new Date().getFullYear();
+  let earliest = Infinity;
+  let latest = -Infinity;
+  for (const job of experience) {
+    const p = job.period || "";
+    const years = (p.match(/(?:19|20)\d{2}/g) || []).map(Number);
+    const ongoing = /present|current|now|ongoing|to date/i.test(p);
+    if (!years.length && !ongoing) continue;
+    const start = years.length ? Math.min(...years) : now;
+    const end = ongoing ? now : Math.max(...years);
+    earliest = Math.min(earliest, start);
+    latest = Math.max(latest, end);
+  }
+  if (!isFinite(earliest) || !isFinite(latest)) return 0;
+  return Math.max(0, latest - earliest);
+}
+
 function timeAgo(ts: number): string {
   const s = Math.floor((Date.now() - ts) / 1000);
   if (s < 60) return "just now";
@@ -297,6 +318,7 @@ export function CvEditor({
   const [draft, setDraft] = useState<Draft | null>(null); // a recoverable saved draft
   const [mobileView, setMobileView] = useState<"edit" | "preview">("edit");
   const [previewOpen, setPreviewOpen] = useState(false);
+  const [earlierDismissed, setEarlierDismissed] = useState(false);
   const [tailorOpen, setTailorOpen] = useState(false);
   const [jd, setJd] = useState("");
   const [tailoring, setTailoring] = useState(false);
@@ -310,6 +332,13 @@ export function CvEditor({
 
   const exportCv = formToCv(form, hidden); // clean — used for the PDF
   const previewCv = formToCv(form, hidden, true); // with placeholders — preview only
+
+  // Long-career tip: suggest an "Earlier Experience" section to condense old roles.
+  const expYears = careerYears(form.experience);
+  const hasEarlierSection = form.customSections.some((s) =>
+    /earlier experience|earlier highlights|additional experience|previous experience/i.test(s.heading),
+  );
+  const showEarlierHint = expYears >= 15 && !hasEarlierSection && !earlierDismissed && !hidden.experience;
 
   // Offer to restore a previously saved draft (never auto-clobbers the current one).
   useEffect(() => {
@@ -507,6 +536,13 @@ export function CvEditor({
   const blankCustomItem = (): CustomItem => ({ title: "", subtitle: "", period: "", description: "" });
   function addCustomSection() {
     setForm((p) => ({ ...p, customSections: [...p.customSections, { heading: "", items: [blankCustomItem()] }] }));
+  }
+  // Suggested for long careers: a section to condense the oldest roles.
+  function addEarlierSection() {
+    setForm((p) => ({ ...p, customSections: [...p.customSections, { heading: "Earlier Experience", items: [blankCustomItem()] }] }));
+    setOpen((p) => ({ ...p, customSections: true }));
+    setHidden((p) => ({ ...p, customSections: false }));
+    setEarlierDismissed(true);
   }
   function removeCustomSection(i: number) {
     setForm((p) => ({ ...p, customSections: p.customSections.filter((_, idx) => idx !== i) }));
@@ -978,6 +1014,35 @@ export function CvEditor({
               ))}
               <AddBtn onClick={() => addItem("experience", { role: "", company: "", period: "", bullets: "" })}>Add job</AddBtn>
             </Panel>
+
+            {showEarlierHint && (
+              <div className="flex flex-wrap items-start justify-between gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3">
+                <div className="flex items-start gap-2.5">
+                  <IconSparkles className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
+                  <p className="text-sm text-amber-900">
+                    You have around <span className="font-semibold">{expYears}+ years</span> of experience. Consider condensing your oldest
+                    roles into an <span className="font-semibold">&ldquo;Earlier Experience&rdquo;</span> section to keep your CV focused and
+                    under two pages.
+                  </p>
+                </div>
+                <div className="flex shrink-0 items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={addEarlierSection}
+                    className="inline-flex items-center gap-1 rounded-lg bg-amber-600 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-amber-700"
+                  >
+                    <IconPlus className="h-3.5 w-3.5" /> Add section
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setEarlierDismissed(true)}
+                    className="rounded-lg px-3 py-1.5 text-xs font-medium text-amber-700 transition-colors hover:bg-amber-100"
+                  >
+                    Dismiss
+                  </button>
+                </div>
+              </div>
+            )}
 
             <Panel id="education" title="Education" icon={<IconGraduation className="h-[18px] w-[18px]" />} open={!!open.education} onToggleOpen={() => toggleOpen("education")} hideable hidden={hidden.education} onToggleHide={() => toggleHide("education")}>
               {form.education.map((ed, i) => (
