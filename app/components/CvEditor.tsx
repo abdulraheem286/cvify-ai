@@ -1188,7 +1188,7 @@ export function CvEditor({
                           <PlainInput label="Title" value={it.title} onChange={(v) => updateCustomItem(i, j, "title", v)} placeholder="Project / award name" />
                           <PlainInput label="Subtitle (optional)" value={it.subtitle} onChange={(v) => updateCustomItem(i, j, "subtitle", v)} placeholder="Role / issuer" />
                         </div>
-                        <PeriodField label="Date (optional)" value={it.period} onChange={(v) => updateCustomItem(i, j, "period", v)} single />
+                        <PeriodField label="Date (optional)" value={it.period} onChange={(v) => updateCustomItem(i, j, "period", v)} />
                         <RichTextarea label="Description (optional)" value={it.description} onChange={(v) => updateCustomItem(i, j, "description", v)} rows={2} placeholder="One or two lines about it." />
                         {s.items.length > 1 && (
                           <div className="flex items-center justify-between">

@@ -66,7 +66,7 @@ function Select({
       value={value}
       onChange={(e) => onChange(e.target.value)}
       disabled={disabled}
-      className={`rounded-lg border border-zinc-300 bg-white px-3 py-2.5 text-sm text-zinc-900 outline-none transition-colors hover:border-zinc-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 disabled:cursor-not-allowed disabled:bg-zinc-50 disabled:text-zinc-400 ${className}`}
+      className={`min-w-0 rounded-lg border border-zinc-300 bg-white px-3 py-2.5 text-sm text-zinc-900 outline-none transition-colors hover:border-zinc-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 disabled:cursor-not-allowed disabled:bg-zinc-50 disabled:text-zinc-400 ${className}`}
     >
       <option value="">{placeholder}</option>
       {options.map((o) => (
@@ -98,20 +98,22 @@ export function PeriodField({
   return (
     <div>
       <label className="mb-1.5 block text-sm font-medium text-zinc-700">{label}</label>
-      <div className="flex flex-wrap items-center gap-2">
-        <div className="flex items-center gap-1.5">
-          <Select value={s.m} onChange={(m) => setStart({ m })} options={MONTHS} placeholder="Month" />
-          <Select value={s.y} onChange={(y) => setStart({ y })} options={YEARS} placeholder="Year" />
+      <div className="flex flex-wrap items-center gap-x-2 gap-y-2">
+        {/* Start */}
+        <div className="flex min-w-[12rem] flex-1 items-center gap-2">
+          <Select value={s.m} onChange={(m) => setStart({ m })} options={MONTHS} placeholder="Month" className="flex-1" />
+          <Select value={s.y} onChange={(y) => setStart({ y })} options={YEARS} placeholder="Year" className="flex-1" />
         </div>
 
         {!single && (
           <>
-            <span className="px-0.5 text-sm text-zinc-400">–</span>
-            <div className="flex items-center gap-1.5">
-              <Select value={e.m} onChange={(m) => setEnd({ m })} options={MONTHS} placeholder="Month" disabled={!!e.present} />
-              <Select value={e.y} onChange={(y) => setEnd({ y })} options={YEARS} placeholder="Year" disabled={!!e.present} />
+            <span className="shrink-0 text-sm text-zinc-400">–</span>
+            {/* End */}
+            <div className="flex min-w-[12rem] flex-1 items-center gap-2">
+              <Select value={e.m} onChange={(m) => setEnd({ m })} options={MONTHS} placeholder="Month" disabled={!!e.present} className="flex-1" />
+              <Select value={e.y} onChange={(y) => setEnd({ y })} options={YEARS} placeholder="Year" disabled={!!e.present} className="flex-1" />
             </div>
-            <label className="inline-flex cursor-pointer items-center gap-1.5 text-sm text-zinc-600">
+            <label className="inline-flex shrink-0 cursor-pointer items-center gap-1.5 text-sm text-zinc-600">
               <input
                 type="checkbox"
                 checked={!!e.present}
