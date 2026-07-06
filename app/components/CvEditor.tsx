@@ -797,62 +797,22 @@ export function CvEditor({
           </button>
           <TemplatePicker value={template} onChange={setTemplate} />
           <CustomizationPanel value={theme} onChange={setTheme} />
-          <div className="relative" ref={downloadRef}>
-            <button
-              type="button"
-              onClick={() => setDownloadOpen((o) => !o)}
-              disabled={downloading || docxBusy}
-              aria-haspopup="menu"
-              aria-expanded={downloadOpen}
-              className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-blue-600/25 transition-all hover:-translate-y-px hover:shadow-md hover:shadow-blue-600/30 disabled:opacity-60 disabled:hover:translate-y-0"
-            >
-              {downloading || docxBusy ? (
-                <span className="h-[18px] w-[18px] animate-spin rounded-full border-2 border-white/40 border-t-white" />
-              ) : (
-                <IconDownload className="h-[18px] w-[18px]" />
-              )}
-              <span className="hidden sm:inline">{downloading || docxBusy ? "Preparing…" : "Download"}</span>
-              <IconChevron className={`h-4 w-4 transition-transform ${downloadOpen ? "rotate-180" : ""}`} />
-            </button>
-            {downloadOpen && (
-              <div role="menu" className="absolute right-0 top-full z-40 mt-2 w-60 overflow-hidden rounded-xl border border-zinc-200 bg-white p-1.5 shadow-lg">
-                <button
-                  type="button"
-                  role="menuitem"
-                  onClick={() => {
-                    setDownloadOpen(false);
-                    handleDownload();
-                  }}
-                  className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left transition-colors hover:bg-zinc-50"
-                >
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
-                    <IconDownload className="h-[18px] w-[18px]" />
-                  </span>
-                  <span>
-                    <span className="block text-sm font-semibold text-zinc-900">PDF document</span>
-                    <span className="block text-xs text-zinc-500">Best for applying &amp; printing</span>
-                  </span>
-                </button>
-                <button
-                  type="button"
-                  role="menuitem"
-                  onClick={() => {
-                    setDownloadOpen(false);
-                    handleDownloadDocx();
-                  }}
-                  className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left transition-colors hover:bg-zinc-50"
-                >
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600">
-                    <IconFileText className="h-[18px] w-[18px]" />
-                  </span>
-                  <span>
-                    <span className="block text-sm font-semibold text-zinc-900">Word document</span>
-                    <span className="block text-xs text-zinc-500">Editable .docx file</span>
-                  </span>
-                </button>
-              </div>
+          {/* Word (.docx) export is ON HOLD — Download is PDF-only for now.
+              The docx code (handleDownloadDocx, app/lib/docxBuild.ts, the menu)
+              is kept so it can be re-enabled quickly. */}
+          <button
+            type="button"
+            onClick={handleDownload}
+            disabled={downloading}
+            className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-blue-600/25 transition-all hover:-translate-y-px hover:shadow-md hover:shadow-blue-600/30 disabled:opacity-60 disabled:hover:translate-y-0"
+          >
+            {downloading ? (
+              <span className="h-[18px] w-[18px] animate-spin rounded-full border-2 border-white/40 border-t-white" />
+            ) : (
+              <IconDownload className="h-[18px] w-[18px]" />
             )}
-          </div>
+            <span className="hidden sm:inline">{downloading ? "Preparing…" : "Download PDF"}</span>
+          </button>
         </div>
       </div>
 
