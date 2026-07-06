@@ -18,7 +18,7 @@ export default function BuildChooser() {
       <AppHeader />
 
       <main className="flex flex-1 flex-col items-center justify-center site-px py-20">
-        <div className="w-full max-w-5xl text-center">
+        <div className="w-full max-w-6xl text-center">
           <RequireAuth>
           <Reveal stagger>
             <span className="inline-block rounded-full border border-blue-100 bg-blue-50 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider text-blue-600">
@@ -32,7 +32,7 @@ export default function BuildChooser() {
             </p>
           </Reveal>
 
-          <Reveal stagger delay={0.15} className="mt-12 grid gap-6 sm:grid-cols-3">
+          <Reveal stagger delay={0.15} className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             <Link
               href="/build/ai"
               className="group relative overflow-hidden rounded-2xl border border-zinc-200 bg-white p-7 text-left shadow-sm transition-all hover:-translate-y-1 hover:border-blue-300 hover:shadow-lg hover:shadow-blue-600/5"
@@ -50,6 +50,26 @@ export default function BuildChooser() {
               </p>
               <span className="mt-4 inline-block text-sm font-semibold text-blue-600">
                 Start with AI →
+              </span>
+            </Link>
+
+            <Link
+              href="/build/wizard"
+              className="group relative overflow-hidden rounded-2xl border border-zinc-200 bg-white p-7 text-left shadow-sm transition-all hover:-translate-y-1 hover:border-blue-300 hover:shadow-lg hover:shadow-blue-600/5"
+            >
+              <span className="absolute right-4 top-4 rounded-full bg-emerald-500 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-white">
+                Easiest
+              </span>
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-600/20">
+                <IconSteps />
+              </div>
+              <h2 className="mt-5 text-xl font-semibold text-zinc-900">Guided wizard</h2>
+              <p className="mt-2 text-sm leading-relaxed text-zinc-600">
+                New to CVs? We walk you through it one step at a time, then you pick a
+                template.
+              </p>
+              <span className="mt-4 inline-block text-sm font-semibold text-blue-600">
+                Start step by step →
               </span>
             </Link>
 
@@ -113,6 +133,16 @@ function IconUpload() {
   return (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
       <path d="M12 15V4M8 8l4-4 4 4M5 20h14" />
+    </svg>
+  );
+}
+function IconSteps() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M4 6h6M4 12h6M4 18h6" />
+      <path d="M15 5l2 2 3-3" />
+      <path d="M15 11l2 2 3-3" />
+      <path d="M15 17l2 2 3-3" />
     </svg>
   );
 }
