@@ -339,6 +339,8 @@ export function CvEditor({
     /earlier experience|earlier highlights|additional experience|previous experience/i.test(s.heading),
   );
   const showEarlierHint = expYears >= 15 && !hasEarlierSection && !earlierDismissed && !hidden.experience;
+  // Long careers (or once an Earlier Experience section exists) can demote a job into it.
+  const canDemote = expYears >= 15 || hasEarlierSection;
 
   // Offer to restore a previously saved draft (never auto-clobbers the current one).
   useEffect(() => {
@@ -540,6 +542,47 @@ export function CvEditor({
   // Suggested for long careers: a section to condense the oldest roles.
   function addEarlierSection() {
     setForm((p) => ({ ...p, customSections: [...p.customSections, { heading: "Earlier Experience", items: [blankCustomItem()] }] }));
+    setOpen((p) => ({ ...p, customSections: true }));
+    setHidden((p) => ({ ...p, customSections: false }));
+    setEarlierDismissed(true);
+  }
+
+  // Move a specific job out of Experience and into the "Earlier Experience"
+  // section (creating that section if it doesn't exist yet).
+  function moveJobToEarlier(jobIndex: number) {
+    setForm((p) => {
+      const job = p.experience[jobIndex];
+      if (!job) return p;
+      const description = job.bullets
+        .split("\n")
+        .map((b) => b.trim().replace(/^[-*]\s+/, ""))
+        .filter(Boolean)
+        .map((b) => `- ${b}`)
+        .join("\n");
+      const item: CustomItem = { title: job.role, subtitle: job.company, period: job.period, description };
+      const cs = [...p.customSections];
+      const idx = cs.findIndex((s) =>
+        /earlier experience|earlier highlights|additional experience|previous experience/i.test(s.heading),
+      );
+      if (idx === -1) {
+        cs.push({ heading: "Earlier Experience", items: [item] });
+      } else {
+        const ex = cs[idx];
+        const blankOnly =
+          ex.items.length === 1 &&
+          !ex.items[0].title.trim() &&
+          !ex.items[0].subtitle.trim() &&
+          !ex.items[0].period.trim() &&
+          !ex.items[0].description.trim();
+        cs[idx] = { ...ex, items: blankOnly ? [item] : [...ex.items, item] };
+      }
+      const experience = p.experience.filter((_, i) => i !== jobIndex);
+      return {
+        ...p,
+        customSections: cs,
+        experience: experience.length ? experience : [{ role: "", company: "", period: "", bullets: "" }],
+      };
+    });
     setOpen((p) => ({ ...p, customSections: true }));
     setHidden((p) => ({ ...p, customSections: false }));
     setEarlierDismissed(true);
@@ -1005,9 +1048,21 @@ export function CvEditor({
                       </AiButton>
                     }
                   />
-                  {form.experience.length > 1 && (
-                    <div className="flex justify-end">
-                      <RemoveBtn onClick={() => removeItem("experience", i)}>Remove job</RemoveBtn>
+                  {(canDemote || form.experience.length > 1) && (
+                    <div className="flex items-center justify-between gap-2">
+                      {canDemote ? (
+                        <button
+                          type="button"
+                          onClick={() => moveJobToEarlier(i)}
+                          title="Move this job into the Earlier Experience section"
+                          className="inline-flex items-center gap-1 text-xs font-medium text-amber-700 transition-colors hover:text-amber-800"
+                        >
+                          <IconChevron className="h-3.5 w-3.5" /> Move to Earlier Experience
+                        </button>
+                      ) : (
+                        <span />
+                      )}
+                      {form.experience.length > 1 && <RemoveBtn onClick={() => removeItem("experience", i)}>Remove job</RemoveBtn>}
                     </div>
                   )}
                 </div>
