@@ -7,6 +7,7 @@ import { CvEditor, EMPTY_FORM, type EditorForm } from "@/app/components/CvEditor
 import { TemplateGallery } from "@/app/components/TemplateGallery";
 import { DEFAULT_TEMPLATE, type TemplateId } from "@/app/templates";
 import { IconField, nameError } from "@/app/components/fields";
+import { PeriodField } from "@/app/components/PeriodField";
 import { aiSummary } from "@/app/lib/assist";
 import {
   IconUser,
@@ -204,7 +205,7 @@ export default function WizardClient() {
                     <TextField label="Role" value={job.role} onChange={(v) => setJob(i, "role", v)} placeholder="Frontend Developer" />
                     <TextField label="Company" value={job.company} onChange={(v) => setJob(i, "company", v)} placeholder="TechCorp" />
                   </div>
-                  <TextField label="Period" value={job.period} onChange={(v) => setJob(i, "period", v)} placeholder="2022 – Present" />
+                  <PeriodField label="Period" value={job.period} onChange={(v) => setJob(i, "period", v)} />
                   <div>
                     <label className="mb-1.5 block text-sm font-medium text-zinc-700">What you did (one per line)</label>
                     <textarea
@@ -236,7 +237,7 @@ export default function WizardClient() {
                   <TextField label="Degree / qualification" value={ed.degree} onChange={(v) => setEdu(i, "degree", v)} placeholder="BS Computer Science" />
                   <div className="grid gap-3 sm:grid-cols-2">
                     <TextField label="Institution" value={ed.institution} onChange={(v) => setEdu(i, "institution", v)} placeholder="State University" />
-                    <TextField label="Period" value={ed.period} onChange={(v) => setEdu(i, "period", v)} placeholder="2014 – 2018" />
+                    <PeriodField label="Period" value={ed.period} onChange={(v) => setEdu(i, "period", v)} />
                   </div>
                 </div>
               ))}

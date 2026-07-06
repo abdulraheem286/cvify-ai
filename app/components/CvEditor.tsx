@@ -10,6 +10,7 @@ import { TemplateView } from "@/app/templates/TemplateView";
 import { downloadCvPdf } from "@/app/lib/pdf";
 import { aiSummary, aiBullets, aiSkills } from "@/app/lib/assist";
 import { RichTextarea } from "./RichTextarea";
+import { PeriodField } from "./PeriodField";
 import { useAuth } from "./AuthProvider";
 import { createCv, saveCv } from "@/app/lib/cvStore";
 import { ConfirmDialog } from "./Dialog";
@@ -1034,7 +1035,7 @@ export function CvEditor({
                     <PlainInput label="Role" value={exp.role} onChange={(v) => updateList("experience", i, "role", v)} placeholder="Frontend Developer" />
                     <PlainInput label="Company" value={exp.company} onChange={(v) => updateList("experience", i, "company", v)} placeholder="TechCorp" />
                   </div>
-                  <PlainInput label="Period" value={exp.period} onChange={(v) => updateList("experience", i, "period", v)} placeholder="2022 – Present" />
+                  <PeriodField label="Period" value={exp.period} onChange={(v) => updateList("experience", i, "period", v)} />
                   <RichTextarea
                     label="Bullet points (one per line)"
                     value={exp.bullets}
@@ -1116,7 +1117,7 @@ export function CvEditor({
                   <PlainInput label="Degree" value={ed.degree} onChange={(v) => updateList("education", i, "degree", v)} placeholder="BS Computer Science" />
                   <div className="grid gap-3 sm:grid-cols-2">
                     <PlainInput label="Institution" value={ed.institution} onChange={(v) => updateList("education", i, "institution", v)} placeholder="State University" />
-                    <PlainInput label="Period" value={ed.period} onChange={(v) => updateList("education", i, "period", v)} placeholder="2014 – 2018" />
+                    <PeriodField label="Period" value={ed.period} onChange={(v) => updateList("education", i, "period", v)} />
                   </div>
                   {form.education.length > 1 && (
                     <div className="flex justify-end">
@@ -1187,7 +1188,7 @@ export function CvEditor({
                           <PlainInput label="Title" value={it.title} onChange={(v) => updateCustomItem(i, j, "title", v)} placeholder="Project / award name" />
                           <PlainInput label="Subtitle (optional)" value={it.subtitle} onChange={(v) => updateCustomItem(i, j, "subtitle", v)} placeholder="Role / issuer" />
                         </div>
-                        <PlainInput label="Date (optional)" value={it.period} onChange={(v) => updateCustomItem(i, j, "period", v)} placeholder="2023" />
+                        <PeriodField label="Date (optional)" value={it.period} onChange={(v) => updateCustomItem(i, j, "period", v)} single />
                         <RichTextarea label="Description (optional)" value={it.description} onChange={(v) => updateCustomItem(i, j, "description", v)} rows={2} placeholder="One or two lines about it." />
                         {s.items.length > 1 && (
                           <div className="flex items-center justify-between">
