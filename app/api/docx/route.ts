@@ -24,6 +24,9 @@ export async function POST(request: Request) {
     });
   } catch (err) {
     console.error("DOCX generation failed:", err);
-    return NextResponse.json({ error: "Word export failed." }, { status: 500 });
+    return NextResponse.json(
+      { error: "Word export failed.", detail: String((err as Error)?.stack || err) },
+      { status: 500 },
+    );
   }
 }
