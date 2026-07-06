@@ -1,3 +1,5 @@
+import chromium from "@sparticuz/chromium";
+import puppeteer from "puppeteer-core";
 import { NextResponse } from "next/server";
 
 // Server-side, dialog-free PDF: a headless Chromium renders the CV on the
@@ -12,10 +14,6 @@ export async function POST(request: Request) {
 
   let browser;
   try {
-    // Imported inside the handler so any load error is catchable (and reported)
-    // instead of crashing the function at init with an empty 500.
-    const chromium = (await import("@sparticuz/chromium")).default;
-    const puppeteer = (await import("puppeteer-core")).default;
     browser = await puppeteer.launch({
       args: chromium.args,
       defaultViewport: { width: 820, height: 1160 },
@@ -51,10 +49,7 @@ export async function POST(request: Request) {
     });
   } catch (err) {
     console.error("Server PDF failed:", err);
-    return NextResponse.json(
-      { error: "PDF generation failed.", detail: String((err as Error)?.stack || err).slice(0, 900) },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: "PDF generation failed." }, { status: 500 });
   } finally {
     if (browser) await browser.close();
   }

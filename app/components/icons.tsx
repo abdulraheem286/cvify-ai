@@ -97,9 +97,6 @@ export const IconAward = ({ className }: IconProps) =>
 export const IconLanguages = ({ className }: IconProps) =>
   base(<path d="M4 5h7M9 3v2c0 4-2 7-5 9M5 9c0 3 3 5 6 6M14 21l4-9 4 9M16.5 16h5" />, className);
 
-export const IconFileText = ({ className }: IconProps) =>
-  base(<><path d="M14 3v4a1 1 0 0 0 1 1h4" /><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2Z" /><path d="M9 9h1M9 13h6M9 17h6" /></>, className);
-
 export const IconExpand = ({ className }: IconProps) =>
   base(<path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />, className);
 
