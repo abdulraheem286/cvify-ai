@@ -43,6 +43,7 @@ import {
   IconGrip,
   IconExpand,
   IconX,
+  IconFileText,
 } from "./icons";
 
 export type ExpEntry = { role: string; company: string; period: string; bullets: string };
@@ -286,6 +287,9 @@ export function CvEditor({
   const [cloudSavedAt, setCloudSavedAt] = useState<number | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [downloading, setDownloading] = useState(false);
+  const [docxBusy, setDocxBusy] = useState(false);
+  const [downloadOpen, setDownloadOpen] = useState(false);
+  const downloadRef = useRef<HTMLDivElement>(null);
   const [aiBusy, setAiBusy] = useState<string | null>(null); // which AI action is running
   const [aiError, setAiError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
@@ -329,6 +333,16 @@ export function CvEditor({
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [previewOpen]);
+
+  // Close the download menu when clicking outside it.
+  useEffect(() => {
+    if (!downloadOpen) return;
+    const onDown = (e: MouseEvent) => {
+      if (downloadRef.current && !downloadRef.current.contains(e.target as Node)) setDownloadOpen(false);
+    };
+    window.addEventListener("mousedown", onDown);
+    return () => window.removeEventListener("mousedown", onDown);
+  }, [downloadOpen]);
 
   // Auto-save the editor state to the browser (debounced). Skips the first mount.
   useEffect(() => {
@@ -588,6 +602,29 @@ export function CvEditor({
     }
   }
 
+  async function handleDownloadDocx() {
+    setDocxBusy(true);
+    const name = exportCv.fullName.replace(/\s+/g, "-") || "cv";
+    try {
+      // Build the .docx in the browser (code-split: only loads on first use).
+      const { buildCvDocx } = await import("@/app/lib/docxBuild");
+      const blob = await buildCvDocx(exportCv, theme);
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${name}.docx`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error("DOCX download failed:", err);
+      setAiError("Couldn't create the Word file. Please try again.");
+    } finally {
+      setDocxBusy(false);
+    }
+  }
+
   async function handleCloudSave() {
     if (!user) return;
     setCloudSaving(true);
@@ -760,19 +797,62 @@ export function CvEditor({
           </button>
           <TemplatePicker value={template} onChange={setTemplate} />
           <CustomizationPanel value={theme} onChange={setTheme} />
-          <button
-            type="button"
-            onClick={handleDownload}
-            disabled={downloading}
-            className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-blue-600/25 transition-all hover:-translate-y-px hover:shadow-md hover:shadow-blue-600/30 disabled:opacity-60 disabled:hover:translate-y-0"
-          >
-            {downloading ? (
-              <span className="h-[18px] w-[18px] animate-spin rounded-full border-2 border-white/40 border-t-white" />
-            ) : (
-              <IconDownload className="h-[18px] w-[18px]" />
+          <div className="relative" ref={downloadRef}>
+            <button
+              type="button"
+              onClick={() => setDownloadOpen((o) => !o)}
+              disabled={downloading || docxBusy}
+              aria-haspopup="menu"
+              aria-expanded={downloadOpen}
+              className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-blue-600/25 transition-all hover:-translate-y-px hover:shadow-md hover:shadow-blue-600/30 disabled:opacity-60 disabled:hover:translate-y-0"
+            >
+              {downloading || docxBusy ? (
+                <span className="h-[18px] w-[18px] animate-spin rounded-full border-2 border-white/40 border-t-white" />
+              ) : (
+                <IconDownload className="h-[18px] w-[18px]" />
+              )}
+              <span className="hidden sm:inline">{downloading || docxBusy ? "Preparing…" : "Download"}</span>
+              <IconChevron className={`h-4 w-4 transition-transform ${downloadOpen ? "rotate-180" : ""}`} />
+            </button>
+            {downloadOpen && (
+              <div role="menu" className="absolute right-0 top-full z-40 mt-2 w-60 overflow-hidden rounded-xl border border-zinc-200 bg-white p-1.5 shadow-lg">
+                <button
+                  type="button"
+                  role="menuitem"
+                  onClick={() => {
+                    setDownloadOpen(false);
+                    handleDownload();
+                  }}
+                  className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left transition-colors hover:bg-zinc-50"
+                >
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+                    <IconDownload className="h-[18px] w-[18px]" />
+                  </span>
+                  <span>
+                    <span className="block text-sm font-semibold text-zinc-900">PDF document</span>
+                    <span className="block text-xs text-zinc-500">Best for applying &amp; printing</span>
+                  </span>
+                </button>
+                <button
+                  type="button"
+                  role="menuitem"
+                  onClick={() => {
+                    setDownloadOpen(false);
+                    handleDownloadDocx();
+                  }}
+                  className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left transition-colors hover:bg-zinc-50"
+                >
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600">
+                    <IconFileText className="h-[18px] w-[18px]" />
+                  </span>
+                  <span>
+                    <span className="block text-sm font-semibold text-zinc-900">Word document</span>
+                    <span className="block text-xs text-zinc-500">Editable .docx file</span>
+                  </span>
+                </button>
+              </div>
             )}
-            <span className="hidden sm:inline">{downloading ? "Preparing…" : "Download PDF"}</span>
-          </button>
+          </div>
         </div>
       </div>
 
