@@ -46,6 +46,9 @@ export const IconGraduation = ({ className }: IconProps) =>
 export const IconTools = ({ className }: IconProps) =>
   base(<path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.7 2.7-2-2 2.7-2.7Z" />, className);
 
+export const IconBookmark = ({ className }: IconProps) =>
+  base(<path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1Z" />, className);
+
 export const IconSparkles = ({ className }: IconProps) =>
   base(
     <>

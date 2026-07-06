@@ -8,20 +8,29 @@ import { TemplateGallery } from "@/app/components/TemplateGallery";
 import { DEFAULT_TEMPLATE, type TemplateId } from "@/app/templates";
 import { useAuth } from "@/app/components/AuthProvider";
 import { getCv, type CvRecord } from "@/app/lib/cvStore";
+import { useMyTemplates } from "@/app/lib/useMyTemplates";
 
 export default function ManualClient() {
   const router = useRouter();
   const { user, loading: authLoading, enabled } = useAuth();
+  const { templates: myTemplates, loading: tplLoading } = useMyTemplates();
   const [step, setStep] = useState<"template" | "edit">("template");
   const [chosen, setChosen] = useState<TemplateId>(DEFAULT_TEMPLATE);
   const [cvParam, setCvParam] = useState<string | null>(null);
+  const [tplParam, setTplParam] = useState<string | null>(null);
   const [loaded, setLoaded] = useState<CvRecord | null>(null);
   const [loadingCv, setLoadingCv] = useState(false);
 
-  // Read ?cv=<id> (client-only, avoids a Suspense boundary).
+  // Read ?cv=<id> / ?tpl=<id> (client-only, avoids a Suspense boundary).
   useEffect(() => {
-    setCvParam(new URLSearchParams(window.location.search).get("cv"));
+    const params = new URLSearchParams(window.location.search);
+    setCvParam(params.get("cv"));
+    setTplParam(params.get("tpl"));
   }, []);
+
+  // Starting a fresh CV from a saved template (dashboard → "Use").
+  const startTpl = tplParam ? myTemplates.find((t) => t.id === tplParam) : undefined;
+  const tplPending = !!tplParam && !startTpl && tplLoading;
 
   // Load a saved CV when opened from the dashboard.
   useEffect(() => {
@@ -35,7 +44,7 @@ export default function ManualClient() {
       .catch(() => setLoadingCv(false));
   }, [cvParam, user, authLoading, enabled]);
 
-  const showLoader = cvParam && (loadingCv || (enabled && authLoading)) && !loaded;
+  const showLoader = (cvParam && (loadingCv || (enabled && authLoading)) && !loaded) || tplPending;
 
   return (
     <div className="flex min-h-full flex-col bg-zinc-50 text-zinc-900 print:bg-white">
@@ -53,6 +62,14 @@ export default function ManualClient() {
           initialHidden={loaded.data.hidden}
           cvId={loaded.id}
           initialTitle={loaded.title}
+          onBack={() => router.push("/dashboard")}
+          backLabel="Back to dashboard"
+        />
+      ) : startTpl ? (
+        <CvEditor
+          initial={EMPTY_FORM}
+          initialTemplate={startTpl.layout}
+          initialTheme={startTpl.theme}
           onBack={() => router.push("/dashboard")}
           backLabel="Back to dashboard"
         />

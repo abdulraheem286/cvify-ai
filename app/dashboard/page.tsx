@@ -9,9 +9,12 @@ import { ScaledPreview } from "@/app/components/ScaledPreview";
 import { TemplateView } from "@/app/templates/TemplateView";
 import { ConfirmDialog, PromptDialog } from "@/app/components/Dialog";
 import { listCvs, deleteCv, duplicateCv, renameCv, type CvRecord } from "@/app/lib/cvStore";
+import { useMyTemplates } from "@/app/lib/useMyTemplates";
+import { SAMPLE_CV } from "@/app/lib/sampleCv";
 import type { EditorForm } from "@/app/components/CvEditor";
 import type { CVResult } from "@/app/types";
-import { IconPlus, IconTrash, IconText, IconTools, IconUser, IconHistory } from "@/app/components/icons";
+import type { MyTemplate } from "@/app/lib/templateStore";
+import { IconPlus, IconTrash, IconText, IconTools, IconUser, IconHistory, IconBookmark } from "@/app/components/icons";
 
 function ago(ts: number): string {
   if (!ts) return "";
@@ -309,18 +312,91 @@ function StatCard({ tint, icon, value, label, sub }: { tint: keyof typeof STAT_T
 }
 
 function TemplatesView() {
+  const { templates, loading, rename, remove } = useMyTemplates();
+  const [renaming, setRenaming] = useState<MyTemplate | null>(null);
+  const [deleting, setDeleting] = useState<MyTemplate | null>(null);
+
   return (
     <div>
-      <h1 className="text-2xl font-bold tracking-tight">My Templates</h1>
-      <div className="mt-8 rounded-2xl border border-dashed border-zinc-300 bg-white px-6 py-16 text-center">
-        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-600/20">
-          <IconTools className="h-6 w-6" />
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight">My Templates</h1>
+          <p className="mt-1 text-sm text-zinc-600">Saved layout + colour styles you can reuse on any CV.</p>
         </div>
-        <p className="mt-4 font-semibold text-zinc-900">Coming soon</p>
-        <p className="mx-auto mt-1 max-w-sm text-sm text-zinc-600">
-          Save your favorite color/font combinations and create your own reusable templates.
-        </p>
+        <span className="rounded-full bg-zinc-100 px-2.5 py-1 text-xs font-semibold text-zinc-600">{templates.length}</span>
       </div>
+
+      <div className="mt-6">
+        {loading && templates.length === 0 ? (
+          <div className="flex items-center justify-center py-24">
+            <span className="h-7 w-7 animate-spin rounded-full border-2 border-zinc-300 border-t-blue-600" />
+          </div>
+        ) : templates.length === 0 ? (
+          <div className="rounded-2xl border border-dashed border-zinc-300 bg-white px-6 py-16 text-center">
+            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-600/20">
+              <IconBookmark className="h-6 w-6" />
+            </div>
+            <p className="mt-4 font-semibold text-zinc-900">No saved templates yet</p>
+            <p className="mx-auto mt-1 max-w-sm text-sm text-zinc-600">
+              While editing a CV, pick a layout, set your colours and fonts, then hit <span className="font-semibold text-zinc-800">Save style</span> to save it here.
+            </p>
+            <Link href="/build" className="mt-5 inline-block rounded-xl bg-blue-600 px-5 py-2.5 font-semibold text-white shadow-sm transition-colors hover:bg-blue-700">
+              Start a CV →
+            </Link>
+          </div>
+        ) : (
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-5">
+            {templates.map((t) => (
+              <div key={t.id} className="group overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm transition-all hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-md">
+                <Link href={`/build/manual?tpl=${t.id}`} className="block bg-zinc-100 p-3">
+                  <ScaledPreview maxHeight={230}>
+                    <TemplateView id={t.layout} cv={SAMPLE_CV} theme={t.theme} domId={`tpl-${t.id}`} />
+                  </ScaledPreview>
+                </Link>
+                <div className="p-4">
+                  <p className="truncate font-semibold text-zinc-900">{t.name}</p>
+                  <div className="mt-3 flex items-center justify-between border-t border-zinc-100 pt-3 text-xs">
+                    <Link href={`/build/manual?tpl=${t.id}`} className="font-semibold text-blue-600 hover:text-blue-700">
+                      Use →
+                    </Link>
+                    <div className="flex items-center gap-2.5">
+                      <button type="button" onClick={() => setRenaming(t)} className="font-medium text-zinc-500 hover:text-zinc-800">Rename</button>
+                      <button type="button" onClick={() => setDeleting(t)} className="text-zinc-400 hover:text-red-600" title="Delete">
+                        <IconTrash className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <PromptDialog
+        open={!!renaming}
+        title="Rename template"
+        label="Template name"
+        defaultValue={renaming?.name ?? ""}
+        confirmLabel="Save"
+        onConfirm={async (name) => {
+          if (renaming) await rename(renaming.id, name.trim() || renaming.name);
+          setRenaming(null);
+        }}
+        onClose={() => setRenaming(null)}
+      />
+      <ConfirmDialog
+        open={!!deleting}
+        title="Delete this template?"
+        message={`"${deleting?.name}" will be removed from your saved templates. Your CVs aren't affected.`}
+        confirmLabel="Delete"
+        danger
+        onConfirm={async () => {
+          if (deleting) await remove(deleting.id);
+          setDeleting(null);
+        }}
+        onClose={() => setDeleting(null)}
+      />
     </div>
   );
 }
