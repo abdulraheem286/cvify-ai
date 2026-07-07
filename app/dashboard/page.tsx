@@ -3,6 +3,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { AppHeader } from "@/app/components/AppHeader";
+import { AppFooter } from "@/app/components/AppFooter";
 import { RequireAuth } from "@/app/components/RequireAuth";
 import { useAuth } from "@/app/components/AuthProvider";
 import { ScaledPreview } from "@/app/components/ScaledPreview";
@@ -127,6 +128,7 @@ function Dashboard() {
           {tab === "cvs" ? <CvsView /> : tab === "templates" ? <TemplatesView /> : <ProfileView />}
         </main>
       </div>
+      <AppFooter />
     </div>
   );
 }

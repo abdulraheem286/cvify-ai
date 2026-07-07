@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { AppHeader } from "../components/AppHeader";
+import { AppFooter } from "../components/AppFooter";
 import { Reveal } from "../components/Reveal";
 import { RequireAuth } from "../components/RequireAuth";
 
@@ -113,6 +114,7 @@ export default async function BuildChooser({ searchParams }: { searchParams: Pro
           </RequireAuth>
         </div>
       </main>
+      <AppFooter />
     </div>
   );
 }
