@@ -360,17 +360,39 @@ function TemplatesView() {
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-5">
             {templates.map((t) => (
-              <div key={t.id} className="group overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm transition-all hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-md">
-                <Link href={`/build?tpl=${t.id}`} className="block bg-zinc-100 p-3">
+              <div key={t.id} className="group overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm">
+                <div className="relative bg-zinc-100 p-3">
                   <ScaledPreview maxHeight={230}>
                     <TemplateView id={t.layout} cv={SAMPLE_CV} theme={t.theme} domId={`tpl-${t.id}`} />
                   </ScaledPreview>
-                </Link>
+                  {/* Delete — appears on hover, top-right of the preview */}
+                  <button
+                    type="button"
+                    onClick={() => setDeleting(t)}
+                    title="Delete template"
+                    aria-label="Delete template"
+                    className="absolute right-4 top-4 rounded-lg bg-white/90 p-1.5 text-zinc-500 opacity-0 shadow-sm ring-1 ring-black/5 backdrop-blur transition-opacity hover:text-red-600 focus-visible:opacity-100 group-hover:opacity-100"
+                  >
+                    <IconTrash className="h-4 w-4" />
+                  </button>
+                </div>
                 <div className="p-4">
-                  <p className="truncate font-semibold text-zinc-900">{t.name}</p>
-                  <p className="truncate text-xs text-zinc-500">{getTemplate(t.layout).name} layout</p>
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="min-w-0">
+                      <p className="truncate font-semibold text-zinc-900">{t.name}</p>
+                      <p className="truncate text-xs text-zinc-500">{getTemplate(t.layout).name} layout</p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setRenaming(t)}
+                      title="Rename"
+                      aria-label="Rename"
+                      className="-mr-1 mt-0.5 shrink-0 rounded-md p-1.5 text-zinc-400 transition-colors hover:bg-zinc-100 hover:text-zinc-700"
+                    >
+                      <IconEdit className="h-4 w-4" />
+                    </button>
+                  </div>
 
-                  {/* Primary actions: use it, or edit its style */}
                   <div className="mt-3 flex items-center gap-2">
                     <Link
                       href={`/build?tpl=${t.id}`}
@@ -383,16 +405,8 @@ function TemplatesView() {
                       title="Edit this template's colours, fonts & layout"
                       className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-300 bg-white px-3 py-2.5 text-sm font-semibold text-zinc-700 transition-colors hover:border-zinc-400 hover:bg-zinc-50"
                     >
-                      <IconEdit className="h-4 w-4" /> Edit
+                      <IconTools className="h-4 w-4" /> Edit
                     </Link>
-                  </div>
-
-                  {/* Secondary: rename / delete */}
-                  <div className="mt-2.5 flex items-center justify-end gap-4 border-t border-zinc-100 pt-2.5 text-xs">
-                    <button type="button" onClick={() => setRenaming(t)} className="font-medium text-zinc-500 hover:text-zinc-800">Rename</button>
-                    <button type="button" onClick={() => setDeleting(t)} className="inline-flex items-center gap-1 text-zinc-500 hover:text-red-600" title="Delete">
-                      <IconTrash className="h-4 w-4" /> Delete
-                    </button>
                   </div>
                 </div>
               </div>
