@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, type ChangeEvent, type ReactNode, type DragEvent } from "react";
+import { useRouter } from "next/navigation";
 import type { CVResult } from "@/app/types";
 import { ScaledPreview } from "./ScaledPreview";
 import { TemplatePicker } from "./TemplatePicker";
@@ -289,6 +290,7 @@ export function CvEditor({
   backLabel: string;
 }) {
   const { user, enabled: authEnabled } = useAuth();
+  const router = useRouter();
   const [form, setForm] = useState<EditorForm>(initial);
   const [hidden, setHidden] = useState<Record<SectionKey, boolean>>(
     () =>
@@ -332,6 +334,20 @@ export function CvEditor({
   const firstCloud = useRef(true);
   const dragRef = useRef<{ kind: string; index: number } | null>(null);
   const signedIn = authEnabled && !!user;
+
+  // Hand the CV's current layout + theme to the customization studio, and remember
+  // where to return to after saving.
+  function openCustomize() {
+    try {
+      sessionStorage.setItem(
+        "cvify:customizeSeed",
+        JSON.stringify({ layout: template, theme, from: window.location.pathname + window.location.search }),
+      );
+    } catch {
+      /* private mode / storage disabled — the studio falls back to defaults */
+    }
+    router.push("/customize?seed=1");
+  }
 
   const exportCv = formToCv(form, hidden); // clean — used for the PDF
   const previewCv = formToCv(form, hidden, true); // with placeholders — preview only
@@ -886,7 +902,7 @@ export function CvEditor({
               setTheme(t.theme);
             }}
           />
-          <QuickPresets value={theme} onChange={setTheme} />
+          <QuickPresets value={theme} onChange={setTheme} onCustomize={openCustomize} />
           {/* Word (.docx) export is ON HOLD — Download is PDF-only for now.
               The docx code (handleDownloadDocx, app/lib/docxBuild.ts, the menu)
               is kept so it can be re-enabled quickly. */}

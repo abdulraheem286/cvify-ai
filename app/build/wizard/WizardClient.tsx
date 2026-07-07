@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AppHeader } from "@/app/components/AppHeader";
 import { CvEditor, EMPTY_FORM, type EditorForm } from "@/app/components/CvEditor";
 import { TemplateGallery } from "@/app/components/TemplateGallery";
-import { DEFAULT_TEMPLATE, type TemplateId } from "@/app/templates";
+import { useSeedTemplate } from "@/app/lib/useSeedTemplate";
+import { DEFAULT_TEMPLATE, type TemplateId, type Theme } from "@/app/templates";
 import { IconField, nameError } from "@/app/components/fields";
 import { PeriodField } from "@/app/components/PeriodField";
 import { aiSummary } from "@/app/lib/assist";
@@ -36,13 +37,25 @@ const STEPS: { id: StepId; title: string; tip: string; icon: React.ReactNode }[]
 
 export default function WizardClient() {
   const router = useRouter();
+  const { seed } = useSeedTemplate();
   const [form, setForm] = useState<EditorForm>(EMPTY_FORM);
   const [stepIndex, setStepIndex] = useState(0);
   const [phase, setPhase] = useState<"wizard" | "template" | "edit">("wizard");
   const [template, setTemplate] = useState<TemplateId>(DEFAULT_TEMPLATE);
+  const [seedTheme, setSeedTheme] = useState<Theme | undefined>(undefined);
+  const [seeded, setSeeded] = useState(false);
   const [nameErr, setNameErr] = useState("");
   const [aiBusy, setAiBusy] = useState(false);
   const [aiErr, setAiErr] = useState("");
+
+  // Came in from a saved template (?tpl): use its look and skip the gallery step.
+  useEffect(() => {
+    if (seed && !seeded) {
+      setTemplate(seed.layout);
+      setSeedTheme(seed.theme);
+      setSeeded(true);
+    }
+  }, [seed, seeded]);
 
   const step = STEPS[stepIndex];
   const isLast = stepIndex === STEPS.length - 1;
@@ -58,7 +71,7 @@ export default function WizardClient() {
         return;
       }
     }
-    if (isLast) setPhase("template");
+    if (isLast) setPhase(seeded ? "edit" : "template");
     else setStepIndex((i) => i + 1);
   }
   function back() {
@@ -108,7 +121,13 @@ export default function WizardClient() {
     return (
       <div className="flex min-h-full flex-col bg-zinc-50 text-zinc-900 print:bg-white">
         <AppHeader />
-        <CvEditor initial={form} initialTemplate={template} onBack={() => setPhase("template")} backLabel="Back to templates" />
+        <CvEditor
+          initial={form}
+          initialTemplate={template}
+          initialTheme={seedTheme}
+          onBack={() => setPhase(seeded ? "wizard" : "template")}
+          backLabel={seeded ? "Back to the wizard" : "Back to templates"}
+        />
       </div>
     );
   }

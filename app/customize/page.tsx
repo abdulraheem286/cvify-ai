@@ -6,7 +6,9 @@ import { AppHeader } from "@/app/components/AppHeader";
 import { RequireAuth } from "@/app/components/RequireAuth";
 import { CustomizeStudio } from "@/app/components/CustomizeStudio";
 import { useMyTemplates } from "@/app/lib/useMyTemplates";
-import { DEFAULT_TEMPLATE, getDefaultTheme, getTemplate, type TemplateId } from "@/app/templates";
+import { DEFAULT_TEMPLATE, getDefaultTheme, getTemplate, type TemplateId, type Theme } from "@/app/templates";
+
+type Seed = { layout: TemplateId; theme: Theme; from?: string };
 
 function Spinner() {
   return (
@@ -19,48 +21,74 @@ function Spinner() {
 function Customize() {
   const router = useRouter();
   const { templates, loading } = useMyTemplates();
-  const [params, setParams] = useState<{ base: string | null; tpl: string | null } | null>(null);
+  const [ready, setReady] = useState(false);
+  const [params, setParams] = useState<{ base: string | null; tpl: string | null }>({ base: null, tpl: null });
+  const [seed, setSeed] = useState<Seed | null>(null);
 
-  // Read ?base=<layoutId> / ?tpl=<savedId> client-side (no Suspense boundary).
+  // Read query params + the seed handed over from the editor (sessionStorage).
   useEffect(() => {
     const p = new URLSearchParams(window.location.search);
+    if (p.get("seed") === "1") {
+      try {
+        const raw = sessionStorage.getItem("cvify:customizeSeed");
+        if (raw) setSeed(JSON.parse(raw) as Seed);
+      } catch {
+        /* ignore */
+      }
+    }
     setParams({ base: p.get("base"), tpl: p.get("tpl") });
+    setReady(true);
   }, []);
 
-  const editTpl = params?.tpl ? templates.find((t) => t.id === params.tpl) : undefined;
-  const editPending = !!params?.tpl && !editTpl && loading;
+  const editTpl = params.tpl ? templates.find((t) => t.id === params.tpl) : undefined;
+  const editPending = !!params.tpl && !editTpl && loading;
 
-  const goDone = () => router.push("/dashboard?tab=templates");
+  // Return to wherever the user came from (editor seed carries it); default to
+  // the dashboard's Templates tab.
+  const returnUrl = seed?.from || "/dashboard?tab=templates";
+  const goHome = () => router.push(returnUrl);
+
+  if (!ready || editPending) {
+    return (
+      <div className="flex min-h-full flex-col bg-zinc-50 text-zinc-900">
+        <AppHeader />
+        <Spinner />
+      </div>
+    );
+  }
+
+  let initialLayout: TemplateId;
+  let initialTheme: Theme;
+  let initialName: string;
+  let editId: string | undefined;
+
+  if (editTpl) {
+    initialLayout = editTpl.layout;
+    initialTheme = editTpl.theme;
+    initialName = editTpl.name;
+    editId = editTpl.id;
+  } else if (seed) {
+    initialLayout = getTemplate(seed.layout).id === seed.layout ? seed.layout : DEFAULT_TEMPLATE;
+    initialTheme = seed.theme;
+    initialName = `${getTemplate(initialLayout).name} custom`;
+  } else {
+    const valid = params.base && getTemplate(params.base).id === params.base;
+    initialLayout = (valid ? params.base : DEFAULT_TEMPLATE) as TemplateId;
+    initialTheme = getDefaultTheme(initialLayout);
+    initialName = `${getTemplate(initialLayout).name} custom`;
+  }
 
   return (
     <div className="flex min-h-full flex-col bg-zinc-50 text-zinc-900">
       <AppHeader />
-      {!params || editPending ? (
-        <Spinner />
-      ) : editTpl ? (
-        <CustomizeStudio
-          initialLayout={editTpl.layout}
-          initialTheme={editTpl.theme}
-          initialName={editTpl.name}
-          editId={editTpl.id}
-          onBack={goDone}
-          onSaved={goDone}
-        />
-      ) : (
-        (() => {
-          const valid = params.base && getTemplate(params.base).id === params.base;
-          const base = (valid ? params.base : DEFAULT_TEMPLATE) as TemplateId;
-          return (
-            <CustomizeStudio
-              initialLayout={base}
-              initialTheme={getDefaultTheme(base)}
-              initialName={`${getTemplate(base).name} custom`}
-              onBack={() => router.push("/dashboard?tab=templates")}
-              onSaved={goDone}
-            />
-          );
-        })()
-      )}
+      <CustomizeStudio
+        initialLayout={initialLayout}
+        initialTheme={initialTheme}
+        initialName={initialName}
+        editId={editId}
+        onBack={goHome}
+        onSaved={goHome}
+      />
     </div>
   );
 }

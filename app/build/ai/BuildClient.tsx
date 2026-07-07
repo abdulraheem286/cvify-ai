@@ -1,13 +1,14 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import type { CVResult } from "@/app/types";
 import { Reveal } from "@/app/components/Reveal";
 import { AppHeader } from "@/app/components/AppHeader";
 import { CvEditor, cvToForm, type EditorForm } from "@/app/components/CvEditor";
 import { TemplateGallery } from "@/app/components/TemplateGallery";
-import { DEFAULT_TEMPLATE, type TemplateId } from "@/app/templates";
+import { useSeedTemplate } from "@/app/lib/useSeedTemplate";
+import { DEFAULT_TEMPLATE, type TemplateId, type Theme } from "@/app/templates";
 import {
   IconField,
   FieldTextarea,
@@ -67,13 +68,26 @@ function aiFieldError(key: keyof AIForm, v: string): string {
 
 export default function BuildClient() {
   const router = useRouter();
+  const { pending, seed } = useSeedTemplate();
   const [step, setStep] = useState<"template" | "ai" | "edit">("template");
   const [chosen, setChosen] = useState<TemplateId>(DEFAULT_TEMPLATE);
+  const [seedTheme, setSeedTheme] = useState<Theme | undefined>(undefined);
+  const [seeded, setSeeded] = useState(false);
   const [aiForm, setAiForm] = useState<AIForm>(EMPTY_AI);
   const [aiErrors, setAiErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [editorInitial, setEditorInitial] = useState<EditorForm | null>(null);
+
+  // Came in from a saved template (?tpl): skip the gallery and use its look.
+  useEffect(() => {
+    if (seed && !seeded) {
+      setChosen(seed.layout);
+      setSeedTheme(seed.theme);
+      setSeeded(true);
+      setStep("ai");
+    }
+  }, [seed, seeded]);
 
   const onAi = (key: keyof AIForm) => (value: string) => {
     const v = key === "phone" ? sanitizePhone(value) : value;
@@ -120,10 +134,15 @@ export default function BuildClient() {
     <div className="flex min-h-full flex-col bg-zinc-50 text-zinc-900 print:bg-white">
       <AppHeader />
 
-      {step === "template" ? (
+      {pending ? (
+        <div className="flex flex-1 items-center justify-center py-32">
+          <span className="h-7 w-7 animate-spin rounded-full border-2 border-zinc-300 border-t-blue-600" />
+        </div>
+      ) : step === "template" ? (
         <TemplateGallery
           onSelect={(id) => {
             setChosen(id);
+            setSeedTheme(undefined);
             setStep("ai");
           }}
           onBack={() => router.push("/build")}
@@ -133,6 +152,7 @@ export default function BuildClient() {
         <CvEditor
           initial={editorInitial}
           initialTemplate={chosen}
+          initialTheme={seedTheme}
           onBack={() => setStep("ai")}
           backLabel="Back to AI input"
         />

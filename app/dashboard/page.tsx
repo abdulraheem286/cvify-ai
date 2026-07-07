@@ -360,7 +360,7 @@ function TemplatesView() {
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-5">
             {templates.map((t) => (
               <div key={t.id} className="group overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm transition-all hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-md">
-                <Link href={`/build/manual?tpl=${t.id}`} className="block bg-zinc-100 p-3">
+                <Link href={`/build?tpl=${t.id}`} className="block bg-zinc-100 p-3">
                   <ScaledPreview maxHeight={230}>
                     <TemplateView id={t.layout} cv={SAMPLE_CV} theme={t.theme} domId={`tpl-${t.id}`} />
                   </ScaledPreview>
@@ -368,8 +368,8 @@ function TemplatesView() {
                 <div className="p-4">
                   <p className="truncate font-semibold text-zinc-900">{t.name}</p>
                   <div className="mt-3 flex items-center justify-between border-t border-zinc-100 pt-3 text-xs">
-                    <Link href={`/build/manual?tpl=${t.id}`} className="font-semibold text-blue-600 hover:text-blue-700">
-                      Use →
+                    <Link href={`/build?tpl=${t.id}`} className="font-semibold text-blue-600 hover:text-blue-700">
+                      Create CV →
                     </Link>
                     <div className="flex items-center gap-2.5">
                       <Link href={`/customize?tpl=${t.id}`} className="font-medium text-zinc-500 hover:text-zinc-800">Edit</Link>

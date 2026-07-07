@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { THEME_PRESETS, type Theme } from "@/app/templates";
 import { IconChevron, IconSparkles } from "./icons";
 
@@ -10,9 +9,12 @@ import { IconChevron, IconSparkles } from "./icons";
 export function QuickPresets({
   value,
   onChange,
+  onCustomize,
 }: {
   value: Theme;
   onChange: (theme: Theme) => void;
+  // Opens the full customization studio seeded with the CV's current look.
+  onCustomize?: () => void;
 }) {
   const [open, setOpen] = useState(false);
 
@@ -57,12 +59,16 @@ export function QuickPresets({
                 );
               })}
             </div>
-            <Link
-              href="/customize"
-              className="mt-3 flex items-center justify-center gap-1.5 rounded-lg bg-zinc-900 px-3 py-2 text-xs font-semibold text-white transition-colors hover:bg-zinc-800"
+            <button
+              type="button"
+              onClick={() => {
+                setOpen(false);
+                onCustomize?.();
+              }}
+              className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-lg bg-zinc-900 px-3 py-2 text-xs font-semibold text-white transition-colors hover:bg-zinc-800"
             >
-              <IconSparkles className="h-4 w-4" /> Create a custom template
-            </Link>
+              <IconSparkles className="h-4 w-4" /> Edit template & save
+            </button>
           </div>
         </>
       )}

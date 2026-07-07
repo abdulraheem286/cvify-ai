@@ -12,7 +12,10 @@ export const metadata: Metadata = {
   alternates: { canonical: "/build" },
 };
 
-export default function BuildChooser() {
+export default async function BuildChooser({ searchParams }: { searchParams: Promise<{ tpl?: string }> }) {
+  const { tpl } = await searchParams;
+  // Carry a chosen saved template into whichever build method the user picks.
+  const q = tpl ? `?tpl=${encodeURIComponent(tpl)}` : "";
   return (
     <div className="flex min-h-full flex-col bg-white text-zinc-900">
       <AppHeader />
@@ -34,7 +37,7 @@ export default function BuildChooser() {
 
           <Reveal stagger delay={0.15} className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             <Link
-              href="/build/ai"
+              href={`/build/ai${q}`}
               className="group relative overflow-hidden rounded-2xl border border-zinc-200 bg-white p-7 text-left shadow-sm transition-all hover:-translate-y-1 hover:border-blue-300 hover:shadow-lg hover:shadow-blue-600/5"
             >
               <span className="absolute right-4 top-4 rounded-full bg-blue-600 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-white">
@@ -54,7 +57,7 @@ export default function BuildChooser() {
             </Link>
 
             <Link
-              href="/build/wizard"
+              href={`/build/wizard${q}`}
               className="group relative overflow-hidden rounded-2xl border border-zinc-200 bg-white p-7 text-left shadow-sm transition-all hover:-translate-y-1 hover:border-blue-300 hover:shadow-lg hover:shadow-blue-600/5"
             >
               <span className="absolute right-4 top-4 rounded-full bg-emerald-500 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-white">
@@ -74,7 +77,7 @@ export default function BuildChooser() {
             </Link>
 
             <Link
-              href="/build/manual"
+              href={`/build/manual${q}`}
               className="group rounded-2xl border border-zinc-200 bg-white p-7 text-left shadow-sm transition-all hover:-translate-y-1 hover:border-blue-300 hover:shadow-lg hover:shadow-blue-600/5"
             >
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-600/20">
@@ -91,7 +94,7 @@ export default function BuildChooser() {
             </Link>
 
             <Link
-              href="/build/import"
+              href={`/build/import${q}`}
               className="group rounded-2xl border border-zinc-200 bg-white p-7 text-left shadow-sm transition-all hover:-translate-y-1 hover:border-blue-300 hover:shadow-lg hover:shadow-blue-600/5"
             >
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-600/20">

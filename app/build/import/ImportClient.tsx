@@ -1,13 +1,14 @@
 "use client";
 
-import { useState, type ChangeEvent, type FormEvent } from "react";
+import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import type { CVResult } from "@/app/types";
 import { Reveal } from "@/app/components/Reveal";
 import { AppHeader } from "@/app/components/AppHeader";
 import { CvEditor, cvToForm, type EditorForm } from "@/app/components/CvEditor";
 import { TemplateGallery } from "@/app/components/TemplateGallery";
-import { DEFAULT_TEMPLATE, type TemplateId } from "@/app/templates";
+import { useSeedTemplate } from "@/app/lib/useSeedTemplate";
+import { DEFAULT_TEMPLATE, type TemplateId, type Theme } from "@/app/templates";
 import { IconArrowLeft, IconSparkles } from "@/app/components/icons";
 
 // Pull plain text out of an uploaded PDF (client-side) or text file.
@@ -31,14 +32,27 @@ async function extractText(file: File): Promise<string> {
 
 export default function ImportClient() {
   const router = useRouter();
+  const { pending, seed } = useSeedTemplate();
   const [step, setStep] = useState<"template" | "import" | "edit">("template");
   const [chosen, setChosen] = useState<TemplateId>(DEFAULT_TEMPLATE);
+  const [seedTheme, setSeedTheme] = useState<Theme | undefined>(undefined);
+  const [seeded, setSeeded] = useState(false);
   const [text, setText] = useState("");
   const [fileName, setFileName] = useState<string | null>(null);
   const [extracting, setExtracting] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [editorInitial, setEditorInitial] = useState<EditorForm | null>(null);
+
+  // Came in from a saved template (?tpl): skip the gallery and use its look.
+  useEffect(() => {
+    if (seed && !seeded) {
+      setChosen(seed.layout);
+      setSeedTheme(seed.theme);
+      setSeeded(true);
+      setStep("import");
+    }
+  }, [seed, seeded]);
 
   async function onFile(e: ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -89,10 +103,15 @@ export default function ImportClient() {
     <div className="flex min-h-full flex-col bg-zinc-50 text-zinc-900 print:bg-white">
       <AppHeader />
 
-      {step === "template" ? (
+      {pending ? (
+        <div className="flex flex-1 items-center justify-center py-32">
+          <span className="h-7 w-7 animate-spin rounded-full border-2 border-zinc-300 border-t-blue-600" />
+        </div>
+      ) : step === "template" ? (
         <TemplateGallery
           onSelect={(id) => {
             setChosen(id);
+            setSeedTheme(undefined);
             setStep("import");
           }}
           onBack={() => router.push("/build")}
@@ -102,6 +121,7 @@ export default function ImportClient() {
         <CvEditor
           initial={editorInitial}
           initialTemplate={chosen}
+          initialTheme={seedTheme}
           onBack={() => setStep("import")}
           backLabel="Back to import"
         />
