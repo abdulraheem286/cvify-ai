@@ -350,10 +350,10 @@ function TemplatesView() {
             </div>
             <p className="mt-4 font-semibold text-zinc-900">No saved templates yet</p>
             <p className="mx-auto mt-1 max-w-sm text-sm text-zinc-600">
-              While editing a CV, pick a layout, set your colours and fonts, then hit <span className="font-semibold text-zinc-800">Save style</span> to save it here.
+              Pick a base layout, tune the colours, fonts and spacing, then save it here to reuse on any CV.
             </p>
-            <Link href="/build" className="mt-5 inline-block rounded-xl bg-blue-600 px-5 py-2.5 font-semibold text-white shadow-sm transition-colors hover:bg-blue-700">
-              Start a CV →
+            <Link href="/customize" className="mt-5 inline-block rounded-xl bg-blue-600 px-5 py-2.5 font-semibold text-white shadow-sm transition-colors hover:bg-blue-700">
+              Create template →
             </Link>
           </div>
         ) : (
