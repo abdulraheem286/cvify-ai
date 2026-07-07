@@ -310,7 +310,7 @@ export default function WizardClient() {
           </button>
           <div className="flex items-center gap-4">
             {optional && (
-              <button type="button" onClick={next} className="text-sm font-medium text-zinc-400 transition-colors hover:text-zinc-700">
+              <button type="button" onClick={next} className="text-sm font-medium text-zinc-500 transition-colors hover:text-zinc-800">
                 Skip
               </button>
             )}

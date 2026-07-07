@@ -30,6 +30,7 @@ function LoginInner() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
+  const [googleBusy, setGoogleBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -116,14 +117,25 @@ function LoginInner() {
               <>
                 <button
                   type="button"
-                  onClick={() => withBusy(signInGoogle)}
+                  onClick={() => {
+                    setGoogleBusy(true);
+                    withBusy(signInGoogle).finally(() => setGoogleBusy(false));
+                  }}
                   disabled={busy || !enabled}
                   className="mt-6 flex w-full items-center justify-center gap-2 rounded-lg border border-zinc-300 bg-white px-4 py-2.5 text-sm font-semibold text-zinc-700 transition-colors hover:bg-zinc-50 disabled:opacity-60"
                 >
-                  <GoogleIcon /> Continue with Google
+                  {googleBusy ? (
+                    <>
+                      <span className="h-4 w-4 animate-spin rounded-full border-2 border-zinc-300 border-t-zinc-600" /> Connecting…
+                    </>
+                  ) : (
+                    <>
+                      <GoogleIcon /> Continue with Google
+                    </>
+                  )}
                 </button>
 
-                <div className="my-5 flex items-center gap-3 text-xs font-medium uppercase tracking-wide text-zinc-400">
+                <div className="my-5 flex items-center gap-3 text-xs font-medium uppercase tracking-wide text-zinc-500">
                   <span className="h-px flex-1 bg-zinc-200" /> or <span className="h-px flex-1 bg-zinc-200" />
                 </div>
 
@@ -198,7 +210,7 @@ function LoginInner() {
             </p>
           </div>
 
-          <p className="text-xs text-zinc-400">© 2026 CVify AI. All rights reserved.</p>
+          <p className="text-xs text-zinc-500">© {new Date().getFullYear()} CVify AI. All rights reserved.</p>
         </div>
 
         {/* RIGHT — brand marketing panel */}

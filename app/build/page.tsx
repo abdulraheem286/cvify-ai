@@ -35,7 +35,7 @@ export default async function BuildChooser({ searchParams }: { searchParams: Pro
             </p>
           </Reveal>
 
-          <Reveal stagger delay={0.15} className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <Reveal stagger className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             <Link
               href={`/build/ai${q}`}
               className="group relative overflow-hidden rounded-2xl border border-zinc-200 bg-white p-7 text-left shadow-sm transition-all hover:-translate-y-1 hover:border-blue-300 hover:shadow-lg hover:shadow-blue-600/5"

@@ -49,7 +49,7 @@ const faqs = [
   },
   {
     q: "Will I lose my work if I close the tab?",
-    a: "No. The editor auto-saves your progress in your browser as you type. When you come back, CVify AI offers to restore your draft so you can continue right where you left off — no account required.",
+    a: "No. The editor auto-saves your progress in your browser as you type. When you come back, CVify AI offers to restore your draft so you can continue right where you left off.",
   },
   {
     q: "Can I make more than one CV?",
@@ -57,7 +57,7 @@ const faqs = [
   },
   {
     q: "Can I change the colors and fonts?",
-    a: "Yes. A customization panel lets you set a primary and secondary color, the background, and separate fonts for headings and body text — or pick a ready-made preset. Any look works with any layout.",
+    a: "Yes. A dedicated customization studio lets you set colors (including separate heading, body, and muted text), the background, fonts, text size, line spacing, and density — or pick a ready-made preset. You can save any look as your own reusable template, and every option works with any layout.",
   },
   {
     q: "Can I add my own sections like Projects or Awards?",
@@ -183,7 +183,7 @@ export default function Home() {
             <Reveal stagger className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               <Feature icon={<IconSparkles />} title="AI that writes & improves" text="Generate a summary, rewrite bullet points into achievements, and suggest skills — right inside the editor." />
               <Feature icon={<IconGlobe />} title="18 distinct templates" text="Eighteen genuinely different layouts across professional, minimal, and creative styles." />
-              <Feature icon={<IconTools />} title="Full customization" text="Set your colors, background, and heading and body fonts — or pick a one-click preset. Any look, any layout." />
+              <Feature icon={<IconTools />} title="Full customization" text="Set colors, fonts, text size, spacing, and density in a dedicated studio — or pick a one-click preset — and save your look as a reusable template." />
               <Feature icon={<IconText />} title="Custom sections" text="Add your own sections — Projects, Awards, Volunteering, Publications — and reorder everything." />
               <Feature icon={<IconDownload />} title="ATS-ready text PDF" text="Download a real, selectable text PDF that applicant tracking systems can actually read." />
               <Feature icon={<IconHistory />} title="Never lose your work" text="The editor auto-saves as you type. Close the tab and come back — pick up right where you left off." />
@@ -238,7 +238,7 @@ export default function Home() {
                 <Check>Only uses the facts you provide</Check>
                 <Check>Editable down to every word</Check>
               </ul>
-              <Link href="/build/ai" className="mt-8 inline-block rounded-lg bg-blue-600 px-5 py-2.5 font-semibold text-white shadow-sm transition-colors hover:bg-blue-700">
+              <Link href="/build/ai" className="mt-8 inline-block rounded-xl bg-blue-600 px-5 py-2.5 font-semibold text-white shadow-sm transition-colors hover:bg-blue-700">
                 Try the AI builder →
               </Link>
             </div>
@@ -278,7 +278,7 @@ export default function Home() {
                 <Check>Live preview of the finished CV</Check>
                 <Check>18 templates plus full color and font control</Check>
               </ul>
-              <Link href="/build/manual" className="mt-8 inline-block rounded-lg bg-blue-600 px-5 py-2.5 font-semibold text-white shadow-sm transition-colors hover:bg-blue-700">
+              <Link href="/build/manual" className="mt-8 inline-block rounded-xl bg-blue-600 px-5 py-2.5 font-semibold text-white shadow-sm transition-colors hover:bg-blue-700">
                 Build it manually →
               </Link>
             </div>

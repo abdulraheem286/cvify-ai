@@ -25,6 +25,7 @@ export function SiteFooter() {
             title="Product"
             links={[
               ["AI builder", "/build/ai"],
+              ["Guided wizard", "/build/wizard"],
               ["Manual builder", "/build/manual"],
               ["Import CV", "/build/import"],
               ["Templates", "/#templates"],
@@ -42,7 +43,7 @@ export function SiteFooter() {
         </div>
 
         <div className="mt-10 flex flex-col items-center justify-between gap-3 border-t border-zinc-200 pt-6 text-sm text-zinc-500 sm:flex-row">
-          <p>© 2026 CVify AI. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} CVify AI. All rights reserved.</p>
           <p>Free to use · Your CVs saved to your account</p>
         </div>
       </div>

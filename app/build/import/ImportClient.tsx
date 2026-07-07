@@ -196,7 +196,7 @@ export default function ImportClient() {
                     </>
                   )}
                 </button>
-                <p className="text-center text-xs text-zinc-400">
+                <p className="text-center text-xs text-zinc-500">
                   The AI extracts your details as written — nothing is invented. You can edit everything next.
                 </p>
               </form>

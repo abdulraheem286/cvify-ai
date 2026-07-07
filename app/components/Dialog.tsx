@@ -3,8 +3,14 @@
 import { useEffect, useState, type ReactNode } from "react";
 
 function Overlay({ children, onClose }: { children: ReactNode; onClose: () => void }) {
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
+
   return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
+    <div role="dialog" aria-modal="true" className="fixed inset-0 z-[60] flex items-center justify-center p-4">
       <button aria-hidden tabIndex={-1} onClick={onClose} className="absolute inset-0 cursor-default bg-black/40" />
       <div className="relative z-10 w-full max-w-sm rounded-2xl bg-white p-6 shadow-xl">{children}</div>
     </div>
@@ -46,8 +52,9 @@ export function ConfirmDialog({
       <div className="mt-6 flex justify-end gap-2">
         <button
           type="button"
+          autoFocus
           onClick={onClose}
-          className="rounded-lg px-4 py-2 text-sm font-medium text-zinc-600 transition-colors hover:bg-zinc-100"
+          className="rounded-lg px-4 py-2 text-sm font-medium text-zinc-600 transition-colors hover:bg-zinc-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-zinc-300"
         >
           Cancel
         </button>
