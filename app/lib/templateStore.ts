@@ -81,6 +81,8 @@ export async function createTemplate(uid: string, name: string, layout: Template
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
   });
+  // Mirror to the cache immediately so it shows without waiting for a re-fetch.
+  writeCache(uid, [{ id: ref.id, name, layout, theme, updatedAt: Date.now() }, ...readCache(uid)]);
   return ref.id;
 }
 

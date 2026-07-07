@@ -46,18 +46,25 @@ export function CustomizeStudio({
   const [theme, setTheme] = useState<Theme>(initialTheme);
   const [name, setName] = useState(initialName);
   const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const set = (patch: Partial<Theme>) => setTheme((t) => ({ ...t, ...patch }));
 
   async function save() {
-    if (!user) return;
+    if (!user) {
+      setError("You need to be signed in to save a template.");
+      return;
+    }
     const finalName = name.trim() || "My template";
+    setError(null);
     setSaving(true);
     try {
       if (editId) await updateTemplate(user.uid, editId, finalName, layout, theme);
       else await createTemplate(user.uid, finalName, layout, theme);
       onSaved();
-    } finally {
+    } catch (e) {
+      console.error("Template save failed:", e);
+      setError("Couldn't save this template. Please try again in a moment.");
       setSaving(false);
     }
   }
@@ -79,6 +86,16 @@ export function CustomizeStudio({
           <p className="mt-1 text-sm text-zinc-600">
             Start from a base layout, then fine-tune the look. Save it to reuse on any CV.
           </p>
+
+          <div className="mt-5">
+            <label className="mb-1.5 block text-sm font-medium text-zinc-700">Template name</label>
+            <input
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="e.g. My blue serif"
+              className="w-full rounded-lg border border-zinc-300 bg-white px-3.5 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+            />
+          </div>
 
           <Section title="Base layout">
             <TemplatePicker value={layout} onChange={setLayout} />
@@ -193,14 +210,7 @@ export function CustomizeStudio({
           </div>
 
           <div className="mt-4 rounded-2xl border border-zinc-200 bg-white p-4">
-            <label className="mb-1.5 block text-sm font-medium text-zinc-700">Template name</label>
-            <input
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="e.g. My blue serif"
-              className="w-full rounded-lg border border-zinc-300 bg-white px-3.5 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-            />
-            <div className="mt-3 flex items-center gap-3">
+            <div className="flex items-center gap-3">
               <button
                 type="button"
                 onClick={save}
@@ -213,6 +223,7 @@ export function CustomizeStudio({
                 Cancel
               </button>
             </div>
+            {error && <p className="mt-3 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>}
           </div>
         </div>
       </div>
