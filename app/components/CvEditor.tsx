@@ -323,6 +323,7 @@ export function CvEditor({
   const [mobileView, setMobileView] = useState<"edit" | "preview">("edit");
   const [previewOpen, setPreviewOpen] = useState(false);
   const { templates: myTemplates } = useMyTemplates();
+  const [activeTplName, setActiveTplName] = useState<string | null>(null);
   const [earlierDismissed, setEarlierDismissed] = useState(false);
   const [tailorOpen, setTailorOpen] = useState(false);
   const [jd, setJd] = useState("");
@@ -895,14 +896,26 @@ export function CvEditor({
           </button>
           <TemplatePicker
             value={template}
-            onChange={setTemplate}
+            activeName={activeTplName}
+            onChange={(id) => {
+              setTemplate(id);
+              setActiveTplName(null);
+            }}
             myTemplates={myTemplates}
             onApplyTemplate={(t) => {
               setTemplate(t.layout);
               setTheme(t.theme);
+              setActiveTplName(t.name);
             }}
           />
-          <QuickPresets value={theme} onChange={setTheme} onCustomize={openCustomize} />
+          <QuickPresets
+            value={theme}
+            onChange={(t) => {
+              setTheme(t);
+              setActiveTplName(null);
+            }}
+            onCustomize={openCustomize}
+          />
           {/* Word (.docx) export is ON HOLD — Download is PDF-only for now.
               The docx code (handleDownloadDocx, app/lib/docxBuild.ts, the menu)
               is kept so it can be re-enabled quickly. */}

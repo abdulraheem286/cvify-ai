@@ -20,6 +20,7 @@ export function TemplatePicker({
   onChange,
   myTemplates = [],
   onApplyTemplate,
+  activeName,
 }: {
   value: TemplateId;
   onChange: (id: TemplateId) => void;
@@ -27,6 +28,9 @@ export function TemplatePicker({
   // onApplyTemplate applies both its layout and its theme at once.
   myTemplates?: MyTemplate[];
   onApplyTemplate?: (t: MyTemplate) => void;
+  // When a saved template is currently applied, show its name instead of the
+  // base layout's name.
+  activeName?: string | null;
 }) {
   const current = getTemplate(value);
   const [open, setOpen] = useState(false);
@@ -41,7 +45,7 @@ export function TemplatePicker({
         className="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-50"
       >
         <span className="hidden text-zinc-500 sm:inline">Template:</span>
-        <span className="text-blue-600">{current.name}</span>
+        <span className="text-blue-600">{activeName || current.name}</span>
         <IconChevron className={`h-4 w-4 text-zinc-400 transition-transform ${open ? "rotate-180" : ""}`} />
       </button>
 

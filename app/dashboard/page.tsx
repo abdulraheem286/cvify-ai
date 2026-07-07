@@ -367,17 +367,17 @@ function TemplatesView() {
                 </Link>
                 <div className="p-4">
                   <p className="truncate font-semibold text-zinc-900">{t.name}</p>
-                  <div className="mt-3 flex items-center justify-between border-t border-zinc-100 pt-3 text-xs">
-                    <Link href={`/build?tpl=${t.id}`} className="font-semibold text-blue-600 hover:text-blue-700">
-                      Create CV →
-                    </Link>
-                    <div className="flex items-center gap-2.5">
-                      <Link href={`/customize?tpl=${t.id}`} className="font-medium text-zinc-500 hover:text-zinc-800">Edit</Link>
-                      <button type="button" onClick={() => setRenaming(t)} className="font-medium text-zinc-500 hover:text-zinc-800">Rename</button>
-                      <button type="button" onClick={() => setDeleting(t)} className="text-zinc-400 hover:text-red-600" title="Delete">
-                        <IconTrash className="h-4 w-4" />
-                      </button>
-                    </div>
+                  <Link
+                    href={`/build?tpl=${t.id}`}
+                    className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-700"
+                  >
+                    Create CV →
+                  </Link>
+                  <div className="mt-2 flex items-center justify-end gap-3 border-t border-zinc-100 pt-2 text-xs">
+                    <button type="button" onClick={() => setRenaming(t)} className="font-medium text-zinc-500 hover:text-zinc-800">Rename</button>
+                    <button type="button" onClick={() => setDeleting(t)} className="text-zinc-400 hover:text-red-600" title="Delete">
+                      <IconTrash className="h-4 w-4" />
+                    </button>
                   </div>
                 </div>
               </div>
