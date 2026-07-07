@@ -75,7 +75,9 @@ export function TemplatePicker({
 
             {cat === "Mine" ? (
               <div className="mt-3 grid max-h-[55vh] grid-cols-2 gap-2 overflow-y-auto">
-                {myTemplates.map((t) => (
+                {myTemplates.map((t) => {
+                  const active = !!activeName && t.name === activeName;
+                  return (
                   <button
                     key={t.id}
                     type="button"
@@ -83,12 +85,15 @@ export function TemplatePicker({
                       onApplyTemplate?.(t);
                       setOpen(false);
                     }}
-                    className="rounded-lg border border-zinc-200 p-1.5 text-left transition hover:border-zinc-300"
+                    className={`rounded-lg border p-1.5 text-left transition ${
+                      active ? "border-blue-500 ring-2 ring-blue-200" : "border-zinc-200 hover:border-zinc-300"
+                    }`}
                   >
                     <Thumb layout={t.layout} accent={t.theme.primary} />
                     <span className="mt-1 block truncate text-[11px] font-medium text-zinc-600">{t.name}</span>
                   </button>
-                ))}
+                  );
+                })}
               </div>
             ) : (
               <div className="mt-3 grid max-h-[55vh] grid-cols-2 gap-2 overflow-y-auto">

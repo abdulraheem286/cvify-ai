@@ -11,6 +11,7 @@ import { ConfirmDialog, PromptDialog } from "@/app/components/Dialog";
 import { listCvs, deleteCv, duplicateCv, renameCv, type CvRecord } from "@/app/lib/cvStore";
 import { useMyTemplates } from "@/app/lib/useMyTemplates";
 import { SAMPLE_CV } from "@/app/lib/sampleCv";
+import { getTemplate } from "@/app/templates";
 import type { EditorForm } from "@/app/components/CvEditor";
 import type { CVResult } from "@/app/types";
 import type { MyTemplate } from "@/app/lib/templateStore";
@@ -367,6 +368,7 @@ function TemplatesView() {
                 </Link>
                 <div className="p-4">
                   <p className="truncate font-semibold text-zinc-900">{t.name}</p>
+                  <p className="truncate text-xs text-zinc-500">{getTemplate(t.layout).name} layout</p>
                   <Link
                     href={`/build?tpl=${t.id}`}
                     className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-700"

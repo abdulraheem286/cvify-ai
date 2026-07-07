@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { ScaledPreview } from "./ScaledPreview";
 import { TemplatePicker } from "./TemplatePicker";
 import { TemplateView } from "@/app/templates/TemplateView";
@@ -53,9 +53,9 @@ export function CustomizeStudio({
   const [previewOpen, setPreviewOpen] = useState(false);
   const [confirmReset, setConfirmReset] = useState(false);
 
-  const setTheme = (t: Theme) => history.set({ layout, theme: t });
+  const setTheme = (t: Theme, key?: string) => history.set({ layout, theme: t }, key);
   const setLayout = (l: TemplateId) => history.set({ layout: l, theme });
-  const set = (patch: Partial<Theme>) => setTheme({ ...theme, ...patch });
+  const set = (patch: Partial<Theme>, key?: string) => setTheme({ ...theme, ...patch }, key);
 
   // Escape closes the enlarged preview.
   useEffect(() => {
@@ -64,6 +64,25 @@ export function CustomizeStudio({
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [previewOpen]);
+
+  // Undo / redo shortcuts (ignored while typing in the name field).
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (!(e.ctrlKey || e.metaKey)) return;
+      const tag = (e.target as HTMLElement | null)?.tagName;
+      if (tag === "INPUT" || tag === "TEXTAREA") return;
+      const key = e.key.toLowerCase();
+      if (key === "z" && !e.shiftKey) {
+        e.preventDefault();
+        history.undo();
+      } else if ((key === "z" && e.shiftKey) || key === "y") {
+        e.preventDefault();
+        history.redo();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [history]);
 
   async function save() {
     if (!user) {
@@ -201,7 +220,7 @@ export function CustomizeStudio({
               step={FONT_SCALE_RANGE.step}
               value={theme.fontScale ?? FONT_SCALE_RANGE.default}
               display={`${Math.round((theme.fontScale ?? 1) * 100)}%`}
-              onChange={(v) => set({ fontScale: v === 1 ? undefined : v })}
+              onChange={(v) => set({ fontScale: v === 1 ? undefined : v }, "fontScale")}
             />
             <Slider
               label="Line spacing"
@@ -210,7 +229,7 @@ export function CustomizeStudio({
               step={LINE_HEIGHT_RANGE.step}
               value={theme.lineHeight ?? LINE_HEIGHT_RANGE.default}
               display={(theme.lineHeight ?? LINE_HEIGHT_RANGE.default).toFixed(2)}
-              onChange={(v) => set({ lineHeight: v })}
+              onChange={(v) => set({ lineHeight: v }, "lineHeight")}
             />
             <div className="mt-3">
               <p className="mb-1.5 text-xs font-medium text-zinc-500">Heading case</p>
@@ -291,24 +310,36 @@ export function CustomizeStudio({
 }
 
 // A small history stack for undo/redo over the design (layout + theme).
+// Passing a coalesceKey merges consecutive changes to the same control (e.g. a
+// slider drag) into ONE undo step instead of one per pixel.
 function useHistory<T>(initial: T) {
   const [past, setPast] = useState<T[]>([]);
   const [present, setPresent] = useState<T>(initial);
   const [future, setFuture] = useState<T[]>([]);
+  const lastKey = useRef<string | null>(null);
 
-  const set = (next: T) => {
+  const set = (next: T, coalesceKey?: string) => {
+    if (coalesceKey && coalesceKey === lastKey.current) {
+      // Same control as the previous change — update in place, no new step.
+      setPresent(next);
+      setFuture([]);
+      return;
+    }
+    lastKey.current = coalesceKey ?? null;
     setPast((p) => [...p, present]);
     setPresent(next);
     setFuture([]);
   };
   const undo = () => {
     if (!past.length) return;
+    lastKey.current = null;
     setFuture((f) => [present, ...f]);
     setPresent(past[past.length - 1]);
     setPast((p) => p.slice(0, -1));
   };
   const redo = () => {
     if (!future.length) return;
+    lastKey.current = null;
     setPast((p) => [...p, present]);
     setPresent(future[0]);
     setFuture((f) => f.slice(1));
