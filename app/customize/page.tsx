@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AppHeader } from "@/app/components/AppHeader";
-import { AppFooter } from "@/app/components/AppFooter";
 import { RequireAuth } from "@/app/components/RequireAuth";
 import { CustomizeStudio } from "@/app/components/CustomizeStudio";
 import { useMyTemplates } from "@/app/lib/useMyTemplates";
@@ -90,7 +89,6 @@ function Customize() {
         onBack={goHome}
         onSaved={goHome}
       />
-      <AppFooter />
     </div>
   );
 }
