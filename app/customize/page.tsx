@@ -43,10 +43,13 @@ function Customize() {
   const editTpl = params.tpl ? templates.find((t) => t.id === params.tpl) : undefined;
   const editPending = !!params.tpl && !editTpl && loading;
 
-  // Return to wherever the user came from (editor seed carries it); default to
-  // the dashboard's Templates tab.
+  // Cancel returns to wherever the user came from (editor seed carries it);
+  // default to the dashboard's Templates tab.
   const returnUrl = seed?.from || "/dashboard?tab=templates";
   const goHome = () => router.push(returnUrl);
+  // After saving, jump straight into the CV editor using the saved template —
+  // no separate "pick a template" step.
+  const goToEditor = (savedId: string) => router.push(`/build/manual?tpl=${savedId}`);
 
   if (!ready || editPending) {
     return (
@@ -87,7 +90,7 @@ function Customize() {
         initialName={initialName}
         editId={editId}
         onBack={goHome}
-        onSaved={goHome}
+        onSaved={goToEditor}
       />
     </div>
   );

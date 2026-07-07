@@ -114,6 +114,11 @@ export default function ImportClient() {
             setSeedTheme(undefined);
             setStep("import");
           }}
+          onSelectTemplate={(t) => {
+            setChosen(t.layout);
+            setSeedTheme(t.theme);
+            setStep("import");
+          }}
           onBack={() => router.push("/build")}
           backLabel="Back to build options"
         />

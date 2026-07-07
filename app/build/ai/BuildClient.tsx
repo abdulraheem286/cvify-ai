@@ -149,6 +149,11 @@ export default function BuildClient() {
             setSeedTheme(undefined);
             setStep("ai");
           }}
+          onSelectTemplate={(t) => {
+            setChosen(t.layout);
+            setSeedTheme(t.theme);
+            setStep("ai");
+          }}
           onBack={() => router.push("/build")}
           backLabel="Back to build options"
         />

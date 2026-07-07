@@ -42,7 +42,7 @@ export function CustomizeStudio({
   initialName: string;
   editId?: string;
   onBack: () => void;
-  onSaved: () => void;
+  onSaved: (savedId: string) => void;
 }) {
   const { user } = useAuth();
   const history = useHistory<Design>({ layout: initialLayout, theme: initialTheme });
@@ -93,9 +93,10 @@ export function CustomizeStudio({
     setError(null);
     setSaving(true);
     try {
+      let savedId = editId;
       if (editId) await updateTemplate(user.uid, editId, finalName, layout, theme);
-      else await createTemplate(user.uid, finalName, layout, theme);
-      onSaved();
+      else savedId = await createTemplate(user.uid, finalName, layout, theme);
+      onSaved(savedId!);
     } catch (e) {
       console.error("Template save failed:", e);
       setError("Couldn't save this template. Please try again in a moment.");

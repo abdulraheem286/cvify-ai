@@ -138,6 +138,12 @@ export default function WizardClient() {
         <TemplateGallery
           onSelect={(id) => {
             setTemplate(id);
+            setSeedTheme(undefined);
+            setPhase("edit");
+          }}
+          onSelectTemplate={(t) => {
+            setTemplate(t.layout);
+            setSeedTheme(t.theme);
             setPhase("edit");
           }}
           onBack={() => {
