@@ -105,12 +105,16 @@ export default function BuildClient() {
       if (m) e[k] = m;
     });
     setAiErrors(e);
-    return Object.keys(e).length === 0;
+    // Website is optional — show a soft hint but never block generation on it.
+    return Object.keys(e).every((k) => k === "website");
   }
 
   async function handleGenerate(e: FormEvent) {
     e.preventDefault();
-    if (!validateAi()) return;
+    if (!validateAi()) {
+      setError("Please fix the highlighted fields above, then try again.");
+      return;
+    }
     setLoading(true);
     setError(null);
     try {
