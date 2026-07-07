@@ -49,6 +49,24 @@ export const IconTools = ({ className }: IconProps) =>
 export const IconBookmark = ({ className }: IconProps) =>
   base(<path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1Z" />, className);
 
+export const IconUndo = ({ className }: IconProps) =>
+  base(
+    <>
+      <path d="M9 14 4 9l5-5" />
+      <path d="M4 9h10a6 6 0 0 1 0 12h-3" />
+    </>,
+    className,
+  );
+
+export const IconRedo = ({ className }: IconProps) =>
+  base(
+    <>
+      <path d="m15 14 5-5-5-5" />
+      <path d="M20 9H10a6 6 0 0 0 0 12h3" />
+    </>,
+    className,
+  );
+
 export const IconSparkles = ({ className }: IconProps) =>
   base(
     <>

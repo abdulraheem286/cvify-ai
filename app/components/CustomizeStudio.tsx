@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { ScaledPreview } from "./ScaledPreview";
 import { TemplatePicker } from "./TemplatePicker";
 import { TemplateView } from "@/app/templates/TemplateView";
+import { ConfirmDialog } from "./Dialog";
 import {
   FONTS,
   SWATCHES,
@@ -20,11 +21,13 @@ import {
 import { SAMPLE_CV } from "@/app/lib/sampleCv";
 import { useAuth } from "./AuthProvider";
 import { createTemplate, updateTemplate } from "@/app/lib/templateStore";
-import { IconArrowLeft } from "./icons";
+import { IconArrowLeft, IconX, IconExpand, IconUndo, IconRedo } from "./icons";
 
 // Neutral palettes for the (optional) body-text and muted-text colours.
 const TEXT_COLORS = ["#18181b", "#27272a", "#1c1917", "#0f172a", "#1e293b", "#3f3f46"];
 const MUTED_COLORS = ["#52525b", "#71717a", "#78716c", "#64748b", "#6b7280", "#94a3b8"];
+
+type Design = { layout: TemplateId; theme: Theme };
 
 export function CustomizeStudio({
   initialLayout,
@@ -42,13 +45,25 @@ export function CustomizeStudio({
   onSaved: () => void;
 }) {
   const { user } = useAuth();
-  const [layout, setLayout] = useState<TemplateId>(initialLayout);
-  const [theme, setTheme] = useState<Theme>(initialTheme);
+  const history = useHistory<Design>({ layout: initialLayout, theme: initialTheme });
+  const { layout, theme } = history.present;
   const [name, setName] = useState(initialName);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [confirmReset, setConfirmReset] = useState(false);
 
-  const set = (patch: Partial<Theme>) => setTheme((t) => ({ ...t, ...patch }));
+  const setTheme = (t: Theme) => history.set({ layout, theme: t });
+  const setLayout = (l: TemplateId) => history.set({ layout: l, theme });
+  const set = (patch: Partial<Theme>) => setTheme({ ...theme, ...patch });
+
+  // Escape closes the enlarged preview.
+  useEffect(() => {
+    if (!previewOpen) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setPreviewOpen(false);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [previewOpen]);
 
   async function save() {
     if (!user) {
@@ -70,7 +85,7 @@ export function CustomizeStudio({
   }
 
   return (
-    <main className="mx-auto w-full max-w-[1400px] flex-1 site-px py-8">
+    <main className="mx-auto w-full max-w-[1400px] flex-1 site-px py-6">
       <button
         type="button"
         onClick={onBack}
@@ -79,36 +94,55 @@ export function CustomizeStudio({
         <IconArrowLeft className="h-4 w-4" /> Back
       </button>
 
-      <div className="mt-4 grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)]">
-        {/* Controls */}
-        <div className="min-w-0">
-          <h1 className="text-2xl font-bold tracking-tight">{editId ? "Edit template" : "Create a template"}</h1>
-          <p className="mt-1 text-sm text-zinc-600">
-            Start from a base layout, then fine-tune the look. Save it to reuse on any CV.
-          </p>
-
-          <div className="mt-5">
-            <label className="mb-1.5 block text-sm font-medium text-zinc-700">Template name</label>
-            <input
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="e.g. My blue serif"
-              className="w-full rounded-lg border border-zinc-300 bg-white px-3.5 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-            />
+      {/* Action bar (name + undo/redo + save) — pinned below the app header */}
+      <div className="sticky top-[68px] z-30 mt-3">
+        <div className="flex flex-wrap items-center gap-3 rounded-2xl border border-zinc-200 bg-white/95 p-3 shadow-sm backdrop-blur">
+          <input
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Template name"
+            className="min-w-[12rem] flex-1 rounded-lg border border-zinc-300 bg-white px-3.5 py-2.5 text-sm font-medium outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+          />
+          <div className="flex items-center gap-1">
+            <IconBtn label="Undo" onClick={history.undo} disabled={!history.canUndo}>
+              <IconUndo className="h-[18px] w-[18px]" />
+            </IconBtn>
+            <IconBtn label="Redo" onClick={history.redo} disabled={!history.canRedo}>
+              <IconRedo className="h-[18px] w-[18px]" />
+            </IconBtn>
           </div>
+          <button
+            type="button"
+            onClick={save}
+            disabled={saving}
+            className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm shadow-blue-600/25 transition-all hover:-translate-y-px disabled:opacity-60"
+          >
+            {saving ? "Saving…" : editId ? "Save changes" : "Save template"}
+          </button>
+          <button type="button" onClick={onBack} className="px-1 text-sm font-medium text-zinc-500 hover:text-zinc-800">
+            Cancel
+          </button>
+        </div>
+        {error && <p className="mt-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>}
+      </div>
 
-          <Section title="Base layout">
-            <TemplatePicker value={layout} onChange={setLayout} />
-            <button
-              type="button"
-              onClick={() => setTheme(getDefaultTheme(layout))}
-              className="ml-2 text-xs font-medium text-zinc-500 underline-offset-2 hover:text-blue-600 hover:underline"
-            >
-              Reset to its default look
-            </button>
-          </Section>
+      <div className="mt-5 grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)]">
+        {/* Controls */}
+        <div className="min-w-0 space-y-4">
+          <Card title="Base layout">
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+              <TemplatePicker value={layout} onChange={setLayout} />
+              <button
+                type="button"
+                onClick={() => setConfirmReset(true)}
+                className="text-xs font-medium text-zinc-500 underline-offset-2 hover:text-blue-600 hover:underline"
+              >
+                Reset to its default look
+              </button>
+            </div>
+          </Card>
 
-          <Section title="Presets">
+          <Card title="Presets">
             <div className="flex flex-wrap gap-2">
               {THEME_PRESETS.map((p) => (
                 <button
@@ -122,14 +156,14 @@ export function CustomizeStudio({
                 </button>
               ))}
             </div>
-          </Section>
+          </Card>
 
-          <Section title="Colours">
+          <Card title="Colours">
             <ColorRow label="Accent" value={theme.primary} swatches={SWATCHES} onPick={(c) => set({ primary: c })} />
             <ColorRow label="Headings & name" value={theme.secondary} swatches={SWATCHES} onPick={(c) => set({ secondary: c })} />
             <ColorRow label="Body text" value={theme.text} swatches={TEXT_COLORS} defaultable onPick={(c) => set({ text: c })} onDefault={() => set({ text: undefined })} />
             <ColorRow label="Muted text" value={theme.muted} swatches={MUTED_COLORS} defaultable onPick={(c) => set({ muted: c })} onDefault={() => set({ muted: undefined })} />
-            <div className="mt-3">
+            <div className="mt-1">
               <p className="mb-1.5 text-xs font-medium text-zinc-500">Background</p>
               <div className="flex flex-wrap gap-2">
                 {BACKGROUNDS.map((b) => {
@@ -150,16 +184,16 @@ export function CustomizeStudio({
                 })}
               </div>
             </div>
-          </Section>
+          </Card>
 
-          <Section title="Fonts">
+          <Card title="Fonts">
             <p className="mb-1.5 text-xs font-medium text-zinc-500">Heading font</p>
             <FontButtons value={theme.fontHeading} onPick={(f) => set({ fontHeading: f })} />
             <p className="mb-1.5 mt-3 text-xs font-medium text-zinc-500">Body font</p>
             <FontButtons value={theme.fontBody} onPick={(f) => set({ fontBody: f })} />
-          </Section>
+          </Card>
 
-          <Section title="Typography">
+          <Card title="Typography">
             <Slider
               label="Text size"
               min={FONT_SCALE_RANGE.min}
@@ -189,51 +223,118 @@ export function CustomizeStudio({
                 onChange={(v) => set({ headingCase: v === "upper" ? "upper" : undefined })}
               />
             </div>
-          </Section>
+          </Card>
 
-          <Section title="Density">
+          <Card title="Density">
             <Segment
               value={theme.density ?? "normal"}
               options={DENSITIES}
               onChange={(v) => set({ density: v === "normal" ? undefined : (v as Density) })}
             />
             <p className="mt-2 text-xs text-zinc-400">Controls how much fits on a page.</p>
-          </Section>
+          </Card>
         </div>
 
-        {/* Preview + save */}
-        <div className="lg:sticky lg:top-[84px] lg:self-start">
-          <div className="rounded-2xl border border-zinc-200 bg-zinc-100 p-4">
-            <ScaledPreview maxHeight={620} capClassName="">
+        {/* Preview — click to expand */}
+        <div className="lg:sticky lg:top-[92px] lg:self-start">
+          <button
+            type="button"
+            onClick={() => setPreviewOpen(true)}
+            className="group relative block w-full rounded-2xl border border-zinc-200 bg-zinc-100 p-4 text-left"
+          >
+            <ScaledPreview maxHeight={640}>
               <TemplateView id={layout} cv={SAMPLE_CV} theme={theme} domId="studio-preview" />
             </ScaledPreview>
-          </div>
-
-          <div className="mt-4 rounded-2xl border border-zinc-200 bg-white p-4">
-            <div className="flex items-center gap-3">
-              <button
-                type="button"
-                onClick={save}
-                disabled={saving}
-                className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm shadow-blue-600/25 transition-all hover:-translate-y-px disabled:opacity-60"
-              >
-                {saving ? "Saving…" : editId ? "Save changes" : "Save template"}
-              </button>
-              <button type="button" onClick={onBack} className="text-sm font-medium text-zinc-500 hover:text-zinc-800">
-                Cancel
-              </button>
-            </div>
-            {error && <p className="mt-3 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>}
-          </div>
+            <span className="pointer-events-none absolute right-6 top-6 inline-flex items-center gap-1.5 rounded-lg bg-zinc-900/80 px-2.5 py-1.5 text-xs font-medium text-white opacity-0 transition-opacity group-hover:opacity-100">
+              <IconExpand className="h-4 w-4" /> Click to expand
+            </span>
+          </button>
         </div>
       </div>
+
+      {/* Enlarged preview modal */}
+      {previewOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/60 p-4 sm:p-8"
+          onClick={() => setPreviewOpen(false)}
+        >
+          <div className="relative w-full max-w-[840px]" onClick={(e) => e.stopPropagation()}>
+            <button
+              type="button"
+              onClick={() => setPreviewOpen(false)}
+              className="absolute -top-2 right-0 -translate-y-full rounded-lg bg-white/90 p-2 text-zinc-700 shadow-sm transition-colors hover:bg-white"
+              aria-label="Close preview"
+            >
+              <IconX className="h-5 w-5" />
+            </button>
+            <div className="overflow-hidden rounded-xl shadow-2xl">
+              <TemplateView id={layout} cv={SAMPLE_CV} theme={theme} domId="studio-preview-modal" />
+            </div>
+          </div>
+        </div>
+      )}
+
+      <ConfirmDialog
+        open={confirmReset}
+        title="Reset to default look?"
+        message="This discards your colour, font, typography and density changes and restores this layout's original look."
+        confirmLabel="Reset"
+        danger
+        onConfirm={() => {
+          history.set({ layout, theme: getDefaultTheme(layout) });
+          setConfirmReset(false);
+        }}
+        onClose={() => setConfirmReset(false)}
+      />
     </main>
   );
 }
 
-function Section({ title, children }: { title: string; children: ReactNode }) {
+// A small history stack for undo/redo over the design (layout + theme).
+function useHistory<T>(initial: T) {
+  const [past, setPast] = useState<T[]>([]);
+  const [present, setPresent] = useState<T>(initial);
+  const [future, setFuture] = useState<T[]>([]);
+
+  const set = (next: T) => {
+    setPast((p) => [...p, present]);
+    setPresent(next);
+    setFuture([]);
+  };
+  const undo = () => {
+    if (!past.length) return;
+    setFuture((f) => [present, ...f]);
+    setPresent(past[past.length - 1]);
+    setPast((p) => p.slice(0, -1));
+  };
+  const redo = () => {
+    if (!future.length) return;
+    setPast((p) => [...p, present]);
+    setPresent(future[0]);
+    setFuture((f) => f.slice(1));
+  };
+
+  return { present, set, undo, redo, canUndo: past.length > 0, canRedo: future.length > 0 };
+}
+
+function IconBtn({ label, onClick, disabled, children }: { label: string; onClick: () => void; disabled?: boolean; children: ReactNode }) {
   return (
-    <div className="mt-6 border-t border-zinc-100 pt-5 first:border-t-0">
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      title={label}
+      aria-label={label}
+      className="rounded-lg border border-zinc-300 bg-white p-2 text-zinc-600 transition-colors hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-40"
+    >
+      {children}
+    </button>
+  );
+}
+
+function Card({ title, children }: { title: string; children: ReactNode }) {
+  return (
+    <div className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm">
       <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-zinc-400">{title}</p>
       {children}
     </div>
