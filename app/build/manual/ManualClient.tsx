@@ -5,10 +5,11 @@ import { useRouter } from "next/navigation";
 import { AppHeader } from "@/app/components/AppHeader";
 import { CvEditor, EMPTY_FORM } from "@/app/components/CvEditor";
 import { TemplateGallery } from "@/app/components/TemplateGallery";
-import { DEFAULT_TEMPLATE, type TemplateId, type Theme } from "@/app/templates";
+import { DEFAULT_TEMPLATE, type TemplateId } from "@/app/templates";
 import { useAuth } from "@/app/components/AuthProvider";
 import { getCv, type CvRecord } from "@/app/lib/cvStore";
 import { useMyTemplates } from "@/app/lib/useMyTemplates";
+import type { MyTemplate } from "@/app/lib/templateStore";
 
 export default function ManualClient() {
   const router = useRouter();
@@ -16,7 +17,7 @@ export default function ManualClient() {
   const { templates: myTemplates, loading: tplLoading } = useMyTemplates();
   const [step, setStep] = useState<"template" | "edit">("template");
   const [chosen, setChosen] = useState<TemplateId>(DEFAULT_TEMPLATE);
-  const [seedTheme, setSeedTheme] = useState<Theme | undefined>(undefined);
+  const [seedTpl, setSeedTpl] = useState<MyTemplate | undefined>(undefined);
   const [cvParam, setCvParam] = useState<string | null>(null);
   const [tplParam, setTplParam] = useState<string | null>(null);
   const [loaded, setLoaded] = useState<CvRecord | null>(null);
@@ -71,6 +72,8 @@ export default function ManualClient() {
           initial={EMPTY_FORM}
           initialTemplate={startTpl.layout}
           initialTheme={startTpl.theme}
+          savedTemplateId={startTpl.id}
+          savedTemplateName={startTpl.name}
           onBack={() => router.push("/dashboard")}
           backLabel="Back to dashboard"
         />
@@ -78,12 +81,12 @@ export default function ManualClient() {
         <TemplateGallery
           onSelect={(id) => {
             setChosen(id);
-            setSeedTheme(undefined);
+            setSeedTpl(undefined);
             setStep("edit");
           }}
           onSelectTemplate={(t) => {
             setChosen(t.layout);
-            setSeedTheme(t.theme);
+            setSeedTpl(t);
             setStep("edit");
           }}
           onBack={() => router.push("/build")}
@@ -93,7 +96,9 @@ export default function ManualClient() {
         <CvEditor
           initial={EMPTY_FORM}
           initialTemplate={chosen}
-          initialTheme={seedTheme}
+          initialTheme={seedTpl?.theme}
+          savedTemplateId={seedTpl?.id}
+          savedTemplateName={seedTpl?.name}
           onBack={() => setStep("template")}
           backLabel="Back to templates"
         />

@@ -8,7 +8,8 @@ import { AppHeader } from "@/app/components/AppHeader";
 import { CvEditor, cvToForm, type EditorForm } from "@/app/components/CvEditor";
 import { TemplateGallery } from "@/app/components/TemplateGallery";
 import { useSeedTemplate } from "@/app/lib/useSeedTemplate";
-import { DEFAULT_TEMPLATE, type TemplateId, type Theme } from "@/app/templates";
+import type { MyTemplate } from "@/app/lib/templateStore";
+import { DEFAULT_TEMPLATE, type TemplateId } from "@/app/templates";
 import { IconArrowLeft, IconSparkles } from "@/app/components/icons";
 
 // Pull plain text out of an uploaded PDF (client-side) or text file.
@@ -35,7 +36,7 @@ export default function ImportClient() {
   const { pending, seed } = useSeedTemplate();
   const [step, setStep] = useState<"template" | "import" | "edit">("template");
   const [chosen, setChosen] = useState<TemplateId>(DEFAULT_TEMPLATE);
-  const [seedTheme, setSeedTheme] = useState<Theme | undefined>(undefined);
+  const [seedTpl, setSeedTpl] = useState<MyTemplate | undefined>(undefined);
   const [seeded, setSeeded] = useState(false);
   const [text, setText] = useState("");
   const [fileName, setFileName] = useState<string | null>(null);
@@ -48,7 +49,7 @@ export default function ImportClient() {
   useEffect(() => {
     if (seed && !seeded) {
       setChosen(seed.layout);
-      setSeedTheme(seed.theme);
+      setSeedTpl(seed);
       setSeeded(true);
       setStep("import");
     }
@@ -111,12 +112,12 @@ export default function ImportClient() {
         <TemplateGallery
           onSelect={(id) => {
             setChosen(id);
-            setSeedTheme(undefined);
+            setSeedTpl(undefined);
             setStep("import");
           }}
           onSelectTemplate={(t) => {
             setChosen(t.layout);
-            setSeedTheme(t.theme);
+            setSeedTpl(t);
             setStep("import");
           }}
           onBack={() => router.push("/build")}
@@ -126,7 +127,9 @@ export default function ImportClient() {
         <CvEditor
           initial={editorInitial}
           initialTemplate={chosen}
-          initialTheme={seedTheme}
+          initialTheme={seedTpl?.theme}
+          savedTemplateId={seedTpl?.id}
+          savedTemplateName={seedTpl?.name}
           onBack={() => setStep("import")}
           backLabel="Back to import"
         />

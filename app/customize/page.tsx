@@ -8,7 +8,7 @@ import { CustomizeStudio } from "@/app/components/CustomizeStudio";
 import { useMyTemplates } from "@/app/lib/useMyTemplates";
 import { DEFAULT_TEMPLATE, getDefaultTheme, getTemplate, type TemplateId, type Theme } from "@/app/templates";
 
-type Seed = { layout: TemplateId; theme: Theme; from?: string };
+type Seed = { layout: TemplateId; theme: Theme; from?: string; editId?: string; name?: string };
 
 function Spinner() {
   return (
@@ -73,7 +73,9 @@ function Customize() {
   } else if (seed) {
     initialLayout = getTemplate(seed.layout).id === seed.layout ? seed.layout : DEFAULT_TEMPLATE;
     initialTheme = seed.theme;
-    initialName = `${getTemplate(initialLayout).name} custom`;
+    initialName = seed.name || `${getTemplate(initialLayout).name} custom`;
+    // If the CV was already styled with a saved template, edit that one in place.
+    editId = seed.editId;
   } else {
     const valid = params.base && getTemplate(params.base).id === params.base;
     initialLayout = (valid ? params.base : DEFAULT_TEMPLATE) as TemplateId;

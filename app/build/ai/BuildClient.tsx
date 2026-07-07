@@ -8,7 +8,8 @@ import { AppHeader } from "@/app/components/AppHeader";
 import { CvEditor, cvToForm, type EditorForm } from "@/app/components/CvEditor";
 import { TemplateGallery } from "@/app/components/TemplateGallery";
 import { useSeedTemplate } from "@/app/lib/useSeedTemplate";
-import { DEFAULT_TEMPLATE, type TemplateId, type Theme } from "@/app/templates";
+import type { MyTemplate } from "@/app/lib/templateStore";
+import { DEFAULT_TEMPLATE, type TemplateId } from "@/app/templates";
 import {
   IconField,
   FieldTextarea,
@@ -71,7 +72,7 @@ export default function BuildClient() {
   const { pending, seed } = useSeedTemplate();
   const [step, setStep] = useState<"template" | "ai" | "edit">("template");
   const [chosen, setChosen] = useState<TemplateId>(DEFAULT_TEMPLATE);
-  const [seedTheme, setSeedTheme] = useState<Theme | undefined>(undefined);
+  const [seedTpl, setSeedTpl] = useState<MyTemplate | undefined>(undefined);
   const [seeded, setSeeded] = useState(false);
   const [aiForm, setAiForm] = useState<AIForm>(EMPTY_AI);
   const [aiErrors, setAiErrors] = useState<Record<string, string>>({});
@@ -83,7 +84,7 @@ export default function BuildClient() {
   useEffect(() => {
     if (seed && !seeded) {
       setChosen(seed.layout);
-      setSeedTheme(seed.theme);
+      setSeedTpl(seed);
       setSeeded(true);
       setStep("ai");
     }
@@ -146,12 +147,12 @@ export default function BuildClient() {
         <TemplateGallery
           onSelect={(id) => {
             setChosen(id);
-            setSeedTheme(undefined);
+            setSeedTpl(undefined);
             setStep("ai");
           }}
           onSelectTemplate={(t) => {
             setChosen(t.layout);
-            setSeedTheme(t.theme);
+            setSeedTpl(t);
             setStep("ai");
           }}
           onBack={() => router.push("/build")}
@@ -161,7 +162,9 @@ export default function BuildClient() {
         <CvEditor
           initial={editorInitial}
           initialTemplate={chosen}
-          initialTheme={seedTheme}
+          initialTheme={seedTpl?.theme}
+          savedTemplateId={seedTpl?.id}
+          savedTemplateName={seedTpl?.name}
           onBack={() => setStep("ai")}
           backLabel="Back to AI input"
         />

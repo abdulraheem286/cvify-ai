@@ -277,6 +277,8 @@ export function CvEditor({
   initialHidden,
   cvId,
   initialTitle,
+  savedTemplateId,
+  savedTemplateName,
   onBack,
   backLabel,
 }: {
@@ -286,6 +288,10 @@ export function CvEditor({
   initialHidden?: Record<string, boolean>;
   cvId?: string;
   initialTitle?: string;
+  // When this CV was started from a saved template, its id + name so the picker
+  // can show the template's name and "Edit template" updates it in place.
+  savedTemplateId?: string;
+  savedTemplateName?: string;
   onBack: () => void;
   backLabel: string;
 }) {
@@ -323,7 +329,8 @@ export function CvEditor({
   const [mobileView, setMobileView] = useState<"edit" | "preview">("edit");
   const [previewOpen, setPreviewOpen] = useState(false);
   const { templates: myTemplates } = useMyTemplates();
-  const [activeTplName, setActiveTplName] = useState<string | null>(null);
+  const [activeTplName, setActiveTplName] = useState<string | null>(savedTemplateName ?? null);
+  const [activeTplId, setActiveTplId] = useState<string | null>(savedTemplateId ?? null);
   const [earlierDismissed, setEarlierDismissed] = useState(false);
   const [tailorOpen, setTailorOpen] = useState(false);
   const [jd, setJd] = useState("");
@@ -342,7 +349,14 @@ export function CvEditor({
     try {
       sessionStorage.setItem(
         "cvify:customizeSeed",
-        JSON.stringify({ layout: template, theme, from: window.location.pathname + window.location.search }),
+        JSON.stringify({
+          layout: template,
+          theme,
+          from: window.location.pathname + window.location.search,
+          // If a saved template is currently applied, edit IT rather than making a copy.
+          editId: activeTplId ?? undefined,
+          name: activeTplName ?? undefined,
+        }),
       );
     } catch {
       /* private mode / storage disabled — the studio falls back to defaults */
@@ -900,12 +914,14 @@ export function CvEditor({
             onChange={(id) => {
               setTemplate(id);
               setActiveTplName(null);
+              setActiveTplId(null);
             }}
             myTemplates={myTemplates}
             onApplyTemplate={(t) => {
               setTemplate(t.layout);
               setTheme(t.theme);
               setActiveTplName(t.name);
+              setActiveTplId(t.id);
             }}
           />
           <QuickPresets
@@ -913,6 +929,7 @@ export function CvEditor({
             onChange={(t) => {
               setTheme(t);
               setActiveTplName(null);
+              setActiveTplId(null);
             }}
             onCustomize={openCustomize}
           />

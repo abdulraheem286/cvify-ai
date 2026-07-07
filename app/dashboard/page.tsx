@@ -15,7 +15,7 @@ import { getTemplate } from "@/app/templates";
 import type { EditorForm } from "@/app/components/CvEditor";
 import type { CVResult } from "@/app/types";
 import type { MyTemplate } from "@/app/lib/templateStore";
-import { IconPlus, IconTrash, IconText, IconTools, IconUser, IconHistory, IconBookmark } from "@/app/components/icons";
+import { IconPlus, IconTrash, IconText, IconTools, IconUser, IconHistory, IconBookmark, IconEdit } from "@/app/components/icons";
 
 function ago(ts: number): string {
   if (!ts) return "";
@@ -369,16 +369,29 @@ function TemplatesView() {
                 <div className="p-4">
                   <p className="truncate font-semibold text-zinc-900">{t.name}</p>
                   <p className="truncate text-xs text-zinc-500">{getTemplate(t.layout).name} layout</p>
-                  <Link
-                    href={`/build?tpl=${t.id}`}
-                    className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-700"
-                  >
-                    Create CV →
-                  </Link>
-                  <div className="mt-2 flex items-center justify-end gap-3 border-t border-zinc-100 pt-2 text-xs">
+
+                  {/* Primary actions: use it, or edit its style */}
+                  <div className="mt-3 flex items-center gap-2">
+                    <Link
+                      href={`/build?tpl=${t.id}`}
+                      className="flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-700"
+                    >
+                      Create CV →
+                    </Link>
+                    <Link
+                      href={`/customize?tpl=${t.id}`}
+                      title="Edit this template's colours, fonts & layout"
+                      className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-300 bg-white px-3 py-2.5 text-sm font-semibold text-zinc-700 transition-colors hover:border-zinc-400 hover:bg-zinc-50"
+                    >
+                      <IconEdit className="h-4 w-4" /> Edit
+                    </Link>
+                  </div>
+
+                  {/* Secondary: rename / delete */}
+                  <div className="mt-2.5 flex items-center justify-end gap-4 border-t border-zinc-100 pt-2.5 text-xs">
                     <button type="button" onClick={() => setRenaming(t)} className="font-medium text-zinc-500 hover:text-zinc-800">Rename</button>
-                    <button type="button" onClick={() => setDeleting(t)} className="text-zinc-400 hover:text-red-600" title="Delete">
-                      <IconTrash className="h-4 w-4" />
+                    <button type="button" onClick={() => setDeleting(t)} className="inline-flex items-center gap-1 text-zinc-500 hover:text-red-600" title="Delete">
+                      <IconTrash className="h-4 w-4" /> Delete
                     </button>
                   </div>
                 </div>

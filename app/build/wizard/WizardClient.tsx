@@ -6,7 +6,8 @@ import { AppHeader } from "@/app/components/AppHeader";
 import { CvEditor, EMPTY_FORM, type EditorForm } from "@/app/components/CvEditor";
 import { TemplateGallery } from "@/app/components/TemplateGallery";
 import { useSeedTemplate } from "@/app/lib/useSeedTemplate";
-import { DEFAULT_TEMPLATE, type TemplateId, type Theme } from "@/app/templates";
+import type { MyTemplate } from "@/app/lib/templateStore";
+import { DEFAULT_TEMPLATE, type TemplateId } from "@/app/templates";
 import { IconField, nameError } from "@/app/components/fields";
 import { PeriodField } from "@/app/components/PeriodField";
 import { aiSummary } from "@/app/lib/assist";
@@ -42,7 +43,7 @@ export default function WizardClient() {
   const [stepIndex, setStepIndex] = useState(0);
   const [phase, setPhase] = useState<"wizard" | "template" | "edit">("wizard");
   const [template, setTemplate] = useState<TemplateId>(DEFAULT_TEMPLATE);
-  const [seedTheme, setSeedTheme] = useState<Theme | undefined>(undefined);
+  const [seedTpl, setSeedTpl] = useState<MyTemplate | undefined>(undefined);
   const [seeded, setSeeded] = useState(false);
   const [nameErr, setNameErr] = useState("");
   const [aiBusy, setAiBusy] = useState(false);
@@ -52,7 +53,7 @@ export default function WizardClient() {
   useEffect(() => {
     if (seed && !seeded) {
       setTemplate(seed.layout);
-      setSeedTheme(seed.theme);
+      setSeedTpl(seed);
       setSeeded(true);
     }
   }, [seed, seeded]);
@@ -124,7 +125,9 @@ export default function WizardClient() {
         <CvEditor
           initial={form}
           initialTemplate={template}
-          initialTheme={seedTheme}
+          initialTheme={seedTpl?.theme}
+          savedTemplateId={seedTpl?.id}
+          savedTemplateName={seedTpl?.name}
           onBack={() => setPhase(seeded ? "wizard" : "template")}
           backLabel={seeded ? "Back to the wizard" : "Back to templates"}
         />
@@ -138,12 +141,12 @@ export default function WizardClient() {
         <TemplateGallery
           onSelect={(id) => {
             setTemplate(id);
-            setSeedTheme(undefined);
+            setSeedTpl(undefined);
             setPhase("edit");
           }}
           onSelectTemplate={(t) => {
             setTemplate(t.layout);
-            setSeedTheme(t.theme);
+            setSeedTpl(t);
             setPhase("edit");
           }}
           onBack={() => {
