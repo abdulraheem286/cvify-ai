@@ -46,7 +46,6 @@ import {
   IconGrip,
   IconExpand,
   IconX,
-  IconFileText,
 } from "./icons";
 
 export type ExpEntry = { role: string; company: string; period: string; bullets: string };
@@ -318,9 +317,6 @@ export function CvEditor({
   const [cloudSavedAt, setCloudSavedAt] = useState<number | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [downloading, setDownloading] = useState(false);
-  const [docxBusy, setDocxBusy] = useState(false);
-  const [downloadOpen, setDownloadOpen] = useState(false);
-  const downloadRef = useRef<HTMLDivElement>(null);
   const [aiBusy, setAiBusy] = useState<string | null>(null); // which AI action is running
   const [aiError, setAiError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
@@ -398,16 +394,6 @@ export function CvEditor({
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [previewOpen]);
-
-  // Close the download menu when clicking outside it.
-  useEffect(() => {
-    if (!downloadOpen) return;
-    const onDown = (e: MouseEvent) => {
-      if (downloadRef.current && !downloadRef.current.contains(e.target as Node)) setDownloadOpen(false);
-    };
-    window.addEventListener("mousedown", onDown);
-    return () => window.removeEventListener("mousedown", onDown);
-  }, [downloadOpen]);
 
   // Auto-save the editor state to the browser (debounced). Skips the first mount.
   useEffect(() => {
@@ -715,29 +701,6 @@ export function CvEditor({
     }
   }
 
-  async function handleDownloadDocx() {
-    setDocxBusy(true);
-    const name = exportCv.fullName.replace(/\s+/g, "-") || "cv";
-    try {
-      // Build the .docx in the browser (code-split: only loads on first use).
-      const { buildCvDocx } = await import("@/app/lib/docxBuild");
-      const blob = await buildCvDocx(exportCv, theme, template);
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `${name}.docx`;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(url);
-    } catch (err) {
-      console.error("DOCX download failed:", err);
-      setAiError("Couldn't create the Word file. Please try again.");
-    } finally {
-      setDocxBusy(false);
-    }
-  }
-
   async function handleCloudSave() {
     if (!user) return;
     setCloudSaving(true);
@@ -933,9 +896,6 @@ export function CvEditor({
             }}
             onCustomize={openCustomize}
           />
-          {/* Word (.docx) export is ON HOLD — Download is PDF-only for now.
-              The docx code (handleDownloadDocx, app/lib/docxBuild.ts, the menu)
-              is kept so it can be re-enabled quickly. */}
           <button
             type="button"
             onClick={handleDownload}
