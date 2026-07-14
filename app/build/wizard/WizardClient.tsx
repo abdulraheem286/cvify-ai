@@ -81,7 +81,7 @@ export default function WizardClient() {
   }
 
   // ---- experience list helpers ----
-  const addJob = () => setForm((p) => ({ ...p, experience: [...p.experience, { role: "", company: "", period: "", bullets: "" }] }));
+  const addJob = () => setForm((p) => ({ ...p, experience: [...p.experience, { role: "", company: "", period: "", bullets: "", employmentType: "", workMode: "" }] }));
   const removeJob = (i: number) => setForm((p) => ({ ...p, experience: p.experience.filter((_, idx) => idx !== i) }));
   const setJob = (i: number, field: "role" | "company" | "period" | "bullets", v: string) =>
     setForm((p) => {

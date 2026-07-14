@@ -16,6 +16,8 @@ export type CVResult = {
     company: string;
     period: string;
     bullets: string[];
+    employmentType?: string; // e.g. "Full-time" (optional)
+    workMode?: string; // "Remote" | "Hybrid" | "On-site" (optional)
   }[];
   education: { degree: string; institution: string; period: string }[];
   skills: string[];

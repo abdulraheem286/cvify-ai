@@ -2,7 +2,7 @@ import type { CSSProperties } from "react";
 import type { CVResult } from "@/app/types";
 import { themeVars, DEFAULT_THEME, type Theme, type DatePlacement } from "./theme";
 import { CustomItems } from "./CustomItems";
-import { InlineDate, StackedDate } from "./EntryDate";
+import { InlineDate, StackedDate, WorkTag } from "./EntryDate";
 import { renderRich, renderInline } from "../lib/richtext";
 
 // Bold: oversized expressive name, primary highlight on the title — designer energy.
@@ -39,8 +39,8 @@ export function BoldTemplate({ cv, domId = "cv-document", theme = DEFAULT_THEME,
           <Section title="Experience">
             {cv.experience.map((job, i) => (
               <div key={i} className="mb-4">
-                <h3 className="font-bold text-zinc-900">{job.role}{job.company && <span className="font-normal text-zinc-600"> · {job.company}</span>}<InlineDate period={job.period} placement={datePlacement} className="text-zinc-500" /></h3>
-                <StackedDate period={job.period} placement={datePlacement} className="text-zinc-500" />
+                <h3 className="font-bold text-zinc-900">{job.role}<WorkTag mode={job.workMode} className="text-zinc-500" />{job.company && <span className="font-normal text-zinc-600"> · {job.company}</span>}<InlineDate period={job.period} type={job.employmentType} placement={datePlacement} className="text-zinc-500" /></h3>
+                <StackedDate period={job.period} type={job.employmentType} placement={datePlacement} className="text-zinc-500" />
                 <ul className="mt-1.5 list-disc space-y-1 pl-5 text-sm text-zinc-700">
                   {job.bullets?.map((b, j) => <li key={j}>{renderInline(b)}</li>)}
                 </ul>

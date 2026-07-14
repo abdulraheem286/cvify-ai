@@ -48,7 +48,11 @@ import {
   IconX,
 } from "./icons";
 
-export type ExpEntry = { role: string; company: string; period: string; bullets: string };
+export type ExpEntry = { role: string; company: string; period: string; bullets: string; employmentType: string; workMode: string };
+
+// Job-type dropdown options (stored as their display label).
+export const EMPLOYMENT_TYPES = ["Full-time", "Part-time", "Contract", "Internship", "Freelance", "Self-employed", "Temporary"];
+export const WORK_MODES = ["Remote", "Hybrid", "On-site"];
 export type EduEntry = { degree: string; institution: string; period: string };
 export type LangEntry = { name: string; level: string };
 export type CertEntry = { name: string; issuer: string; year: string };
@@ -85,7 +89,7 @@ export const EMPTY_FORM: EditorForm = {
   website: "",
   linkedin: "",
   summary: "",
-  experience: [{ role: "", company: "", period: "", bullets: "" }],
+  experience: [{ role: "", company: "", period: "", bullets: "", employmentType: "", workMode: "" }],
   education: [{ degree: "", institution: "", period: "" }],
   skills: "",
   languages: [{ name: "", level: "" }],
@@ -112,8 +116,10 @@ export function cvToForm(cv: CVResult): EditorForm {
           company: e.company ?? "",
           period: e.period ?? "",
           bullets: (e.bullets ?? []).join("\n"),
+          employmentType: e.employmentType ?? "",
+          workMode: e.workMode ?? "",
         }))
-      : [{ role: "", company: "", period: "", bullets: "" }],
+      : [{ role: "", company: "", period: "", bullets: "", employmentType: "", workMode: "" }],
     education: cv.education?.length
       ? cv.education.map((e) => ({ degree: e.degree ?? "", institution: e.institution ?? "", period: e.period ?? "" }))
       : [{ degree: "", institution: "", period: "" }],
@@ -153,12 +159,15 @@ const PH = {
       company: "Company Name",
       period: "2022 — Present",
       bullets: ["A key achievement or responsibility.", "Another accomplishment with measurable impact."],
+      workMode: "Remote",
+      employmentType: "Full-time",
     },
     {
       role: "Previous Role",
       company: "Earlier Company",
       period: "2019 — 2022",
       bullets: ["Something you delivered or improved."],
+      employmentType: "Contract",
     },
   ],
   education: [{ degree: "Your Degree", institution: "University / School", period: "2015 — 2019" }],
@@ -177,6 +186,8 @@ export function formToCv(form: EditorForm, hidden: Record<string, boolean>, ph =
       company: x.company,
       period: x.period,
       bullets: x.bullets.split("\n").map((b) => b.trim().replace(/^[-*]\s+/, "")).filter(Boolean),
+      employmentType: x.employmentType || undefined,
+      workMode: x.workMode || undefined,
     }));
   const edu = form.education.filter((x) => x.degree || x.institution);
   const skills = form.skills.split(",").map((s) => s.trim()).filter(Boolean);
@@ -600,7 +611,7 @@ export function CvEditor({
       return {
         ...p,
         customSections: cs,
-        experience: experience.length ? experience : [{ role: "", company: "", period: "", bullets: "" }],
+        experience: experience.length ? experience : [{ role: "", company: "", period: "", bullets: "", employmentType: "", workMode: "" }],
       };
     });
     setOpen((p) => ({ ...p, customSections: true }));
@@ -1052,6 +1063,10 @@ export function CvEditor({
                     <PlainInput label="Company" value={exp.company} onChange={(v) => updateList("experience", i, "company", v)} placeholder="TechCorp" />
                   </div>
                   <PeriodField label="Period" value={exp.period} onChange={(v) => updateList("experience", i, "period", v)} />
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <SelectField label="Employment type" value={exp.employmentType} onChange={(v) => updateList("experience", i, "employmentType", v)} options={EMPLOYMENT_TYPES} placeholder="Type (optional)" />
+                    <SelectField label="Work mode" value={exp.workMode} onChange={(v) => updateList("experience", i, "workMode", v)} options={WORK_MODES} placeholder="Work mode (optional)" />
+                  </div>
                   <RichTextarea
                     label="Bullet points (one per line)"
                     value={exp.bullets}
@@ -1084,7 +1099,7 @@ export function CvEditor({
                   )}
                 </div>
               ))}
-              <AddBtn onClick={() => addItem("experience", { role: "", company: "", period: "", bullets: "" })}>Add job</AddBtn>
+              <AddBtn onClick={() => addItem("experience", { role: "", company: "", period: "", bullets: "", employmentType: "", workMode: "" })}>Add job</AddBtn>
             </Panel>
 
             {showEarlierHint && (
@@ -1490,6 +1505,38 @@ function PlainInput({
         placeholder={placeholder}
         className="w-full rounded-lg border border-zinc-300 bg-white px-4 py-2.5 text-zinc-900 placeholder-zinc-400 outline-none transition-colors hover:border-zinc-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
       />
+    </div>
+  );
+}
+
+function SelectField({
+  label,
+  value,
+  onChange,
+  options,
+  placeholder,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  options: string[];
+  placeholder?: string;
+}) {
+  return (
+    <div>
+      <label className="mb-1.5 block text-sm font-medium text-zinc-700">{label}</label>
+      <select
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className={`w-full rounded-lg border border-zinc-300 bg-white px-4 py-2.5 outline-none transition-colors hover:border-zinc-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 ${value ? "text-zinc-900" : "text-zinc-400"}`}
+      >
+        <option value="">{placeholder || "Select…"}</option>
+        {options.map((o) => (
+          <option key={o} value={o} className="text-zinc-900">
+            {o}
+          </option>
+        ))}
+      </select>
     </div>
   );
 }

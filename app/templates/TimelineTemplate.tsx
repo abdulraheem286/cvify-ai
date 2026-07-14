@@ -2,7 +2,7 @@ import type { CSSProperties } from "react";
 import type { CVResult } from "@/app/types";
 import { themeVars, DEFAULT_THEME, type Theme, type DatePlacement } from "./theme";
 import { CustomItems } from "./CustomItems";
-import { InlineDate, StackedDate } from "./EntryDate";
+import { InlineDate, StackedDate, WorkTag } from "./EntryDate";
 import { renderRich, renderInline } from "../lib/richtext";
 
 // Timeline: experience rendered as a vertical timeline with primary dots + rail.
@@ -38,9 +38,9 @@ export function TimelineTemplate({ cv, domId = "cv-document", theme = DEFAULT_TH
               {cv.experience.map((job, i) => (
                 <div key={i} className="relative mb-5 last:mb-0">
                   <span className="absolute -left-[31px] top-1 h-3 w-3 rounded-full bg-[var(--primary)] ring-4 ring-[var(--bg)]" />
-                  <h3 className="font-semibold text-zinc-900">{job.role}</h3>
-                  {job.company && <p className="text-sm font-medium text-[var(--primary)]">{job.company}<InlineDate period={job.period} placement={datePlacement} className="text-zinc-500" /></p>}
-                  <StackedDate period={job.period} placement={datePlacement} className="text-zinc-500" />
+                  <h3 className="font-semibold text-zinc-900">{job.role}<WorkTag mode={job.workMode} className="text-zinc-500" /></h3>
+                  {job.company && <p className="text-sm font-medium text-[var(--primary)]">{job.company}<InlineDate period={job.period} type={job.employmentType} placement={datePlacement} className="text-zinc-500" /></p>}
+                  <StackedDate period={job.period} type={job.employmentType} placement={datePlacement} className="text-zinc-500" />
                   <ul className="mt-1.5 list-disc space-y-1 pl-5 text-sm text-zinc-700">
                     {job.bullets?.map((b, j) => <li key={j}>{renderInline(b)}</li>)}
                   </ul>
