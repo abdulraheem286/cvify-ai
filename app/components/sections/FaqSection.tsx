@@ -10,7 +10,7 @@ export function FaqSection({ showHead = true, columns = 1 }: { showHead?: boolea
   const topGap = showHead ? " mt-12" : "";
   return (
     <section id="faq" className="border-t border-zinc-200 bg-white">
-      <div className={`mx-auto site-px py-20 ${two ? "max-w-5xl" : "max-w-3xl"}`}>
+      <div className={`mx-auto site-px py-20 ${two ? "max-w-6xl" : "max-w-3xl"}`}>
         {showHead && (
           <SectionHead eyebrow="FAQ" title="Frequently asked questions" subtitle="Answers to questions about building, optimizing, and exporting your resume." />
         )}
