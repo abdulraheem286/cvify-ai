@@ -4,10 +4,9 @@ import { useState } from "react";
 import Link from "next/link";
 
 const LINKS: [string, string][] = [
-  ["Features", "/#features"],
-  ["Templates", "/#templates"],
-  ["How it works", "/#how"],
-  ["FAQ", "/#faq"],
+  ["Features", "/features"],
+  ["Templates", "/templates"],
+  ["FAQ", "/faq"],
 ];
 
 // Hamburger menu for the marketing header on small screens (the inline nav is

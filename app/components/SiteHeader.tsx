@@ -13,10 +13,9 @@ export function SiteHeader() {
           </Link>
         </div>
         <nav className="hidden items-center gap-8 text-sm font-medium text-zinc-600 sm:flex">
-          <Link href="/#features" className="transition-colors hover:text-zinc-900">Features</Link>
-          <Link href="/#templates" className="transition-colors hover:text-zinc-900">Templates</Link>
-          <Link href="/#how" className="transition-colors hover:text-zinc-900">How it works</Link>
-          <Link href="/#faq" className="transition-colors hover:text-zinc-900">FAQ</Link>
+          <Link href="/features" className="transition-colors hover:text-zinc-900">Features</Link>
+          <Link href="/templates" className="transition-colors hover:text-zinc-900">Templates</Link>
+          <Link href="/faq" className="transition-colors hover:text-zinc-900">FAQ</Link>
         </nav>
         <HeaderAuth />
       </div>

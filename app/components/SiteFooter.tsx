@@ -28,15 +28,14 @@ export function SiteFooter() {
               ["Guided wizard", "/build/wizard"],
               ["Manual builder", "/build/manual"],
               ["Import CV", "/build/import"],
-              ["Templates", "/#templates"],
+              ["Templates", "/templates"],
             ]}
           />
           <FooterCol
             title="Learn"
             links={[
-              ["Features", "/#features"],
-              ["How it works", "/#how"],
-              ["FAQ", "/#faq"],
+              ["Features", "/features"],
+              ["FAQ", "/faq"],
             ]}
           />
           <FooterCol title="Get started" links={[["Create my CV", "/build"]]} />
