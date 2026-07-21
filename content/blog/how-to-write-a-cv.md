@@ -5,6 +5,7 @@ date: "2026-07-15"
 author: "Abdul Rahim"
 tags: ["CV Tips", "Guide"]
 cover: "✍️"
+image: "/blog/how-to-write-a-cv.jpg"
 ---
 
 A good CV (curriculum vitae) is simply a clear summary of your work, skills, and results. It is the document that gets you the interview, so every line should earn its place. This guide shows you how to write a CV from scratch, section by section, with short examples you can copy the shape of.

@@ -5,6 +5,7 @@ date: "2026-07-18"
 author: "Abdul Rahim"
 tags: ["CV Basics", "Resume"]
 cover: "📄"
+image: "/blog/cv-vs-resume.jpg"
 ---
 
 People often use the words "CV" and "resume" as if they mean the same thing. Sometimes they do, and sometimes they do not. This guide explains the CV vs resume question in plain language, so you know exactly which document to send and when.

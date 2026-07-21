@@ -5,6 +5,7 @@ date: "2026-07-11"
 author: "Abdul Rahim"
 tags: ["ATS", "CV Tips"]
 cover: "🤖"
+image: "/blog/ats-cv-format.jpg"
 ---
 
 Before a human ever reads your CV, a piece of software often reads it first. That software is called an ATS, and if it cannot read your file properly, your application can get filtered out. The good news: the right ATS CV format is simple, and this guide walks you through it step by step.
