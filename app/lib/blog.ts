@@ -23,6 +23,7 @@ export type PostMeta = {
   author: string;
   tags: string[];
   cover: string; // emoji shown on cards / header
+  image?: string; // optional thumbnail image path (falls back to the emoji cover)
   readingTime: number; // minutes
 };
 
@@ -45,6 +46,7 @@ function fileToMeta(fileName: string): PostMeta {
     author: String(data.author ?? "CVify AI Team"),
     tags: Array.isArray(data.tags) ? data.tags.map(String) : [],
     cover: String(data.cover ?? "📝"),
+    image: data.image ? String(data.image) : undefined,
     readingTime: readingTimeOf(content),
   };
 }
