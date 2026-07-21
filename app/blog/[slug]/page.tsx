@@ -90,15 +90,17 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
       <SiteHeader />
       <main className="flex-1">
         <LikeProvider slug={post.slug}>
-          {/* Article header */}
-          <header className="bg-gradient-to-b from-blue-50/80 via-white to-white">
-            <div className="mx-auto max-w-3xl site-px pb-6 pt-8">
-              <Link href="/blog" className="text-sm font-medium text-blue-600 transition-colors hover:text-blue-700">
-                ← Back to all articles
-              </Link>
-              <div className="mt-5 text-center">
+          {/* Two-column layout from the very top: article on the left, sticky sidebar on the right */}
+          <div className="mx-auto max-w-6xl site-px py-10">
+            <div className="grid gap-10 lg:grid-cols-[1fr_320px]">
+              {/* LEFT — full article */}
+              <div className="min-w-0">
+                <Link href="/blog" className="text-sm font-medium text-blue-600 transition-colors hover:text-blue-700">
+                  ← Back to all articles
+                </Link>
+
                 {post.tags.length > 0 && (
-                  <div className="flex flex-wrap justify-center gap-2">
+                  <div className="mt-6 flex flex-wrap gap-2">
                     {post.tags.map((t) => (
                       <span key={t} className="rounded-full border border-blue-100 bg-blue-50 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider text-blue-600">
                         {t}
@@ -106,55 +108,40 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                     ))}
                   </div>
                 )}
-                <h1 className="mx-auto mt-4 max-w-2xl text-3xl font-bold leading-[1.15] tracking-tight sm:text-4xl">{post.title}</h1>
-                <div className="mt-5 flex items-center justify-center gap-3 text-sm text-zinc-500">
-                  <AuthorAvatar author={author} size={36} />
-                  <span className="font-medium text-zinc-700">{author.name}</span>
-                  <span aria-hidden>·</span>
-                  <span>{formatDate(post.date)}</span>
-                  <span aria-hidden>·</span>
-                  <span>{post.readingTime} min read</span>
-                </div>
-                <div className="mt-5 flex justify-center">
+
+                <h1 className="mt-4 text-3xl font-bold leading-[1.15] tracking-tight sm:text-4xl">{post.title}</h1>
+
+                {/* Meta row — author info left, Like right */}
+                <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-b border-zinc-200 pb-6">
+                  <div className="flex items-center gap-3 text-sm text-zinc-500">
+                    <AuthorAvatar author={author} size={36} />
+                    <span className="font-medium text-zinc-700">{author.name}</span>
+                    <span aria-hidden>·</span>
+                    <span>{formatDate(post.date)}</span>
+                    <span aria-hidden>·</span>
+                    <span>{post.readingTime} min read</span>
+                  </div>
                   <LikeButton variant="inline" />
                 </div>
-              </div>
-            </div>
-          </header>
 
-          {/* Hero image */}
-          {post.image && (
-            <div className="mx-auto max-w-4xl site-px pt-6">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={post.image} alt={post.title} className="aspect-[16/9] w-full rounded-2xl border border-zinc-200 object-cover shadow-sm" />
-            </div>
-          )}
+                {post.image && (
+                  <div className="mt-8">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={post.image} alt={post.title} className="aspect-[16/9] w-full rounded-2xl border border-zinc-200 object-cover shadow-sm" />
+                  </div>
+                )}
 
-          {/* Two-column body: article + sticky sidebar */}
-          <div className="mx-auto max-w-6xl site-px py-12">
-            <div className="grid gap-10 lg:grid-cols-[1fr_320px]">
-              {/* LEFT — article, share, likes, comments */}
-              <div className="min-w-0">
                 <div
-                  className="prose prose-zinc max-w-none prose-headings:font-bold prose-headings:tracking-tight prose-a:font-medium prose-a:text-blue-600 hover:prose-a:text-blue-700 prose-strong:text-zinc-900 prose-img:rounded-xl prose-img:border prose-img:border-zinc-200"
+                  className="prose prose-zinc mt-8 max-w-none prose-headings:font-bold prose-headings:tracking-tight prose-a:font-medium prose-a:text-blue-600 hover:prose-a:text-blue-700 prose-strong:text-zinc-900 prose-img:rounded-xl prose-img:border prose-img:border-zinc-200"
                   dangerouslySetInnerHTML={{ __html: post.html }}
                 />
 
                 <PostFaqSection faqs={post.faqs} />
-
                 <ShareButtons url={url} title={post.title} />
-                <LikeButton variant="block" />
-
-                <div className="mt-10">
-                  <Link href="/blog" className="text-sm font-medium text-blue-600 transition-colors hover:text-blue-700">
-                    ← Back to all articles
-                  </Link>
-                </div>
-
                 <BlogComments slug={post.slug} />
               </div>
 
-              {/* RIGHT — sticky sidebar: author info + recent posts */}
+              {/* RIGHT — sticky sidebar from the top */}
               <aside className="space-y-8 lg:sticky lg:top-24 lg:self-start">
                 <SidebarAuthor author={author} />
                 <RecentPosts posts={recent} />

@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { formatDate, type PostMeta } from "../../lib/blog";
+import { formatDate } from "../../lib/blogFormat";
+import type { PostMeta } from "../../lib/blog";
 
 // A blog post card — used on the /blog index and the "Keep reading" grid.
 export function PostCard({ post }: { post: PostMeta }) {
