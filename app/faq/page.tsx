@@ -34,7 +34,7 @@ export default function FaqPage() {
           title="Frequently asked questions"
           subtitle="Answers to questions about building, optimizing, and exporting your resume with CVify AI."
         />
-        <FaqSection showHead={false} />
+        <FaqSection showHead={false} columns={2} />
         <CtaBand />
       </main>
       <SiteFooter />
