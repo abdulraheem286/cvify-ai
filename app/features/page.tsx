@@ -8,7 +8,7 @@ import { FeaturesSection } from "../components/sections/FeaturesSection";
 export const metadata: Metadata = {
   title: "Features — CVify AI | Free AI Resume & CV Builder",
   description:
-    "See what CVify AI does: an AI that writes and improves your CV, 18 distinct templates, full color and font customization, custom sections, auto-save, and an ATS-ready text PDF — all free.",
+    "See what CVify AI does: an AI that writes and improves your CV, distinct professional templates, full color and font customization, custom sections, auto-save, and an ATS-ready text PDF — all free.",
   alternates: { canonical: "/features" },
 };
 

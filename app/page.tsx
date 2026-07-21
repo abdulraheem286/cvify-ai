@@ -74,7 +74,7 @@ export default function Home() {
               </h1>
               <p className="mt-4 max-w-md text-base text-zinc-600">
                 CVify AI turns simple notes into a professional resume. Edit every detail, choose from
-                18 templates, and land more interviews.
+                professional templates, and land more interviews.
               </p>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <Link href="/build" className="rounded-xl bg-blue-600 px-6 py-3 text-center text-base font-semibold text-white shadow-lg shadow-blue-600/20 transition-all hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-xl hover:shadow-blue-600/25">
@@ -86,7 +86,7 @@ export default function Home() {
               </div>
               <div className="mt-8 flex flex-wrap gap-x-5 gap-y-2 text-sm text-zinc-500">
                 <TrustItem>Free forever</TrustItem>
-                <TrustItem>18 templates</TrustItem>
+                <TrustItem>Clean templates</TrustItem>
                 <TrustItem>ATS-ready PDF</TrustItem>
               </div>
             </Reveal>
@@ -110,7 +110,7 @@ export default function Home() {
         <section className="border-b border-zinc-200 bg-white">
           <div className="mx-auto grid max-w-[1920px] gap-5 site-px py-14 sm:grid-cols-2 lg:grid-cols-4">
             <Stat value="100%" label="Free to use" />
-            <Stat value="18" label="Distinct templates" />
+            <Stat value="∞" label="CVs you can make" />
             <Stat value="AI" label="Writes & improves it" />
             <Stat value="ATS" label="Real text PDF" />
           </div>
@@ -184,13 +184,13 @@ export default function Home() {
                 Edit everything, switch styles instantly
               </h2>
               <p className="mt-4 text-zinc-600">
-                Fine-tune every section in the editor, then flip between 18 templates and recolor or
+                Fine-tune every section in the editor, then flip between templates and recolor or
                 restyle in a click — your content stays exactly where it is.
               </p>
               <ul className="mt-6 space-y-2 text-sm text-zinc-700">
                 <Check>Add, remove, and reorder any section</Check>
                 <Check>Live preview of the finished CV</Check>
-                <Check>18 templates plus full color and font control</Check>
+                <Check>Multiple templates plus full color and font control</Check>
               </ul>
               <Link href="/build/manual" className="mt-8 inline-block rounded-xl bg-blue-600 px-5 py-2.5 font-semibold text-white shadow-sm transition-colors hover:bg-blue-700">
                 Build it manually →

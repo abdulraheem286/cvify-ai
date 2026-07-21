@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="500" viewBox="0 0 1500 500" role="img" aria-label="CVify AI X header">
+  <defs>
+    <linearGradient id="ai" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#4053ee"/>
+      <stop offset="1" stop-color="#6366f1"/>
+    </linearGradient>
+    <linearGradient id="card" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#4053ee"/>
+      <stop offset="1" stop-color="#6366f1"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.7" cy="0.45" r="0.6">
+      <stop offset="0" stop-color="#4053ee" stop-opacity="0.16"/>
+      <stop offset="1" stop-color="#4053ee" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="cardShadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="18" stdDeviation="26" flood-color="#2233aa" flood-opacity="0.28"/>
+    </filter>
+    <style>
+      .wm  { font-family: Inter, system-ui, Arial, sans-serif; font-weight: 800; }
+      .tag { font-family: Inter, system-ui, Arial, sans-serif; font-weight: 600; }
+      .url { font-family: Inter, system-ui, Arial, sans-serif; font-weight: 700; letter-spacing: .04em; }
+    </style>
+  </defs>
+
+  <rect width="1500" height="500" fill="#ffffff"/>
+  <rect width="1500" height="500" fill="url(#glow)"/>
+  <rect x="0" y="0" width="1500" height="7" fill="url(#ai)"/>
+
+  <g transform="translate(140,190)">
+    <text class="wm" font-size="82" fill="#18181b">CVify <tspan fill="url(#ai)">AI</tspan></text>
+    <text class="tag" x="2" y="70" font-size="32" fill="#52525b">Build a job-ready CV in minutes. 18 templates. ATS-ready PDF.</text>
+    <g transform="translate(2,118)">
+      <circle cx="9" cy="-9" r="9" fill="#4053ee"/>
+      <text class="url" x="30" y="0" font-size="28" fill="#4053ee">cvifyai.com</text>
+    </g>
+  </g>
+
+  <g filter="url(#cardShadow)" transform="translate(1090,110) rotate(4)">
+    <rect x="0" y="0" width="300" height="290" rx="20" fill="#ffffff" stroke="#eef0fb"/>
+    <rect x="0" y="0" width="300" height="72" rx="20" fill="url(#card)"/>
+    <rect x="0" y="42" width="300" height="30" fill="url(#card)"/>
+    <circle cx="46" cy="122" r="22" fill="#c7ccff"/>
+    <rect x="82" y="108" width="120" height="14" rx="7" fill="#3340c9"/>
+    <rect x="82" y="130" width="80" height="10" rx="5" fill="#c7ccff"/>
+    <rect x="30" y="180" width="240" height="10" rx="5" fill="#e7e9f7"/>
+    <rect x="30" y="202" width="240" height="10" rx="5" fill="#e7e9f7"/>
+    <rect x="30" y="224" width="160" height="10" rx="5" fill="#e7e9f7"/>
+    <rect x="30" y="252" width="240" height="10" rx="5" fill="#e7e9f7"/>
+  </g>
+</svg>

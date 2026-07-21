@@ -2,7 +2,7 @@
 
 // A themed month/year period picker that reads and writes the same free-text
 // string the rest of the app already stores (e.g. "Jan 2020 – Present"). This
-// keeps CVResult, all 18 templates and careerYears() untouched — it only changes
+// keeps CVResult, all templates and careerYears() untouched — it only changes
 // how the user enters the value.
 
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];

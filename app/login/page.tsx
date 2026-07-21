@@ -221,12 +221,12 @@ function LoginInner() {
           <div className="relative z-10">
             <h2 className="text-3xl font-bold leading-tight">Build a CV that gets you hired</h2>
             <p className="mt-3 max-w-sm text-blue-100">
-              Turn rough notes into a polished, professional CV in minutes — 18 templates, AI writing, and an instant
+              Turn rough notes into a polished, professional CV in minutes — professional templates, AI writing, and an instant
               PDF download.
             </p>
             <div className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-sm font-medium text-blue-100">
               <span className="inline-flex items-center gap-1.5">✓ Free forever</span>
-              <span className="inline-flex items-center gap-1.5">✓ 18 templates</span>
+              <span className="inline-flex items-center gap-1.5">✓ Professional templates</span>
               <span className="inline-flex items-center gap-1.5">✓ ATS-ready PDF</span>
             </div>
           </div>

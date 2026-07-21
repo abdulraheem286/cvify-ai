@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="820" height="360" viewBox="0 0 820 360" role="img" aria-label="CVify AI Facebook cover">
+  <defs>
+    <linearGradient id="ai" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#4053ee"/>
+      <stop offset="1" stop-color="#6366f1"/>
+    </linearGradient>
+    <linearGradient id="card" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#4053ee"/>
+      <stop offset="1" stop-color="#6366f1"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.72" cy="0.45" r="0.6">
+      <stop offset="0" stop-color="#4053ee" stop-opacity="0.16"/>
+      <stop offset="1" stop-color="#4053ee" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="cardShadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="12" stdDeviation="18" flood-color="#2233aa" flood-opacity="0.28"/>
+    </filter>
+    <style>
+      .wm  { font-family: Inter, system-ui, Arial, sans-serif; font-weight: 800; }
+      .tag { font-family: Inter, system-ui, Arial, sans-serif; font-weight: 600; }
+      .url { font-family: Inter, system-ui, Arial, sans-serif; font-weight: 700; letter-spacing: .04em; }
+    </style>
+  </defs>
+
+  <rect width="820" height="360" fill="#ffffff"/>
+  <rect width="820" height="360" fill="url(#glow)"/>
+  <rect x="0" y="0" width="820" height="5" fill="url(#ai)"/>
+
+  <!-- content kept centered; FB crops edges on mobile -->
+  <g transform="translate(70,140)">
+    <text class="wm" font-size="52" fill="#18181b">CVify <tspan fill="url(#ai)">AI</tspan></text>
+    <text class="tag" x="2" y="46" font-size="21" fill="#52525b">Free AI resume &amp; CV builder.</text>
+    <g transform="translate(2,80)">
+      <circle cx="6" cy="-6" r="6" fill="#4053ee"/>
+      <text class="url" x="20" y="0" font-size="19" fill="#4053ee">cvifyai.com</text>
+    </g>
+  </g>
+
+  <g filter="url(#cardShadow)" transform="translate(590,66) rotate(4)">
+    <rect x="0" y="0" width="190" height="228" rx="16" fill="#ffffff" stroke="#eef0fb"/>
+    <rect x="0" y="0" width="190" height="50" rx="16" fill="url(#card)"/>
+    <rect x="0" y="30" width="190" height="20" fill="url(#card)"/>
+    <circle cx="32" cy="86" r="15" fill="#c7ccff"/>
+    <rect x="56" y="76" width="80" height="10" rx="5" fill="#3340c9"/>
+    <rect x="56" y="92" width="54" height="8" rx="4" fill="#c7ccff"/>
+    <rect x="22" y="128" width="146" height="8" rx="4" fill="#e7e9f7"/>
+    <rect x="22" y="146" width="146" height="8" rx="4" fill="#e7e9f7"/>
+    <rect x="22" y="164" width="100" height="8" rx="4" fill="#e7e9f7"/>
+    <rect x="22" y="188" width="146" height="8" rx="4" fill="#e7e9f7"/>
+  </g>
+</svg>

@@ -13,7 +13,7 @@ export function TemplatesSection({ cv, showHead = true }: { cv: CVResult; showHe
         {showHead && (
           <SectionHead
             eyebrow="Templates"
-            title="18 templates across professional, minimal & creative"
+            title="Templates across professional, minimal & creative"
             subtitle="Switch styles anytime without losing your content, then recolor and change fonts to make it yours."
           />
         )}

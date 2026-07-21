@@ -12,7 +12,7 @@ import {
 
 const features: { icon: ReactNode; title: string; text: string }[] = [
   { icon: <IconSparkles />, title: "AI that writes & improves", text: "Generate a summary, rewrite bullet points into achievements, and suggest skills — right inside the editor." },
-  { icon: <IconGlobe />, title: "18 distinct templates", text: "Eighteen genuinely different layouts across professional, minimal, and creative styles." },
+  { icon: <IconGlobe />, title: "Distinct templates", text: "Genuinely different layouts across professional, minimal, and creative styles." },
   { icon: <IconTools />, title: "Full customization", text: "Set colors, fonts, text size, spacing, and density in a dedicated studio — or pick a one-click preset — and save your look as a reusable template." },
   { icon: <IconText />, title: "Custom sections", text: "Add your own sections — Projects, Awards, Volunteering, Publications — and reorder everything." },
   { icon: <IconDownload />, title: "ATS-ready text PDF", text: "Download a real, selectable text PDF that applicant tracking systems can actually read." },
