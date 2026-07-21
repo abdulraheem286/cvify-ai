@@ -2,7 +2,7 @@
 title: "CV vs Resume: What's the Difference?"
 description: "CV vs resume: learn the key differences in length, detail, and purpose, plus which one to use by country and how to build the right one for free."
 date: "2026-07-18"
-author: "CVify AI Team"
+author: "Abdul Rahim"
 tags: ["CV Basics", "Resume"]
 cover: "📄"
 ---

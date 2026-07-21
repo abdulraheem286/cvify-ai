@@ -2,7 +2,7 @@
 title: "How to Write a CV: A Step-by-Step Guide (With Examples)"
 description: "Learn how to write a CV step by step: the sections to include, real before-and-after examples, formatting and length tips, and mistakes to avoid."
 date: "2026-07-15"
-author: "CVify AI Team"
+author: "Abdul Rahim"
 tags: ["CV Tips", "Guide"]
 cover: "✍️"
 ---

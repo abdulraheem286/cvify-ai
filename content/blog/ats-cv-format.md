@@ -2,7 +2,7 @@
 title: "Best CV Format to Pass ATS in 2026"
 description: "Learn the best ATS CV format for 2026. Simple rules for an ATS-friendly CV, what breaks parsing, file tips, and a checklist to get past the robots."
 date: "2026-07-11"
-author: "CVify AI Team"
+author: "Abdul Rahim"
 tags: ["ATS", "CV Tips"]
 cover: "🤖"
 ---

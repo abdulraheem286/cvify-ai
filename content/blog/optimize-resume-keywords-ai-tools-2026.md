@@ -2,7 +2,7 @@
 title: "How to Optimize Resume Keywords with AI Tools in 2026"
 description: "Learn how to optimize resume keywords with AI tools in 2026: why modern ATS software reads context over counts, plus a framework to hit an 80+ match score."
 date: "2026-07-21"
-author: "CVify AI Team"
+author: "Abdul Rahim"
 tags: ["ATS", "Keywords"]
 cover: "🔑"
 image: "/blog/optimize-resume-keywords-1.webp"
