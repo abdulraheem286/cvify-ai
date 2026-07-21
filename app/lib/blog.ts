@@ -15,6 +15,8 @@ marked.use(gfmHeadingId());
 
 const BLOG_DIR = path.join(process.cwd(), "content", "blog");
 
+export type PostFaq = { q: string; a: string };
+
 export type PostMeta = {
   slug: string;
   title: string;
@@ -24,6 +26,7 @@ export type PostMeta = {
   tags: string[];
   cover: string; // emoji shown on cards / header
   image?: string; // optional thumbnail image path (falls back to the emoji cover)
+  faqs: PostFaq[]; // optional FAQ (frontmatter) — rendered + emitted as FAQPage schema
   readingTime: number; // minutes
 };
 
@@ -47,6 +50,11 @@ function fileToMeta(fileName: string): PostMeta {
     tags: Array.isArray(data.tags) ? data.tags.map(String) : [],
     cover: String(data.cover ?? "📝"),
     image: data.image ? String(data.image) : undefined,
+    faqs: Array.isArray(data.faqs)
+      ? (data.faqs as { q?: unknown; a?: unknown }[])
+          .filter((f) => f && f.q && f.a)
+          .map((f) => ({ q: String(f.q), a: String(f.a) }))
+      : [],
     readingTime: readingTimeOf(content),
   };
 }

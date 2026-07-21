@@ -10,6 +10,7 @@ import { RecentPosts } from "../../components/blog/RecentPosts";
 import { ShareButtons } from "../../components/blog/ShareButtons";
 import { LikeProvider, LikeButton } from "../../components/blog/BlogLikes";
 import { BlogComments } from "../../components/blog/BlogComments";
+import { PostFaqSection } from "../../components/blog/PostFaq";
 import { getAllPosts, getAllSlugs, getPostBySlug, formatDate } from "../../lib/blog";
 import { getAuthor } from "../../lib/authors";
 
@@ -49,19 +50,39 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   const recent = getAllPosts().filter((p) => p.slug !== slug).slice(0, 3);
   const url = `${BASE}/blog/${post.slug}`;
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "BlogPosting",
-    headline: post.title,
-    description: post.description,
-    datePublished: post.date,
-    dateModified: post.date,
-    image: post.image ? `${BASE}${post.image}` : undefined,
-    author: { "@type": "Person", name: author.name },
-    publisher: { "@type": "Organization", name: "CVify AI", url: BASE },
-    mainEntityOfPage: { "@type": "WebPage", "@id": url },
-    keywords: post.tags.join(", "),
-  };
+  const graph: Record<string, unknown>[] = [
+    {
+      "@type": "BlogPosting",
+      headline: post.title,
+      description: post.description,
+      datePublished: post.date,
+      dateModified: post.date,
+      image: post.image ? `${BASE}${post.image}` : undefined,
+      author: { "@type": "Person", name: author.name },
+      publisher: { "@type": "Organization", name: "CVify AI", url: BASE },
+      mainEntityOfPage: { "@type": "WebPage", "@id": url },
+      keywords: post.tags.join(", "),
+    },
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: `${BASE}/` },
+        { "@type": "ListItem", position: 2, name: "Blog", item: `${BASE}/blog` },
+        { "@type": "ListItem", position: 3, name: post.title, item: url },
+      ],
+    },
+  ];
+  if (post.faqs.length > 0) {
+    graph.push({
+      "@type": "FAQPage",
+      mainEntity: post.faqs.map((f) => ({
+        "@type": "Question",
+        name: f.q,
+        acceptedAnswer: { "@type": "Answer", text: f.a },
+      })),
+    });
+  }
+  const jsonLd = { "@context": "https://schema.org", "@graph": graph };
 
   return (
     <div className="flex min-h-full flex-col bg-white text-zinc-900">
@@ -118,6 +139,8 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                   className="prose prose-zinc max-w-none prose-headings:font-bold prose-headings:tracking-tight prose-a:font-medium prose-a:text-blue-600 hover:prose-a:text-blue-700 prose-strong:text-zinc-900 prose-img:rounded-xl prose-img:border prose-img:border-zinc-200"
                   dangerouslySetInnerHTML={{ __html: post.html }}
                 />
+
+                <PostFaqSection faqs={post.faqs} />
 
                 <ShareButtons url={url} title={post.title} />
                 <LikeButton variant="block" />
