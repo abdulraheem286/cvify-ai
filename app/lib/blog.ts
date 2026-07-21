@@ -2,6 +2,11 @@ import fs from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
 import { marked } from "marked";
+import { gfmHeadingId, resetHeadings } from "marked-gfm-heading-id";
+
+// Add GitHub-style id="" slugs to headings so in-article Table-of-Contents
+// anchor links (and deep links) work.
+marked.use(gfmHeadingId());
 
 // Blog posts live as Markdown files in /content/blog. Each has YAML frontmatter:
 //   title, description, date (YYYY-MM-DD), author, tags (list), cover (emoji).
@@ -63,6 +68,7 @@ export function getPostBySlug(slug: string): Post | null {
   if (!fs.existsSync(file)) return null;
   const meta = fileToMeta(`${slug}.md`);
   const { content } = matter(fs.readFileSync(file, "utf8"));
+  resetHeadings(); // keep slug counter clean per post so ids match the TOC
   const html = marked.parse(content, { async: false }) as string;
   return { ...meta, html };
 }
