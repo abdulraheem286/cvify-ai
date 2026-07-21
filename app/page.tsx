@@ -53,7 +53,7 @@ export default function Home() {
 
       <main className="flex-1">
         {/* Hero */}
-        <section className="relative overflow-hidden border-b border-zinc-200 bg-gradient-to-b from-blue-50/80 via-white to-white">
+        <section className="relative overflow-hidden bg-gradient-to-b from-blue-50/80 via-white to-white">
           {/* soft ambient glow */}
           <div
             aria-hidden

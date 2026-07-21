@@ -2,7 +2,7 @@
 // Mirrors the homepage hero's blue gradient so the pages feel on-brand.
 export function PageHero({ eyebrow, title, subtitle }: { eyebrow: string; title: string; subtitle: string }) {
   return (
-    <section className="border-b border-zinc-200 bg-gradient-to-b from-blue-50/80 via-white to-white">
+    <section className="bg-gradient-to-b from-blue-50/80 via-white to-white">
       <div className="mx-auto max-w-[1920px] site-px py-16 text-center">
         <span className="inline-block rounded-full border border-blue-100 bg-blue-50 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider text-blue-600">
           {eyebrow}
