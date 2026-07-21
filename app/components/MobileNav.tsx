@@ -6,6 +6,7 @@ import Link from "next/link";
 const LINKS: [string, string][] = [
   ["Features", "/features"],
   ["Templates", "/templates"],
+  ["Blog", "/blog"],
   ["FAQ", "/faq"],
 ];
 
