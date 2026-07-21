@@ -4,9 +4,9 @@ import { notFound } from "next/navigation";
 import { SiteHeader } from "../../components/SiteHeader";
 import { SiteFooter } from "../../components/SiteFooter";
 import { CtaBand } from "../../components/CtaBand";
-import { PostCard } from "../../components/blog/PostCard";
 import { AuthorAvatar } from "../../components/blog/AuthorAvatar";
-import { AuthorBox } from "../../components/blog/AuthorBox";
+import { SidebarAuthor } from "../../components/blog/SidebarAuthor";
+import { RecentPosts } from "../../components/blog/RecentPosts";
 import { ShareButtons } from "../../components/blog/ShareButtons";
 import { BlogLikes } from "../../components/blog/BlogLikes";
 import { BlogComments } from "../../components/blog/BlogComments";
@@ -46,7 +46,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   if (!post) notFound();
 
   const author = getAuthor(post.author);
-  const related = getAllPosts().filter((p) => p.slug !== slug).slice(0, 3);
+  const recent = getAllPosts().filter((p) => p.slug !== slug).slice(0, 3);
   const url = `${BASE}/blog/${post.slug}`;
 
   const jsonLd = {
@@ -100,41 +100,34 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           </div>
         )}
 
-        {/* Article body */}
-        <article className="mx-auto max-w-3xl site-px py-12">
-          <div
-            className="prose prose-zinc max-w-none prose-headings:font-bold prose-headings:tracking-tight prose-a:font-medium prose-a:text-blue-600 hover:prose-a:text-blue-700 prose-strong:text-zinc-900 prose-img:rounded-xl prose-img:border prose-img:border-zinc-200"
-            dangerouslySetInnerHTML={{ __html: post.html }}
-          />
+        {/* Two-column body: article + sticky sidebar */}
+        <div className="mx-auto max-w-6xl site-px py-12">
+          <div className="grid gap-10 lg:grid-cols-[1fr_320px]">
+            {/* LEFT — article, share, likes, comments */}
+            <div className="min-w-0">
+              <div
+                className="prose prose-zinc max-w-none prose-headings:font-bold prose-headings:tracking-tight prose-a:font-medium prose-a:text-blue-600 hover:prose-a:text-blue-700 prose-strong:text-zinc-900 prose-img:rounded-xl prose-img:border prose-img:border-zinc-200"
+                dangerouslySetInnerHTML={{ __html: post.html }}
+              />
 
-          <ShareButtons url={url} title={post.title} />
-          <BlogLikes slug={post.slug} />
-          <AuthorBox author={author} />
+              <ShareButtons url={url} title={post.title} />
+              <BlogLikes slug={post.slug} />
 
-          <div className="mt-10">
-            <Link href="/blog" className="text-sm font-medium text-blue-600 transition-colors hover:text-blue-700">
-              ← Back to all articles
-            </Link>
-          </div>
-        </article>
-
-        {/* Related posts */}
-        {related.length > 0 && (
-          <section className="border-t border-zinc-200 bg-zinc-50">
-            <div className="mx-auto max-w-6xl site-px py-16">
-              <h2 className="text-2xl font-bold tracking-tight text-zinc-900">Keep reading</h2>
-              <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {related.map((p) => (
-                  <PostCard key={p.slug} post={p} />
-                ))}
+              <div className="mt-10">
+                <Link href="/blog" className="text-sm font-medium text-blue-600 transition-colors hover:text-blue-700">
+                  ← Back to all articles
+                </Link>
               </div>
-            </div>
-          </section>
-        )}
 
-        {/* Comments */}
-        <div className="site-px pb-6">
-          <BlogComments slug={post.slug} />
+              <BlogComments slug={post.slug} />
+            </div>
+
+            {/* RIGHT — sticky sidebar: author info + recent posts */}
+            <aside className="space-y-8 lg:sticky lg:top-24 lg:self-start">
+              <SidebarAuthor author={author} />
+              <RecentPosts posts={recent} />
+            </aside>
+          </div>
         </div>
 
         <CtaBand />
