@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, type FormEvent } from "react";
-import { listComments, addComment, type BlogComment } from "../../lib/blogSocial";
+import { listComments, addComment, deleteComment, type BlogComment } from "../../lib/blogSocial";
 import { firebaseEnabled } from "../../lib/firebase";
 
 function initialsOf(name: string): string {
@@ -23,10 +23,27 @@ function timeAgo(ms: number | null): string {
   return `${Math.floor(mo / 12)} year${mo >= 24 ? "s" : ""} ago`;
 }
 
+// Which comment ids this browser created — so we can offer "Delete" on them.
+function loadMine(slug: string): Set<string> {
+  try {
+    return new Set(JSON.parse(localStorage.getItem(`cvify-my-comments:${slug}`) || "[]"));
+  } catch {
+    return new Set();
+  }
+}
+function saveMine(slug: string, ids: Set<string>) {
+  try {
+    localStorage.setItem(`cvify-my-comments:${slug}`, JSON.stringify([...ids]));
+  } catch {
+    /* ignore */
+  }
+}
+
 // Anonymous comments (name + text), stored in Firestore. Comment text is
 // rendered as plain React text, so it is escaped — no HTML injection.
 export function BlogComments({ slug }: { slug: string }) {
   const [comments, setComments] = useState<BlogComment[]>([]);
+  const [mine, setMine] = useState<Set<string>>(new Set());
   const [loaded, setLoaded] = useState(false);
   const [name, setName] = useState("");
   const [text, setText] = useState("");
@@ -35,6 +52,7 @@ export function BlogComments({ slug }: { slug: string }) {
 
   useEffect(() => {
     let on = true;
+    setMine(loadMine(slug));
     listComments(slug).then((c) => {
       if (on) {
         setComments(c);
@@ -57,13 +75,35 @@ export function BlogComments({ slug }: { slug: string }) {
     setBusy(true);
     setError(null);
     try {
-      await addComment(slug, n, t);
-      setComments((cur) => [{ id: `local-${cur.length}-${t.length}`, name: n, text: t, createdAt: Date.now() }, ...cur]);
+      const id = await addComment(slug, n, t);
+      setMine((prev) => {
+        const s = new Set(prev);
+        s.add(id);
+        saveMine(slug, s);
+        return s;
+      });
+      setComments((cur) => [{ id, name: n, text: t, createdAt: Date.now() }, ...cur]);
       setText("");
     } catch {
       setError("Couldn't post your comment. Please try again in a moment.");
     } finally {
       setBusy(false);
+    }
+  }
+
+  async function remove(id: string) {
+    const prev = comments;
+    setComments((cur) => cur.filter((c) => c.id !== id));
+    setMine((cur) => {
+      const s = new Set(cur);
+      s.delete(id);
+      saveMine(slug, s);
+      return s;
+    });
+    try {
+      await deleteComment(slug, id);
+    } catch {
+      setComments(prev); // restore on failure
     }
   }
 
@@ -80,21 +120,8 @@ export function BlogComments({ slug }: { slug: string }) {
       </h2>
 
       <form onSubmit={submit} className="mt-6 space-y-3">
-        <input
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          maxLength={60}
-          placeholder="Your name"
-          className={inputCls}
-        />
-        <textarea
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          maxLength={2000}
-          rows={4}
-          placeholder="Share your thoughts…"
-          className={inputCls}
-        />
+        <input value={name} onChange={(e) => setName(e.target.value)} maxLength={60} placeholder="Your name" className={inputCls} />
+        <textarea value={text} onChange={(e) => setText(e.target.value)} maxLength={2000} rows={4} placeholder="Share your thoughts…" className={inputCls} />
         {error && <p className="text-sm text-red-600">{error}</p>}
         <button
           type="submit"
@@ -111,16 +138,22 @@ export function BlogComments({ slug }: { slug: string }) {
         )}
         {comments.map((c) => (
           <div key={c.id} className="flex gap-3">
-            <span
-              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 text-xs font-semibold text-white"
-              aria-hidden
-            >
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 text-xs font-semibold text-white" aria-hidden>
               {initialsOf(c.name)}
             </span>
-            <div>
+            <div className="min-w-0">
               <p className="text-sm">
                 <span className="font-semibold text-zinc-900">{c.name}</span>
                 <span className="text-zinc-400"> · {timeAgo(c.createdAt)}</span>
+                {mine.has(c.id) && (
+                  <button
+                    type="button"
+                    onClick={() => remove(c.id)}
+                    className="ml-3 text-xs font-medium text-zinc-400 transition-colors hover:text-red-600"
+                  >
+                    Delete
+                  </button>
+                )}
               </p>
               <p className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-zinc-700">{c.text}</p>
             </div>

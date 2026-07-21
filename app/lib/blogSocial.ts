@@ -5,6 +5,7 @@ import {
   getDocs,
   addDoc,
   setDoc,
+  deleteDoc,
   query,
   orderBy,
   limit,
@@ -48,11 +49,17 @@ export async function listComments(slug: string): Promise<BlogComment[]> {
   }
 }
 
-export async function addComment(slug: string, name: string, text: string): Promise<void> {
+export async function addComment(slug: string, name: string, text: string): Promise<string> {
   if (!db) throw new Error("Comments are unavailable right now.");
-  await addDoc(collection(db, "blogPosts", slug, "comments"), {
+  const ref = await addDoc(collection(db, "blogPosts", slug, "comments"), {
     name: name.trim().slice(0, 60),
     text: text.trim().slice(0, 2000),
     createdAt: serverTimestamp(),
   });
+  return ref.id;
+}
+
+export async function deleteComment(slug: string, id: string): Promise<void> {
+  if (!db) return;
+  await deleteDoc(doc(db, "blogPosts", slug, "comments", id));
 }

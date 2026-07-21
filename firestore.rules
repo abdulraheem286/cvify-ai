@@ -28,7 +28,10 @@ service cloud.firestore {
                       && request.resource.data.text is string
                       && request.resource.data.text.size() > 0
                       && request.resource.data.text.size() <= 2000;
-        allow update, delete: if false;
+        // Anonymous blog: deletes are gated in the UI to the browser that
+        // created the comment (no login = no server-side ownership check).
+        allow update: if false;
+        allow delete: if true;
       }
     }
   }
