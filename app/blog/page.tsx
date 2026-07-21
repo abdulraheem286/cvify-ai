@@ -21,11 +21,11 @@ export default function BlogIndexPage() {
       <SiteHeader />
       <main className="flex-1">
         <PageHero
-          eyebrow="Blog"
+          eyebrow="Blogs"
           title="CV & resume tips, guides & examples"
           subtitle="Practical, up-to-date advice to help you write a stronger CV and land more interviews."
         />
-        <section className="mx-auto max-w-[1920px] site-px py-20">
+        <section className="mx-auto max-w-[1920px] site-px pb-20 pt-6">
           {posts.length === 0 ? (
             <p className="text-center text-zinc-500">New articles are on the way — check back soon.</p>
           ) : (

@@ -8,7 +8,7 @@ import { AuthorAvatar } from "../../components/blog/AuthorAvatar";
 import { SidebarAuthor } from "../../components/blog/SidebarAuthor";
 import { RecentPosts } from "../../components/blog/RecentPosts";
 import { ShareButtons } from "../../components/blog/ShareButtons";
-import { BlogLikes } from "../../components/blog/BlogLikes";
+import { LikeProvider, LikeButton } from "../../components/blog/BlogLikes";
 import { BlogComments } from "../../components/blog/BlogComments";
 import { getAllPosts, getAllSlugs, getPostBySlug, formatDate } from "../../lib/blog";
 import { getAuthor } from "../../lib/authors";
@@ -68,67 +68,77 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <SiteHeader />
       <main className="flex-1">
-        {/* Article header */}
-        <header className="bg-gradient-to-b from-blue-50/80 via-white to-white">
-          <div className="mx-auto max-w-3xl site-px pb-8 pt-14 text-center">
-            {post.tags.length > 0 && (
-              <div className="flex flex-wrap justify-center gap-2">
-                {post.tags.map((t) => (
-                  <span key={t} className="rounded-full border border-blue-100 bg-blue-50 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider text-blue-600">
-                    {t}
-                  </span>
-                ))}
+        <LikeProvider slug={post.slug}>
+          {/* Article header */}
+          <header className="bg-gradient-to-b from-blue-50/80 via-white to-white">
+            <div className="mx-auto max-w-3xl site-px pb-6 pt-8">
+              <Link href="/blog" className="text-sm font-medium text-blue-600 transition-colors hover:text-blue-700">
+                ← Back to all articles
+              </Link>
+              <div className="mt-5 text-center">
+                {post.tags.length > 0 && (
+                  <div className="flex flex-wrap justify-center gap-2">
+                    {post.tags.map((t) => (
+                      <span key={t} className="rounded-full border border-blue-100 bg-blue-50 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider text-blue-600">
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+                )}
+                <h1 className="mx-auto mt-4 max-w-2xl text-3xl font-bold leading-[1.15] tracking-tight sm:text-4xl">{post.title}</h1>
+                <div className="mt-5 flex items-center justify-center gap-3 text-sm text-zinc-500">
+                  <AuthorAvatar author={author} size={36} />
+                  <span className="font-medium text-zinc-700">{author.name}</span>
+                  <span aria-hidden>·</span>
+                  <span>{formatDate(post.date)}</span>
+                  <span aria-hidden>·</span>
+                  <span>{post.readingTime} min read</span>
+                </div>
+                <div className="mt-5 flex justify-center">
+                  <LikeButton variant="inline" />
+                </div>
               </div>
-            )}
-            <h1 className="mx-auto mt-4 max-w-2xl text-3xl font-bold leading-[1.15] tracking-tight sm:text-4xl">{post.title}</h1>
-            <div className="mt-6 flex items-center justify-center gap-3 text-sm text-zinc-500">
-              <AuthorAvatar author={author} size={36} />
-              <span className="font-medium text-zinc-700">{author.name}</span>
-              <span aria-hidden>·</span>
-              <span>{formatDate(post.date)}</span>
-              <span aria-hidden>·</span>
-              <span>{post.readingTime} min read</span>
+            </div>
+          </header>
+
+          {/* Hero image */}
+          {post.image && (
+            <div className="mx-auto max-w-4xl site-px pt-6">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={post.image} alt={post.title} className="aspect-[16/9] w-full rounded-2xl border border-zinc-200 object-cover shadow-sm" />
+            </div>
+          )}
+
+          {/* Two-column body: article + sticky sidebar */}
+          <div className="mx-auto max-w-6xl site-px py-12">
+            <div className="grid gap-10 lg:grid-cols-[1fr_320px]">
+              {/* LEFT — article, share, likes, comments */}
+              <div className="min-w-0">
+                <div
+                  className="prose prose-zinc max-w-none prose-headings:font-bold prose-headings:tracking-tight prose-a:font-medium prose-a:text-blue-600 hover:prose-a:text-blue-700 prose-strong:text-zinc-900 prose-img:rounded-xl prose-img:border prose-img:border-zinc-200"
+                  dangerouslySetInnerHTML={{ __html: post.html }}
+                />
+
+                <ShareButtons url={url} title={post.title} />
+                <LikeButton variant="block" />
+
+                <div className="mt-10">
+                  <Link href="/blog" className="text-sm font-medium text-blue-600 transition-colors hover:text-blue-700">
+                    ← Back to all articles
+                  </Link>
+                </div>
+
+                <BlogComments slug={post.slug} />
+              </div>
+
+              {/* RIGHT — sticky sidebar: author info + recent posts */}
+              <aside className="space-y-8 lg:sticky lg:top-24 lg:self-start">
+                <SidebarAuthor author={author} />
+                <RecentPosts posts={recent} />
+              </aside>
             </div>
           </div>
-        </header>
-
-        {/* Hero image */}
-        {post.image && (
-          <div className="mx-auto max-w-4xl site-px">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={post.image} alt={post.title} className="aspect-[16/9] w-full rounded-2xl border border-zinc-200 object-cover shadow-sm" />
-          </div>
-        )}
-
-        {/* Two-column body: article + sticky sidebar */}
-        <div className="mx-auto max-w-6xl site-px py-12">
-          <div className="grid gap-10 lg:grid-cols-[1fr_320px]">
-            {/* LEFT — article, share, likes, comments */}
-            <div className="min-w-0">
-              <div
-                className="prose prose-zinc max-w-none prose-headings:font-bold prose-headings:tracking-tight prose-a:font-medium prose-a:text-blue-600 hover:prose-a:text-blue-700 prose-strong:text-zinc-900 prose-img:rounded-xl prose-img:border prose-img:border-zinc-200"
-                dangerouslySetInnerHTML={{ __html: post.html }}
-              />
-
-              <ShareButtons url={url} title={post.title} />
-              <BlogLikes slug={post.slug} />
-
-              <div className="mt-10">
-                <Link href="/blog" className="text-sm font-medium text-blue-600 transition-colors hover:text-blue-700">
-                  ← Back to all articles
-                </Link>
-              </div>
-
-              <BlogComments slug={post.slug} />
-            </div>
-
-            {/* RIGHT — sticky sidebar: author info + recent posts */}
-            <aside className="space-y-8 lg:sticky lg:top-24 lg:self-start">
-              <SidebarAuthor author={author} />
-              <RecentPosts posts={recent} />
-            </aside>
-          </div>
-        </div>
+        </LikeProvider>
 
         <CtaBand />
       </main>

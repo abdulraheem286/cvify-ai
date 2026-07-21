@@ -35,7 +35,7 @@ export function SiteFooter() {
             title="Learn"
             links={[
               ["Features", "/features"],
-              ["Blog", "/blog"],
+              ["Blogs", "/blog"],
               ["FAQ", "/faq"],
             ]}
           />
