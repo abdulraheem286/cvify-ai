@@ -28,7 +28,7 @@
 
   <g transform="translate(140,190)">
     <text class="wm" font-size="82" fill="#18181b">CVify <tspan fill="url(#ai)">AI</tspan></text>
-    <text class="tag" x="2" y="70" font-size="32" fill="#52525b">Build a job-ready CV in minutes. 18 templates. ATS-ready PDF.</text>
+    <text class="tag" x="2" y="70" font-size="32" fill="#52525b">Build a job-ready CV in minutes. Clean templates. ATS-ready PDF.</text>
     <g transform="translate(2,118)">
       <circle cx="9" cy="-9" r="9" fill="#4053ee"/>
       <text class="url" x="30" y="0" font-size="28" fill="#4053ee">cvifyai.com</text>
