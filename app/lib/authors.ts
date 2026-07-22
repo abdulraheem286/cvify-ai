@@ -21,9 +21,10 @@ const REGISTRY: Record<string, Entry> = {
   "Abdul Rahim": {
     name: "Abdul Rahim",
     role: "Founder, CVify AI",
-    // TODO: replace this placeholder bio with your own, and add linkedin/email.
-    bio: "Abdul builds CVify AI and writes about resumes, job hunting, and getting past applicant tracking systems.",
-    avatarFile: "authors/abdul.jpg", // drop your photo here: public/authors/abdul.jpg
+    bio: "Abdul is the founder of CVify AI. He builds tools that help people write stronger CVs, and writes practical guides on resumes, applicant tracking systems (ATS), and landing more interviews.",
+    email: "abdulrahim.majid5@gmail.com",
+    linkedin: "https://www.linkedin.com/company/cvifyai",
+    avatarFile: "authors/abdul.jpg",
   },
 };
 
