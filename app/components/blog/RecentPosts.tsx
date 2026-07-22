@@ -15,7 +15,7 @@ export function RecentPosts({ posts }: { posts: PostMeta[] }) {
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={p.image} alt="" className="h-14 w-14 shrink-0 rounded-lg object-cover" />
               ) : (
-                <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 text-xl" aria-hidden>
+                <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg bg-blue-600 text-xl" aria-hidden>
                   {p.cover}
                 </span>
               )}

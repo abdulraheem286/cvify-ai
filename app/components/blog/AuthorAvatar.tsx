@@ -25,7 +25,7 @@ export function AuthorAvatar({ author, size = 40 }: { author: Author; size?: num
     .toUpperCase();
   return (
     <span
-      className="flex shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 font-semibold text-white"
+      className="flex shrink-0 items-center justify-center rounded-full bg-blue-600 font-semibold text-white"
       style={{ width: size, height: size, fontSize: Math.round(size * 0.4) }}
       aria-hidden
     >

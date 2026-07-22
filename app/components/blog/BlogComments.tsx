@@ -138,7 +138,7 @@ export function BlogComments({ slug }: { slug: string }) {
         )}
         {comments.map((c) => (
           <div key={c.id} className="flex gap-3">
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 text-xs font-semibold text-white" aria-hidden>
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-blue-600 text-xs font-semibold text-white" aria-hidden>
               {initialsOf(c.name)}
             </span>
             <div className="min-w-0">

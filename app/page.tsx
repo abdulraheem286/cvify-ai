@@ -53,13 +53,8 @@ export default function Home() {
 
       <main className="flex-1">
         {/* Hero */}
-        <section className="relative overflow-hidden bg-gradient-to-b from-blue-50/80 via-white to-white">
-          {/* soft ambient glow */}
-          <div
-            aria-hidden
-            className="pointer-events-none absolute -top-32 left-1/2 h-[520px] w-[900px] -translate-x-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(59,130,246,0.18),transparent)] blur-2xl"
-          />
-          <div className="relative mx-auto grid max-w-[1920px] items-center gap-10 site-px py-12 lg:grid-cols-2 lg:py-16">
+        <section className="bg-zinc-50">
+          <div className="mx-auto grid max-w-[1920px] items-center gap-10 site-px py-12 lg:grid-cols-2 lg:py-16">
             <Reveal stagger>
               <span className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-white/70 px-3 py-1 text-xs font-semibold text-blue-700 shadow-sm backdrop-blur">
                 <span className="relative flex h-1.5 w-1.5">
@@ -91,13 +86,8 @@ export default function Home() {
               </div>
             </Reveal>
 
-            <div className="relative w-full">
-              {/* glow behind the document */}
-              <div
-                aria-hidden
-                className="absolute inset-x-4 inset-y-8 rounded-[2rem] bg-gradient-to-tr from-blue-400/20 to-indigo-400/20 blur-2xl"
-              />
-              <div className="relative rotate-1 transition-transform duration-300 hover:rotate-0">
+            <div className="w-full">
+              <div className="rotate-1 transition-transform duration-300 hover:rotate-0">
                 <ScaledPreview maxHeight={500} capClassName="max-h-[78vh]">
                   <ModernTemplate cv={sampleCv} domId="hero-preview" />
                 </ScaledPreview>
@@ -123,7 +113,7 @@ export default function Home() {
         <TemplatesSection cv={sampleCv} />
 
         {/* How it works */}
-        <section id="how" className="bg-gradient-to-b from-blue-50 to-white">
+        <section id="how" className="border-t border-zinc-200 bg-white">
           <div className="mx-auto max-w-[1920px] site-px py-20">
             <SectionHead eyebrow="Process" title="Four simple steps" subtitle="From a blank page to a polished resume in minutes." />
             <Reveal stagger className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -156,9 +146,8 @@ export default function Home() {
                 Try the AI builder →
               </Link>
             </div>
-            <div className="relative w-full">
-              <div aria-hidden className="pointer-events-none absolute inset-x-6 inset-y-8 rounded-[2rem] bg-gradient-to-tr from-blue-400/15 to-indigo-400/15 blur-2xl" />
-              <div className="relative">
+            <div className="w-full">
+              <div>
                 <ScaledPreview maxHeight={520} capClassName="max-h-[78vh]">
                   <ModernTemplate cv={sampleCv} domId="row-modern" />
                 </ScaledPreview>
@@ -170,9 +159,8 @@ export default function Home() {
         {/* Feature row 2 — edit & switch */}
         <section className="border-t border-zinc-200 bg-zinc-50">
           <div className="mx-auto grid max-w-[1920px] items-center gap-12 site-px py-20 lg:grid-cols-2">
-            <div className="relative order-2 w-full lg:order-1">
-              <div aria-hidden className="pointer-events-none absolute inset-x-6 inset-y-8 rounded-[2rem] bg-gradient-to-tr from-indigo-400/15 to-blue-400/15 blur-2xl" />
-              <div className="relative">
+            <div className="order-2 w-full lg:order-1">
+              <div>
                 <ScaledPreview maxHeight={520} capClassName="max-h-[78vh]">
                   <SidebarTemplate cv={sampleCv} domId="row-sidebar" />
                 </ScaledPreview>
@@ -240,10 +228,8 @@ export default function Home() {
 
         {/* CTA */}
         <section className="mx-auto max-w-[1920px] site-px pb-20">
-          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-blue-600 to-indigo-600 px-6 py-16 text-center text-white shadow-xl shadow-blue-600/20">
-            <div aria-hidden className="pointer-events-none absolute -right-16 -top-24 h-72 w-72 rounded-full bg-white/10 blur-2xl" />
-            <div aria-hidden className="pointer-events-none absolute -bottom-24 -left-16 h-72 w-72 rounded-full bg-indigo-300/20 blur-2xl" />
-            <div className="relative">
+          <div className="rounded-3xl bg-blue-600 px-6 py-16 text-center text-white shadow-lg shadow-blue-600/20">
+            <div>
               <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Start building your resume today</h2>
               <p className="mx-auto mt-4 max-w-md text-blue-100">
                 Join job seekers who land interviews with CVify AI — free, with a clean PDF in minutes.
@@ -269,7 +255,7 @@ export default function Home() {
 function Stat({ value, label }: { value: string; label: string }) {
   return (
     <div className="rounded-2xl border border-zinc-200 bg-white p-8 text-center shadow-sm transition-all hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-md">
-      <p className="bg-gradient-to-r from-blue-600 to-indigo-500 bg-clip-text text-4xl font-bold text-transparent sm:text-5xl">{value}</p>
+      <p className="text-4xl font-bold text-blue-600 sm:text-5xl">{value}</p>
       <p className="mt-2 text-base font-medium text-zinc-500">{label}</p>
     </div>
   );
@@ -297,7 +283,7 @@ function Tip({ n, title, text }: { n: string; title: string; text: string }) {
 function Step({ n, title, text }: { n: number; title: string; text: string }) {
   return (
     <div className="rounded-2xl border border-zinc-200 bg-white p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-blue-600/5">
-      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-blue-600 to-indigo-500 text-sm font-bold text-white shadow-md shadow-blue-600/20">
+      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-600 text-sm font-bold text-white shadow-sm">
         {n}
       </div>
       <h3 className="mt-4 font-semibold text-zinc-900">{title}</h3>

@@ -9,12 +9,12 @@ export function PostCard({ post }: { post: PostMeta }) {
       href={`/blog/${post.slug}`}
       className="group flex h-full flex-col overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-blue-200 hover:shadow-lg hover:shadow-blue-600/5"
     >
-      {/* Thumbnail — real image if provided, else a branded gradient + emoji */}
+      {/* Thumbnail — real image if provided, else a branded solid + emoji */}
       {post.image ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img src={post.image} alt="" className="aspect-[16/9] w-full object-cover" />
       ) : (
-        <div className="flex aspect-[16/9] w-full items-center justify-center bg-gradient-to-br from-blue-500 to-indigo-600 text-5xl" aria-hidden>
+        <div className="flex aspect-[16/9] w-full items-center justify-center bg-blue-600 text-5xl" aria-hidden>
           {post.cover}
         </div>
       )}

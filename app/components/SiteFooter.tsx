@@ -2,8 +2,8 @@ import Link from "next/link";
 
 export function SiteFooter() {
   return (
-    <footer className="bg-gradient-to-b from-zinc-50 to-zinc-100/50">
-      <div className="h-1 w-full bg-gradient-to-r from-blue-600 via-indigo-500 to-blue-600" />
+    <footer className="bg-zinc-50">
+      <div className="h-1 w-full bg-blue-600" />
       <div className="mx-auto max-w-[1920px] site-px py-14">
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           <div>
@@ -44,7 +44,10 @@ export function SiteFooter() {
 
         <div className="mt-10 flex flex-col items-center justify-between gap-3 border-t border-zinc-200 pt-6 text-sm text-zinc-500 sm:flex-row">
           <p>© {new Date().getFullYear()} CVify AI. All rights reserved.</p>
-          <p>Free to use · Your CVs saved to your account</p>
+          <div className="flex items-center gap-4">
+            <Link href="/legal" className="transition-colors hover:text-blue-600">Legal &amp; credits</Link>
+            <span>Free to use</span>
+          </div>
         </div>
       </div>
     </footer>
