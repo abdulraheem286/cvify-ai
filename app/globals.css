@@ -55,7 +55,7 @@ html {
   /* Site typography. Headings use --font-display, body uses --font-text.
      Swap these to restyle every heading / paragraph on the site at once.
      (CV templates keep their own --font-heading/--font-body, untouched.) */
-  --font-display: var(--font-playfair);
+  --font-display: var(--font-lora);
   --font-text: var(--font-inter);
 }
 
