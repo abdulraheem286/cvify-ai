@@ -68,9 +68,8 @@ export const metadata: Metadata = {
     description:
       "Build a polished, professional CV in minutes. Free AI resume builder with beautiful templates and instant PDF download.",
   },
-  // PRE-LAUNCH: keep the site out of search engines. Flip both of these to
-  // true on launch day (and restore the sitemap/host in app/robots.ts).
-  robots: { index: false, follow: false },
+  // LIVE: allow search engines to index the site.
+  robots: { index: true, follow: true },
 };
 
 export default function RootLayout({
