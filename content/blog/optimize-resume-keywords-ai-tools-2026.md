@@ -5,7 +5,7 @@ date: "2026-07-21"
 author: "Abdul Rahim"
 tags: ["ATS", "Keywords"]
 cover: "🔑"
-image: "/blog/optimize-resume-keywords-1.webp"
+image: "/blog/optimize-resume-keywords.jpg"
 ---
 
 Failing to understand how modern hiring software reads applications costs the average candidate 81% of their potential interviews before a human ever sees their file. You can fix this massive gap by learning the specific ways semantic scoring engines evaluate your professional background.
