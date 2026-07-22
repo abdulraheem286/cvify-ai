@@ -44,10 +44,7 @@ export function SiteFooter() {
 
         <div className="mt-10 flex flex-col items-center justify-between gap-3 border-t border-zinc-200 pt-6 text-sm text-zinc-500 sm:flex-row">
           <p>© {new Date().getFullYear()} CVify AI. All rights reserved.</p>
-          <div className="flex items-center gap-4">
-            <Link href="/legal" className="transition-colors hover:text-blue-600">Legal &amp; credits</Link>
-            <span>Free to use</span>
-          </div>
+          <Link href="/legal" className="transition-colors hover:text-blue-600">Legal &amp; credits</Link>
         </div>
       </div>
     </footer>

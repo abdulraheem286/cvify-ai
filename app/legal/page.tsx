@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/legal" },
 };
 
-const CONTACT_EMAIL = "hello@cvifyai.com";
+const CONTACT_EMAIL = "abdulrahim.majid5@gmail.com";
 
 export default function LegalPage() {
   return (
@@ -100,9 +100,9 @@ export default function LegalPage() {
 
             <Block title="Contact">
               <p>
-                Questions about these terms, your data, or the credits above? Email us at{" "}
+                Questions about these terms, your data, or the credits above?{" "}
                 <a href={`mailto:${CONTACT_EMAIL}`} className="font-medium text-blue-600 hover:text-blue-700">
-                  {CONTACT_EMAIL}
+                  Email us
                 </a>
                 .
               </p>
