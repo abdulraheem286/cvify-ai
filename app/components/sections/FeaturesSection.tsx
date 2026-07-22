@@ -25,7 +25,7 @@ const features: { icon: ReactNode; title: string; text: string }[] = [
 export function FeaturesSection({ showHead = true }: { showHead?: boolean }) {
   return (
     <section id="features" className="bg-zinc-50">
-      <div className="mx-auto max-w-[1920px] site-px py-20">
+      <div className={`mx-auto max-w-[1920px] site-px pb-20 ${showHead ? "pt-20" : "pt-10"}`}>
         {showHead && (
           <SectionHead
             eyebrow="Features"

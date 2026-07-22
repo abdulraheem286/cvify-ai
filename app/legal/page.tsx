@@ -25,7 +25,7 @@ export default function LegalPage() {
           subtitle="Plain-language terms, privacy, and credits for CVify AI. Last updated July 2026."
         />
 
-        <section className="mx-auto max-w-3xl site-px pb-20 pt-4">
+        <section className="mx-auto max-w-3xl site-px pb-20 pt-10">
           <div className="space-y-10 text-[15px] leading-relaxed text-zinc-600">
             <Block title="Image & photography credits">
               <p>

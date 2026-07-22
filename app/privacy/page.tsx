@@ -25,7 +25,7 @@ export default function PrivacyPage() {
           subtitle="How we handle your information at CVify AI. Last updated July 2026."
         />
 
-        <section className="mx-auto max-w-3xl site-px pb-20 pt-4">
+        <section className="mx-auto max-w-3xl site-px pb-20 pt-10">
           <div className="space-y-10 text-[15px] leading-relaxed text-zinc-600">
             <Block title="Who we are">
               <p>

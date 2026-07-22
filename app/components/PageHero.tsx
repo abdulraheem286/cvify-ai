@@ -3,7 +3,7 @@
 export function PageHero({ eyebrow, title, subtitle }: { eyebrow: string; title: string; subtitle: string }) {
   return (
     <section className="bg-zinc-50">
-      <div className="mx-auto max-w-[1920px] site-px py-16 text-center">
+      <div className="mx-auto max-w-[1920px] site-px pb-12 pt-14 text-center">
         <span className="inline-block rounded-full border border-blue-100 bg-blue-50 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider text-blue-600">
           {eyebrow}
         </span>

@@ -25,7 +25,7 @@ export default function BlogIndexPage() {
           title="CV and resume tips, guides and examples"
           subtitle="Practical, up-to-date advice to help you write a stronger CV and land more interviews."
         />
-        <section className="mx-auto max-w-[1920px] site-px pb-20 pt-6">
+        <section className="mx-auto max-w-[1920px] site-px pb-20 pt-10">
           {posts.length === 0 ? (
             <p className="text-center text-zinc-500">New articles are on the way — check back soon.</p>
           ) : (
