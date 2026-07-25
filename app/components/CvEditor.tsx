@@ -435,11 +435,17 @@ export function CvEditor({
   // first real edit, then keeps updating it. No manual Save button needed.
   useEffect(() => {
     if (!signedIn) return;
+    if (!formHasContent(form)) return;
+    // Skip auto-saving on the first content-ful render ONLY when re-opening an
+    // already-saved CV (so opening it doesn't bump its timestamp). A brand-new
+    // CV that already has content — from the AI or Import flows — should save
+    // immediately, even if the user never touches a field. And because this
+    // runs only once there's content AND we're signed in, a late-resolving
+    // sign-in (the manual flow) no longer swallows the first edit.
     if (firstCloud.current) {
       firstCloud.current = false;
-      return;
+      if (cloudId) return;
     }
-    if (!formHasContent(form)) return;
     const t = setTimeout(() => {
       handleCloudSave();
     }, 1200);
