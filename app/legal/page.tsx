@@ -93,8 +93,9 @@ export default function LegalPage() {
 
             <Block title="Blog comments">
               <p>
-                Comments on the blog are public and can be posted anonymously. Please keep them respectful and on-topic.
-                We may remove comments that are spam, abusive, or otherwise inappropriate.
+                Commenting on the blog requires a free account, and your comments are public and shown with your name.
+                You can delete your own comments at any time. Please keep them respectful and on-topic — we may remove
+                comments that are spam, abusive, or otherwise inappropriate.
               </p>
             </Block>
 

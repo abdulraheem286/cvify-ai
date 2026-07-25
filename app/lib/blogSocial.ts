@@ -18,7 +18,7 @@ import { db } from "./firebase";
 // Likes: a single count on blogPosts/{slug}. Comments: blogPosts/{slug}/comments.
 // These are anonymous (no login) — see firestore.rules for the access rules.
 
-export type BlogComment = { id: string; name: string; text: string; createdAt: number | null };
+export type BlogComment = { id: string; uid: string; name: string; text: string; createdAt: number | null };
 
 export async function getLikes(slug: string): Promise<number> {
   if (!db) return 0;
@@ -42,16 +42,26 @@ export async function listComments(slug: string): Promise<BlogComment[]> {
     const snap = await getDocs(query(col, orderBy("createdAt", "desc"), limit(300)));
     return snap.docs.map((d) => {
       const data = d.data();
-      return { id: d.id, name: String(data.name ?? ""), text: String(data.text ?? ""), createdAt: data.createdAt?.toMillis?.() ?? null };
+      return {
+        id: d.id,
+        uid: String(data.uid ?? ""),
+        name: String(data.name ?? ""),
+        text: String(data.text ?? ""),
+        createdAt: data.createdAt?.toMillis?.() ?? null,
+      };
     });
   } catch {
     return [];
   }
 }
 
-export async function addComment(slug: string, name: string, text: string): Promise<string> {
+// Commenting requires a signed-in account: `uid` is stored so Firestore rules
+// can verify the author, which blocks spam bots and stops anyone deleting
+// someone else's comment.
+export async function addComment(slug: string, uid: string, name: string, text: string): Promise<string> {
   if (!db) throw new Error("Comments are unavailable right now.");
   const ref = await addDoc(collection(db, "blogPosts", slug, "comments"), {
+    uid,
     name: name.trim().slice(0, 60),
     text: text.trim().slice(0, 2000),
     createdAt: serverTimestamp(),

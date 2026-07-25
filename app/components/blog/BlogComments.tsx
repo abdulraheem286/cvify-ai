@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useState, type FormEvent } from "react";
+import Link from "next/link";
 import { listComments, addComment, deleteComment, type BlogComment } from "../../lib/blogSocial";
 import { firebaseEnabled } from "../../lib/firebase";
+import { useAuth } from "../AuthProvider";
 
 function initialsOf(name: string): string {
   return name.split(/\s+/).map((w) => w[0]).filter(Boolean).slice(0, 2).join("").toUpperCase() || "?";
@@ -23,36 +25,19 @@ function timeAgo(ms: number | null): string {
   return `${Math.floor(mo / 12)} year${mo >= 24 ? "s" : ""} ago`;
 }
 
-// Which comment ids this browser created — so we can offer "Delete" on them.
-function loadMine(slug: string): Set<string> {
-  try {
-    return new Set(JSON.parse(localStorage.getItem(`cvify-my-comments:${slug}`) || "[]"));
-  } catch {
-    return new Set();
-  }
-}
-function saveMine(slug: string, ids: Set<string>) {
-  try {
-    localStorage.setItem(`cvify-my-comments:${slug}`, JSON.stringify([...ids]));
-  } catch {
-    /* ignore */
-  }
-}
-
-// Anonymous comments (name + text), stored in Firestore. Comment text is
-// rendered as plain React text, so it is escaped — no HTML injection.
+// Comments require a signed-in account. That keeps spam bots out, shows real
+// names, and lets Firestore rules guarantee people can only delete their own
+// comment. Comment text renders as plain React text, so it is escaped.
 export function BlogComments({ slug }: { slug: string }) {
+  const { user, loading: authLoading } = useAuth();
   const [comments, setComments] = useState<BlogComment[]>([]);
-  const [mine, setMine] = useState<Set<string>>(new Set());
   const [loaded, setLoaded] = useState(false);
-  const [name, setName] = useState("");
   const [text, setText] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     let on = true;
-    setMine(loadMine(slug));
     listComments(slug).then((c) => {
       if (on) {
         setComments(c);
@@ -64,25 +49,21 @@ export function BlogComments({ slug }: { slug: string }) {
     };
   }, [slug]);
 
+  const displayName = user?.displayName?.trim() || user?.email?.split("@")[0] || "Anonymous";
+
   async function submit(e: FormEvent) {
     e.preventDefault();
-    const n = name.trim();
+    if (!user) return;
     const t = text.trim();
-    if (!n || !t) {
-      setError("Please add your name and a comment.");
+    if (!t) {
+      setError("Please write a comment first.");
       return;
     }
     setBusy(true);
     setError(null);
     try {
-      const id = await addComment(slug, n, t);
-      setMine((prev) => {
-        const s = new Set(prev);
-        s.add(id);
-        saveMine(slug, s);
-        return s;
-      });
-      setComments((cur) => [{ id, name: n, text: t, createdAt: Date.now() }, ...cur]);
+      const id = await addComment(slug, user.uid, displayName, t);
+      setComments((cur) => [{ id, uid: user.uid, name: displayName, text: t, createdAt: Date.now() }, ...cur]);
       setText("");
     } catch {
       setError("Couldn't post your comment. Please try again in a moment.");
@@ -94,16 +75,10 @@ export function BlogComments({ slug }: { slug: string }) {
   async function remove(id: string) {
     const prev = comments;
     setComments((cur) => cur.filter((c) => c.id !== id));
-    setMine((cur) => {
-      const s = new Set(cur);
-      s.delete(id);
-      saveMine(slug, s);
-      return s;
-    });
     try {
       await deleteComment(slug, id);
     } catch {
-      setComments(prev); // restore on failure
+      setComments(prev); // restore if the delete failed
     }
   }
 
@@ -119,19 +94,47 @@ export function BlogComments({ slug }: { slug: string }) {
         {loaded && comments.length > 0 && <span className="font-normal text-zinc-400"> ({comments.length})</span>}
       </h2>
 
-      <form onSubmit={submit} className="mt-6 space-y-3">
-        <input value={name} onChange={(e) => setName(e.target.value)} maxLength={60} placeholder="Your name" className={inputCls} />
-        <textarea value={text} onChange={(e) => setText(e.target.value)} maxLength={2000} rows={4} placeholder="Share your thoughts…" className={inputCls} />
-        {error && <p className="text-sm text-red-600">{error}</p>}
-        <button
-          type="submit"
-          disabled={busy}
-          className="rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-700 disabled:opacity-60"
-        >
-          {busy ? "Posting…" : "Post comment"}
-        </button>
-      </form>
+      {/* Composer — signed-in only */}
+      {authLoading ? null : user ? (
+        <form onSubmit={submit} className="mt-6 space-y-3">
+          <div className="flex items-center gap-2 text-sm text-zinc-500">
+            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-blue-600 text-[11px] font-semibold text-white" aria-hidden>
+              {initialsOf(displayName)}
+            </span>
+            <span>
+              Commenting as <span className="font-medium text-zinc-700">{displayName}</span>
+            </span>
+          </div>
+          <textarea
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            maxLength={2000}
+            rows={4}
+            placeholder="Share your thoughts…"
+            className={inputCls}
+          />
+          {error && <p className="text-sm text-red-600">{error}</p>}
+          <button
+            type="submit"
+            disabled={busy}
+            className="rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-700 disabled:opacity-60"
+          >
+            {busy ? "Posting…" : "Post comment"}
+          </button>
+        </form>
+      ) : (
+        <div className="mt-6 flex flex-col items-start gap-3 rounded-xl border border-zinc-200 bg-zinc-50 p-5 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-sm text-zinc-600">Sign in to join the conversation.</p>
+          <Link
+            href="/login"
+            className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-blue-700"
+          >
+            Sign in to comment
+          </Link>
+        </div>
+      )}
 
+      {/* Thread */}
       <div className="mt-10 space-y-6">
         {loaded && comments.length === 0 && (
           <p className="text-sm text-zinc-500">No comments yet. Be the first to share your thoughts.</p>
@@ -145,7 +148,7 @@ export function BlogComments({ slug }: { slug: string }) {
               <p className="text-sm">
                 <span className="font-semibold text-zinc-900">{c.name}</span>
                 <span className="text-zinc-400"> · {timeAgo(c.createdAt)}</span>
-                {mine.has(c.id) && (
+                {user && c.uid === user.uid && (
                   <button
                     type="button"
                     onClick={() => remove(c.id)}
