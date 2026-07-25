@@ -5,6 +5,7 @@ date: "2026-06-23"
 author: "Abdul Rahim"
 tags: ["Interview", "Job Search"]
 cover: "🎤"
+image: "/blog/how-to-prepare-for-a-job-interview.jpg"
 faqs:
   - q: "How do I prepare for a job interview?"
     a: "Research the company and the role, re-read the job description and your CV, and practice answers to common questions out loud. Then prepare a few questions of your own and sort out the logistics, like the time, place, and what to wear. A little planning turns nerves into confidence."

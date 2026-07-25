@@ -5,6 +5,7 @@ date: "2026-06-27"
 author: "Abdul Rahim"
 tags: ["Cover Letter", "Students"]
 cover: "🚀"
+image: "/blog/cover-letter-with-no-experience.jpg"
 faqs:
   - q: "How do I write a cover letter with no experience?"
     a: "Lead with genuine enthusiasm for the role, then prove your fit with transferable skills, your education, class or personal projects, and any volunteering. Name the exact job, give one or two short examples of when you showed the skills it needs, and close by asking for a chat. You do not need paid work history to write a strong letter."

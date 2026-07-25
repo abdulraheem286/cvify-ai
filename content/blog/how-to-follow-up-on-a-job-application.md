@@ -5,6 +5,7 @@ date: "2026-06-21"
 author: "Abdul Rahim"
 tags: ["Job Search"]
 cover: "📨"
+image: "/blog/how-to-follow-up-on-a-job-application.jpg"
 faqs:
   - q: "How do I follow up on a job application?"
     a: "Send a short, polite email to the recruiter or hiring manager. Say which role you applied for, repeat your interest in one line, add one detail that shows you fit, and ask about the next steps. Keep it under 150 words."

@@ -5,6 +5,7 @@ date: "2026-06-25"
 author: "Abdul Rahim"
 tags: ["Interview", "Job Search"]
 cover: "💬"
+image: "/blog/common-interview-questions-and-answers.jpg"
 faqs:
   - q: "What are the most common interview questions?"
     a: "The classics come up in almost every interview: 'Tell me about yourself', 'Why do you want this job?', 'What are your strengths and weaknesses?', 'Why should we hire you?', 'Tell me about a challenge you faced', and 'Where do you see yourself in five years?'. Prepare a short answer for each and you will handle most of the interview."

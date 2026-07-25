@@ -5,6 +5,7 @@ date: "2026-07-03"
 author: "Abdul Rahim"
 tags: ["Cover Letter", "Examples"]
 cover: "📋"
+image: "/blog/cover-letter-examples.jpg"
 faqs:
   - q: "What does a good cover letter look like?"
     a: "A good cover letter is one page, three or four short paragraphs, addressed to a real person where possible. It names the exact role, proves you can do the job with one or two specific examples, and ends with a clear next step. It sounds like you, not a template."

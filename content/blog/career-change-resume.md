@@ -5,6 +5,7 @@ date: "2026-06-19"
 author: "Abdul Rahim"
 tags: ["CV Tips", "Career Change"]
 cover: "🔄"
+image: "/blog/career-change-resume.jpg"
 faqs:
   - q: "How do I write a resume for a career change?"
     a: "Lead with a short summary that names your target role, then highlight transferable skills (abilities that carry across jobs, like communication or project management). Reframe your past experience so each bullet points at the new field. Use a combination format so skills show up before your job history."

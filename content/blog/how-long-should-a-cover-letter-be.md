@@ -5,6 +5,7 @@ date: "2026-07-01"
 author: "Abdul Rahim"
 tags: ["Cover Letter"]
 cover: "📐"
+image: "/blog/how-long-should-a-cover-letter-be.jpg"
 faqs:
   - q: "How long should a cover letter be?"
     a: "Half a page to one full page. That is about 250 to 400 words across three or four short paragraphs. Never go past one page, because hiring managers skim and a long letter often goes unread."

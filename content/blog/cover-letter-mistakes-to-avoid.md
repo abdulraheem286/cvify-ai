@@ -5,6 +5,7 @@ date: "2026-06-29"
 author: "Abdul Rahim"
 tags: ["Cover Letter", "Mistakes"]
 cover: "⚠️"
+image: "/blog/cover-letter-mistakes-to-avoid.jpg"
 faqs:
   - q: "What are the most common cover letter mistakes?"
     a: "The most common cover letter mistakes are using a generic copy-paste letter, simply repeating your CV, making it too long, leaving in typos, using 'To whom it may concern', and talking only about yourself instead of what the employer needs. Almost all of them are quick to fix once you spot them."
