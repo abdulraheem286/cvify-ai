@@ -55,7 +55,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (!auth) throw new Error("Accounts aren't available yet.");
     const cred = await createUserWithEmailAndPassword(auth, email, password);
     if (name) await updateProfile(cred.user, { displayName: name });
-    setUser({ ...cred.user });
+    // Use the real Firebase user object (spreading it drops uid/email, which
+    // are prototype getters). setTick forces a re-render for the new name.
+    setUser(cred.user);
+    setTick((t) => t + 1);
   }
   async function resetPassword(email: string) {
     if (!auth) throw new Error("Accounts aren't available yet.");
