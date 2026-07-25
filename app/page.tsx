@@ -64,12 +64,12 @@ export default function Home() {
                 Free AI resume builder
               </span>
               <h1 className="mt-4 max-w-xl text-4xl font-bold leading-[1.1] tracking-tight sm:text-5xl">
-                Build your resume in minutes with{" "}
-                <span className="bg-gradient-to-r from-blue-600 to-indigo-500 bg-clip-text text-transparent">AI</span>
+                Turn rough notes into a{" "}
+                <span className="bg-gradient-to-r from-blue-600 to-indigo-500 bg-clip-text text-transparent">job-ready CV</span>
               </h1>
               <p className="mt-4 max-w-md text-base text-zinc-600">
-                CVify AI turns simple notes into a professional resume. Edit every detail, choose from
-                professional templates, and land more interviews.
+                CVify AI turns a few lines about your experience into clear, achievement-focused bullet
+                points and a clean, ATS-ready PDF — free, in minutes.
               </p>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <Link href="/build" className="rounded-xl bg-blue-600 px-6 py-3 text-center text-base font-semibold text-white shadow-lg shadow-blue-600/20 transition-all hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-xl hover:shadow-blue-600/25">

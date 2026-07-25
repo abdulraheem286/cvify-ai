@@ -29,8 +29,8 @@ export function FeaturesSection({ showHead = true }: { showHead?: boolean }) {
         {showHead && (
           <SectionHead
             eyebrow="Features"
-            title="Everything you need to land the interview"
-            subtitle="CVify AI handles the hard parts — strong wording, clean structure, and professional design."
+            title="The parts that get your CV read"
+            subtitle="Strong wording, a clean single-column structure, and an export both software and recruiters can actually read — CVify AI handles the hard parts."
           />
         )}
         <Reveal stagger className={`grid gap-6 sm:grid-cols-2 lg:grid-cols-3${showHead ? " mt-14" : ""}`}>

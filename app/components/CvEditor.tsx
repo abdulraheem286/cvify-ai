@@ -21,6 +21,7 @@ import {
   nameError,
   emailError,
   phoneError,
+  urlError,
 } from "./fields";
 import {
   IconUser,
@@ -326,6 +327,7 @@ export function CvEditor({
   const [cloudId, setCloudId] = useState<string | undefined>(cvId);
   const [cloudSaving, setCloudSaving] = useState(false);
   const [cloudSavedAt, setCloudSavedAt] = useState<number | null>(null);
+  const [cloudError, setCloudError] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [downloading, setDownloading] = useState(false);
   const [aiBusy, setAiBusy] = useState<string | null>(null); // which AI action is running
@@ -483,12 +485,14 @@ export function CvEditor({
   const set = (key: keyof EditorForm) => (v: string) =>
     setForm((prev) => ({ ...prev, [key]: v }));
 
-  const setValidated = (key: "firstName" | "email" | "phone") => (v: string) => {
+  type ValidatedKey = "firstName" | "email" | "phone" | "website" | "linkedin";
+
+  const setValidated = (key: ValidatedKey) => (v: string) => {
     setForm((prev) => ({ ...prev, [key]: v }));
     setErrors((prev) => (prev[key] ? { ...prev, [key]: "" } : prev));
   };
 
-  function blur(key: "firstName" | "email" | "phone") {
+  function blur(key: ValidatedKey) {
     return () =>
       setErrors((prev) => {
         const msg =
@@ -496,7 +500,9 @@ export function CvEditor({
             ? nameError(form.firstName, false)
             : key === "email"
               ? emailError(form.email)
-              : phoneError(form.phone);
+              : key === "phone"
+                ? phoneError(form.phone)
+                : urlError(form[key]);
         return { ...prev, [key]: msg };
       });
   }
@@ -721,6 +727,7 @@ export function CvEditor({
   async function handleCloudSave() {
     if (!user) return;
     setCloudSaving(true);
+    setCloudError(false);
     try {
       const title = (exportCv.fullName || "Untitled CV").trim() || "Untitled CV";
       const data = { form, template, theme, hidden };
@@ -738,6 +745,7 @@ export function CvEditor({
       setCloudSavedAt(Date.now());
     } catch (err) {
       console.error("Cloud save failed:", err);
+      setCloudError(true);
     } finally {
       setCloudSaving(false);
     }
@@ -868,13 +876,21 @@ export function CvEditor({
           <IconArrowLeft className="h-4 w-4" /> <span className="hidden sm:inline">{backLabel}</span>
         </button>
         <div className="flex items-center gap-2">
-          {signedIn
-            ? (cloudSaving || cloudSavedAt) && (
-                <span className="hidden text-xs text-zinc-400 md:inline">{cloudSaving ? "Saving…" : "Saved ✓"}</span>
+          {signedIn ? (
+            cloudError ? (
+              <button type="button" onClick={handleCloudSave} className="text-xs font-medium text-red-600 hover:underline">
+                Couldn&rsquo;t save — retry
+              </button>
+            ) : (
+              (cloudSaving || cloudSavedAt) && (
+                <span className="text-xs text-zinc-400">{cloudSaving ? "Saving…" : "Saved ✓"}</span>
               )
-            : (saving || savedAt) && (
-                <span className="hidden text-xs text-zinc-400 md:inline">{saving ? "Saving…" : "Saved ✓"}</span>
-              )}
+            )
+          ) : (
+            (saving || savedAt) && (
+              <span className="hidden text-xs text-zinc-400 md:inline">{saving ? "Saving…" : "Saved ✓"}</span>
+            )
+          )}
           {(savedAt || cloudSavedAt) && (
             <button type="button" onClick={() => setConfirmFresh(true)} className="hidden text-xs font-medium text-zinc-400 transition-colors hover:text-zinc-700 sm:inline">
               Start fresh
@@ -1029,9 +1045,9 @@ export function CvEditor({
                 </div>
                 <div className="grid gap-4 sm:grid-cols-2">
                   <IconField label="Location" icon={<IconMapPin />} value={form.location} onChange={set("location")} placeholder="London, UK" />
-                  <IconField label="Website" icon={<IconGlobe />} value={form.website} onChange={set("website")} placeholder="yoursite.com" />
+                  <IconField label="Website" icon={<IconGlobe />} value={form.website} onChange={setValidated("website")} onBlur={blur("website")} placeholder="yoursite.com" error={errors.website} />
                 </div>
-                <IconField label="LinkedIn (optional)" icon={<IconGlobe />} value={form.linkedin} onChange={set("linkedin")} placeholder="linkedin.com/in/you" />
+                <IconField label="LinkedIn (optional)" icon={<IconGlobe />} value={form.linkedin} onChange={setValidated("linkedin")} onBlur={blur("linkedin")} placeholder="linkedin.com/in/you" error={errors.linkedin} />
               </div>
             </Panel>
 

@@ -49,6 +49,12 @@ export default function WizardClient() {
   const [aiBusy, setAiBusy] = useState(false);
   const [aiErr, setAiErr] = useState("");
 
+  // Move back to the top whenever the step (or phase) changes, so a new step
+  // always starts at the top instead of mid-scroll.
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [stepIndex, phase]);
+
   // Came in from a saved template (?tpl): use its look and skip the gallery step.
   useEffect(() => {
     if (seed && !seeded) {
