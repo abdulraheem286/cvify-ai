@@ -119,4 +119,4 @@ If you want a head start, [build your CV free](/build) with CVify AI, then use t
 
 Learning how to write a cover letter comes down to being specific: the right person, the right role, and real proof you can help. Get those right and the rest is just tidy formatting.
 
-Ready to gather the details that make a great letter? [Build your CV free](/build) with CVify AI, then turn your best achievements into a cover letter that gets you noticed.
+Skip the blank page: try CVify AI's [free cover letter generator](/cover-letter) — paste the job and a little about your experience (or pull it straight from a saved CV), and get a tailored draft in seconds that you can edit and download. Need a matching CV too? [Build yours free](/build) first, then turn your best achievements into a letter that gets you noticed.
