@@ -6,6 +6,15 @@ author: "Abdul Rahim"
 tags: ["CV Basics", "Resume"]
 cover: "📄"
 image: "/blog/cv-vs-resume.jpg"
+faqs:
+  - q: "What is the difference between a CV and a resume?"
+    a: "In the US, a resume is a short, tailored one-to-two page summary of the experience relevant to one job, while a CV is a longer, fuller record of your career, education, and achievements. Outside the US, 'CV' is usually just the everyday word for a resume."
+  - q: "Should I use a CV or a resume?"
+    a: "Follow the job posting and the country. In the US and Canada, send a resume for most jobs and a CV for academic, scientific, or research roles. In the UK, Europe, and much of the world, send a CV — which simply means the short, tailored document."
+  - q: "How long should a CV or resume be?"
+    a: "A resume is typically one page, or two if you have many years of relevant experience. A full academic CV has no strict limit and grows over your career, because it lists publications, research, and teaching in full."
+  - q: "Are CV and resume the same thing?"
+    a: "It depends where you are. In the US they are different documents. In the UK, Ireland, Europe, Australia, New Zealand, and many other places the terms are used interchangeably, and 'CV' means the short, tailored document a US employer would call a resume."
 ---
 
 People often use the words "CV" and "resume" as if they mean the same thing. Sometimes they do, and sometimes they do not. This guide explains the CV vs resume question in plain language, so you know exactly which document to send and when.

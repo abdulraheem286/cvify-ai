@@ -6,6 +6,17 @@ author: "Abdul Rahim"
 tags: ["ATS", "CV Tips"]
 cover: "🤖"
 image: "/blog/ats-cv-format.jpg"
+faqs:
+  - q: "What is the best CV format for ATS?"
+    a: "A clean, single-column layout with standard section headings (Experience, Education, Skills), a standard font, simple bullet points, and consistent dates. Save it as a real text-based PDF so the software can read every word."
+  - q: "What is an ATS?"
+    a: "An ATS (applicant tracking system) is software many employers use to collect, store, and search job applications. It parses your CV into text so recruiters can search and filter candidates by skills, job titles, and keywords."
+  - q: "What breaks ATS parsing?"
+    a: "Tables, text boxes, multiple columns, key details hidden in headers or footers, icons or graphics used in place of text, and image-only PDFs. If your text is not real, selectable text, the software may miss it entirely."
+  - q: "Is PDF or Word better for ATS?"
+    a: "A real text-based PDF is the safest choice: it keeps your formatting and stays selectable and searchable. Avoid scanned or image-based PDFs — highlight the text to check. Use Word only if the job posting specifically asks for it."
+  - q: "How do I add keywords to my CV for ATS?"
+    a: "Mirror the exact wording of the job description for the skills and tools you genuinely have, and place each one inside real experience bullets rather than a keyword list. Never stuff keywords or hide them in white text."
 ---
 
 Before a human ever reads your CV, a piece of software often reads it first. That software is called an ATS, and if it cannot read your file properly, your application can get filtered out. The good news: the right ATS CV format is simple, and this guide walks you through it step by step.

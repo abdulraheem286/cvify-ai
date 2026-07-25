@@ -6,6 +6,17 @@ author: "Abdul Rahim"
 tags: ["CV Tips", "Guide"]
 cover: "✍️"
 image: "/blog/how-to-write-a-cv.jpg"
+faqs:
+  - q: "What should I include on my CV?"
+    a: "Contact details, a short professional summary, work experience in reverse-chronological order, education, and skills. Add extras such as projects, certifications, volunteering, or languages when they support the job you want."
+  - q: "How do I write a CV with no experience?"
+    a: "Lead with education, projects, coursework, volunteering, and part-time or freelance work, and highlight transferable skills such as communication, organisation, and problem solving. Show what you achieved in each, not just that you were there."
+  - q: "How long should a CV be?"
+    a: "One page suits most people. Use two pages only if you have several years of relevant experience worth including. Cut older or unrelated roles rather than shrinking the font to squeeze everything in."
+  - q: "What makes a good CV bullet point?"
+    a: "Start with a strong action verb, say what you actually did, and end with the result — ideally a number. 'Rebuilt the onboarding flow, cutting drop-off by 20%' beats 'Responsible for onboarding'."
+  - q: "Should I tailor my CV to every job?"
+    a: "Yes. Mirror the wording of the job description for skills you genuinely have, and reorder your bullets so the most relevant experience appears first. A tailored CV reads better to both applicant tracking systems (ATS) and recruiters."
 ---
 
 A good CV (curriculum vitae) is simply a clear summary of your work, skills, and results. It is the document that gets you the interview, so every line should earn its place. This guide shows you how to write a CV from scratch, section by section, with short examples you can copy the shape of.
