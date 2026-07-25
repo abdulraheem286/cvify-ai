@@ -28,6 +28,7 @@ export function SiteFooter() {
               ["Guided Wizard", "/build/wizard"],
               ["Manual Builder", "/build/manual"],
               ["Import CV", "/build/import"],
+              ["Cover Letter", "/cover-letter"],
               ["Templates", "/templates"],
             ]}
           />
