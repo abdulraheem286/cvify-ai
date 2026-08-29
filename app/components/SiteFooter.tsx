@@ -7,7 +7,7 @@ export function SiteFooter() {
       <div className="mx-auto max-w-[1920px] site-px py-14">
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           <div>
-            <Link href="/" className="text-lg font-bold tracking-tight text-zinc-900">
+            <Link href="/" className="text-lg font-bold tracking-[-0.01em] text-zinc-900">
               CVify <span className="bg-gradient-to-r from-blue-600 to-indigo-500 bg-clip-text text-transparent">AI</span>
             </Link>
             <p className="mt-3 max-w-xs text-sm text-zinc-500">

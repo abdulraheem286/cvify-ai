@@ -985,7 +985,7 @@ export function CvEditor({
           <span className="inline-block rounded-full border border-blue-100 bg-blue-50 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider text-blue-600">
             CV Editor
           </span>
-          <h1 className="mt-3 text-3xl font-bold tracking-tight">Build your CV</h1>
+          <h1 className="mt-3 text-3xl font-bold tracking-[-0.01em]">Build your CV</h1>
           <p className="mt-2 text-sm text-zinc-600">
             Fill in the sections below — your preview updates live. Use the eye icon to hide a
             section from the CV. Look for the <span className="font-medium text-blue-600">AI buttons</span> to
@@ -1308,7 +1308,7 @@ export function CvEditor({
                 <IconTarget className="h-5 w-5" />
               </span>
               <div>
-                <h2 className="text-lg font-bold tracking-tight">Tailor to a job</h2>
+                <h2 className="text-lg font-bold tracking-[-0.01em]">Tailor to a job</h2>
                 <p className="text-sm text-zinc-500">Paste a job description — AI re-angles your summary and bullets to match it.</p>
               </div>
             </div>

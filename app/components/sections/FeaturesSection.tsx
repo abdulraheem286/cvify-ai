@@ -30,7 +30,7 @@ export function FeaturesSection({ showHead = true }: { showHead?: boolean }) {
           <SectionHead
             split
             eyebrow="Features"
-            title="The parts that get your CV read"
+            title="The Parts That Get Your CV Read"
             subtitle="Strong wording, a clean single-column structure, and an export both software and recruiters can actually read — CVify AI handles the hard parts."
           />
         )}
@@ -46,11 +46,11 @@ export function FeaturesSection({ showHead = true }: { showHead?: boolean }) {
 
 function Feature({ icon, title, text }: { icon: ReactNode; title: string; text: string }) {
   return (
-    <div className="group rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-blue-200 hover:shadow-lg hover:shadow-blue-600/5">
-      <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-blue-600 transition-colors group-hover:bg-blue-600 group-hover:text-white">
+    <div className="group rounded-2xl bg-white p-7 ring-1 ring-inset ring-zinc-200/80 transition-all hover:ring-blue-200">
+      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-blue-600 transition-colors group-hover:bg-blue-600 group-hover:text-white">
         {icon}
       </div>
-      <h3 className="mt-4 font-semibold text-zinc-900">{title}</h3>
+      <h3 className="mt-5 font-semibold text-zinc-900">{title}</h3>
       <p className="mt-2 text-sm leading-relaxed text-zinc-600">{text}</p>
     </div>
   );

@@ -15,7 +15,7 @@ export default function NotFound() {
           <span className="inline-block rounded-full border border-blue-100 bg-blue-50 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider text-blue-600">
             Error 404
           </span>
-          <h1 className="mt-5 text-5xl font-bold tracking-tight sm:text-6xl">Page not found</h1>
+          <h1 className="mt-5 text-5xl font-bold tracking-[-0.01em] sm:text-6xl">Page not found</h1>
           <p className="mx-auto mt-4 max-w-md text-lg text-zinc-600">
             The page you&apos;re looking for doesn&apos;t exist or may have moved. Let&apos;s get you back on track.
           </p>

@@ -109,7 +109,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                   </div>
                 )}
 
-                <h1 className="mt-4 text-3xl font-bold leading-[1.15] tracking-tight sm:text-4xl">{post.title}</h1>
+                <h1 className="mt-4 text-3xl font-bold leading-[1.15] tracking-[-0.01em] sm:text-4xl">{post.title}</h1>
 
                 {/* Meta row — author info left, Like right */}
                 <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-b border-zinc-200 pb-6">
@@ -132,7 +132,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                 )}
 
                 <div
-                  className="prose prose-zinc mt-8 max-w-none prose-headings:font-bold prose-headings:tracking-tight prose-a:font-medium prose-a:text-blue-600 hover:prose-a:text-blue-700 prose-strong:text-zinc-900 prose-img:rounded-xl prose-img:border prose-img:border-zinc-200"
+                  className="prose prose-zinc mt-8 max-w-none prose-headings:font-bold prose-headings:tracking-[-0.01em] prose-a:font-medium prose-a:text-blue-600 hover:prose-a:text-blue-700 prose-strong:text-zinc-900 prose-img:rounded-xl prose-img:border prose-img:border-zinc-200"
                   dangerouslySetInnerHTML={{ __html: post.html }}
                 />
 

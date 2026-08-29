@@ -185,7 +185,7 @@ export default function BuildClient() {
                   <IconSparkles className="h-6 w-6" />
                 </span>
                 <div>
-                  <h1 className="text-3xl font-bold tracking-tight">AI CV Builder</h1>
+                  <h1 className="text-3xl font-bold tracking-[-0.01em]">AI CV Builder</h1>
                   <p className="text-sm text-zinc-600">
                     Paste rough notes — AI writes a first draft you can edit.
                   </p>

@@ -31,7 +31,7 @@ export default function FaqPage() {
       <main className="flex-1">
         <PageHero
           eyebrow="FAQ"
-          title="Frequently asked questions"
+          title="Frequently Asked Questions"
           subtitle="Answers to questions about building, optimizing, and exporting your resume with CVify AI."
         />
         <FaqSection showHead={false} columns={2} />

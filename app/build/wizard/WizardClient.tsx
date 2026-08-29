@@ -191,7 +191,7 @@ export default function WizardClient() {
             {step.icon}
           </span>
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">{step.title}</h1>
+            <h1 className="text-2xl font-bold tracking-[-0.01em]">{step.title}</h1>
             <p className="mt-1 text-sm text-zinc-600">{step.tip}</p>
           </div>
         </div>

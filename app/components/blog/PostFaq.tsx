@@ -7,7 +7,7 @@ export function PostFaqSection({ faqs }: { faqs: PostFaq[] }) {
   if (faqs.length === 0) return null;
   return (
     <section className="mt-12 border-t border-zinc-200 pt-8">
-      <h2 className="text-2xl font-bold tracking-tight text-zinc-900">Frequently asked questions</h2>
+      <h2 className="text-2xl font-bold tracking-[-0.01em] text-zinc-900">Frequently Asked Questions</h2>
       <div className="mt-6 space-y-6">
         {faqs.map((f) => (
           <div key={f.q}>

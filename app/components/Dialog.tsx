@@ -44,7 +44,7 @@ export function ConfirmDialog({
 
   return (
     <Overlay onClose={onClose}>
-      <h2 className="text-lg font-bold tracking-tight text-zinc-900">{title}</h2>
+      <h2 className="text-lg font-bold tracking-[-0.01em] text-zinc-900">{title}</h2>
       <p className="mt-2 text-sm text-zinc-600">{message}</p>
       {danger && armed && (
         <p className="mt-3 text-sm font-medium text-red-600">This can&apos;t be undone. Click again to confirm.</p>
@@ -104,7 +104,7 @@ export function PromptDialog({
 
   return (
     <Overlay onClose={onClose}>
-      <h2 className="text-lg font-bold tracking-tight text-zinc-900">{title}</h2>
+      <h2 className="text-lg font-bold tracking-[-0.01em] text-zinc-900">{title}</h2>
       <label className="mt-4 mb-1.5 block text-sm font-medium text-zinc-700">{label}</label>
       <input
         autoFocus

@@ -4,17 +4,17 @@ import Link from "next/link";
 export function CtaBand() {
   return (
     <section className="mx-auto max-w-[1920px] site-px py-20">
-      <div className="rounded-3xl bg-blue-600 px-6 py-16 text-center text-white shadow-lg shadow-blue-600/20">
+      <div className="rounded-3xl bg-gradient-to-br from-blue-600 to-indigo-600 px-6 py-20 text-center text-white shadow-xl shadow-blue-600/20">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Start building your resume today</h2>
+          <h2 className="text-3xl font-bold tracking-[-0.01em] sm:text-4xl">Start Building Your Resume Today</h2>
           <p className="mx-auto mt-4 max-w-md text-blue-100">
             Join job seekers who land interviews with CVify AI — free, with a clean PDF in minutes.
           </p>
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <Link href="/build" className="rounded-xl bg-white px-6 py-3 font-semibold text-blue-700 shadow-lg transition-all hover:-translate-y-0.5 hover:bg-blue-50">
+            <Link href="/build" className="rounded-full bg-white px-7 py-3.5 font-semibold text-blue-700 shadow-lg transition-all hover:-translate-y-0.5 hover:bg-blue-50">
               Build my resume →
             </Link>
-            <Link href="/templates" className="rounded-xl border border-white/40 px-6 py-3 font-semibold text-white transition-colors hover:bg-white/10">
+            <Link href="/templates" className="rounded-full px-7 py-3.5 font-semibold text-white ring-1 ring-inset ring-white/40 transition-colors hover:bg-white/10">
               Browse templates
             </Link>
           </div>

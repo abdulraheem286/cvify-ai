@@ -54,7 +54,7 @@ export default function AboutPage() {
 
             {/* What you can do */}
             <div>
-              <h2 className="text-2xl font-bold tracking-tight text-zinc-900">What you can do with CVify AI</h2>
+              <h2 className="text-2xl font-bold tracking-[-0.01em] text-zinc-900">What You Can Do With CVify AI</h2>
               <div className="mt-6 grid gap-4 sm:grid-cols-2">
                 {CAPABILITIES.map((t) => (
                   <div key={t} className="flex items-start gap-3 rounded-xl border border-zinc-200 bg-white p-4">
@@ -69,7 +69,7 @@ export default function AboutPage() {
 
             {/* Founder */}
             <div>
-              <h2 className="text-2xl font-bold tracking-tight text-zinc-900">Who&rsquo;s behind it</h2>
+              <h2 className="text-2xl font-bold tracking-[-0.01em] text-zinc-900">Who&rsquo;s Behind It</h2>
               <div className="mt-6 flex flex-col gap-5 rounded-2xl border border-zinc-200 bg-zinc-50 p-6 sm:flex-row sm:items-start">
                 <AuthorAvatar author={founder} size={72} />
                 <div>
@@ -98,7 +98,7 @@ export default function AboutPage() {
 
             {/* Why free */}
             <div>
-              <h2 className="text-2xl font-bold tracking-tight text-zinc-900">Why it&rsquo;s free</h2>
+              <h2 className="text-2xl font-bold tracking-[-0.01em] text-zinc-900">Why It&rsquo;s Free</h2>
               <p className="mt-3 text-[15px] leading-relaxed text-zinc-600">
                 A CV shouldn&rsquo;t be a paywall between you and your next job. CVify AI is free to use; we keep it
                 running through advertising and by building tools people genuinely find useful. You can read how we handle

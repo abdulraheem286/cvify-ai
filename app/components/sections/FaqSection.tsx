@@ -10,7 +10,7 @@ export function FaqSection({ showHead = true, columns = 1 }: { showHead?: boolea
     <section id="faq" className="border-t border-zinc-200 bg-white">
       <div className={`mx-auto site-px pb-20 ${showHead ? "pt-20" : "pt-10"} ${columns === 2 ? "max-w-7xl" : "max-w-3xl"}`}>
         {showHead && (
-          <SectionHead eyebrow="FAQ" title="Frequently asked questions" subtitle="Answers to questions about building, optimizing, and exporting your resume." />
+          <SectionHead eyebrow="FAQ" title="Frequently Asked Questions" subtitle="Answers to questions about building, optimizing, and exporting your resume." />
         )}
         <FaqList columns={columns} topGap={showHead} />
       </div>

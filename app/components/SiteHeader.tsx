@@ -8,7 +8,7 @@ export function SiteHeader() {
       <div className="mx-auto flex max-w-[1920px] items-center justify-between site-px py-4">
         <div className="flex items-center gap-1.5">
           <MobileNav />
-          <Link href="/" className="text-xl font-bold tracking-tight text-zinc-900">
+          <Link href="/" className="text-xl font-bold tracking-[-0.01em] text-zinc-900">
             CVify <span className="text-blue-600">AI</span>
           </Link>
         </div>

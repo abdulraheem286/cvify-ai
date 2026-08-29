@@ -103,8 +103,8 @@ export default function Home() {
                 </span>
                 Free AI resume builder
               </span>
-              <h1 className="mx-auto mt-5 max-w-3xl text-4xl font-bold leading-[1.08] tracking-tight text-zinc-900 sm:text-5xl lg:text-6xl">
-                Turn rough notes into a <span className="text-blue-600">job-ready CV</span>
+              <h1 className="mx-auto mt-5 max-w-3xl text-4xl font-bold leading-[1.08] tracking-[-0.01em] text-zinc-900 sm:text-5xl lg:text-6xl">
+                Turn Rough Notes Into a <span className="text-blue-600">Job-Ready CV</span>
               </h1>
               <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-zinc-600 sm:text-lg">
                 CVify AI turns a few lines about your experience into clear, achievement-focused bullet
@@ -156,8 +156,8 @@ export default function Home() {
         <section className="bg-white">
           <div className="mx-auto max-w-[1920px] site-px py-20">
             <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
-              <h2 className="max-w-xl text-3xl font-bold leading-tight tracking-tight sm:text-4xl">
-                Everything you need to apply, <span className="text-blue-600">completely free</span>
+              <h2 className="max-w-xl text-3xl font-bold leading-tight tracking-[-0.01em] sm:text-4xl">
+                Everything You Need to Apply, <span className="text-blue-600">Completely Free</span>
               </h2>
               <Link
                 href="/build"
@@ -184,7 +184,7 @@ export default function Home() {
         {/* How it works */}
         <section id="how" className="border-t border-zinc-200 bg-white">
           <div className="mx-auto max-w-[1920px] site-px py-20">
-            <SectionHead split eyebrow="Process" title="Four simple steps" subtitle="From a blank page to a polished resume in minutes." />
+            <SectionHead split eyebrow="Process" title="Four Simple Steps" subtitle="From a blank page to a polished resume in minutes." />
             <Reveal stagger className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
               <Step n={1} title="Add your info" text="Paste rough notes or share a few details about your work history." />
               <Step n={2} title="Generate or type" text="Let AI write a first draft, or fill the editor in yourself." />
@@ -199,8 +199,8 @@ export default function Home() {
           <div className="mx-auto grid max-w-[1920px] items-center gap-12 site-px py-20 lg:grid-cols-2 lg:gap-20">
             <div className="max-w-xl">
               <span className="inline-block rounded-full border border-blue-100 bg-blue-50 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider text-blue-600">AI draft</span>
-              <h2 className="mt-4 text-3xl font-bold leading-[1.15] tracking-tight sm:text-4xl">
-                A professional first draft in <span className="text-blue-600">seconds</span>
+              <h2 className="mt-4 text-3xl font-bold leading-[1.15] tracking-[-0.01em] sm:text-4xl">
+                A Professional First Draft in <span className="text-blue-600">Seconds</span>
               </h2>
               <p className="mt-4 leading-relaxed text-zinc-600">
                 Paste your old CV or jot down rough notes. CVify AI writes a compelling summary and
@@ -237,8 +237,8 @@ export default function Home() {
             </div>
             <div className="order-1 max-w-xl lg:order-2">
               <span className="inline-block rounded-full border border-blue-100 bg-blue-50 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider text-blue-600">Edit live</span>
-              <h2 className="mt-4 text-3xl font-bold leading-[1.15] tracking-tight sm:text-4xl">
-                Edit everything, switch styles <span className="text-blue-600">instantly</span>
+              <h2 className="mt-4 text-3xl font-bold leading-[1.15] tracking-[-0.01em] sm:text-4xl">
+                Edit Everything, Switch Styles <span className="text-blue-600">Instantly</span>
               </h2>
               <p className="mt-4 leading-relaxed text-zinc-600">
                 Fine-tune every section in the editor, then flip between templates and recolor or
@@ -263,7 +263,7 @@ export default function Home() {
             <SectionHead
               split
               eyebrow="Who it's for"
-              title="Built for every kind of job seeker"
+              title="Built for Every Kind of Job Seeker"
               subtitle="Whatever stage you're at, CVify AI gives you a polished CV tailored to the role."
             />
             <Reveal stagger className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -281,7 +281,7 @@ export default function Home() {
             <SectionHead
               split
               eyebrow="Resume tips"
-              title="How to write a resume that gets interviews"
+              title="How to Write a Resume That Gets Interviews"
               subtitle="Simple, proven principles — and CVify AI helps you apply each one."
             />
             <Reveal stagger className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -300,17 +300,17 @@ export default function Home() {
 
         {/* CTA */}
         <section className="mx-auto max-w-[1920px] site-px pb-20">
-          <div className="rounded-3xl bg-blue-600 px-6 py-16 text-center text-white shadow-lg shadow-blue-600/20">
+          <div className="rounded-3xl bg-gradient-to-br from-blue-600 to-indigo-600 px-6 py-20 text-center text-white shadow-xl shadow-blue-600/20">
             <div>
-              <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Start building your resume today</h2>
+              <h2 className="text-3xl font-bold tracking-[-0.01em] sm:text-4xl">Start Building Your Resume Today</h2>
               <p className="mx-auto mt-4 max-w-md text-blue-100">
                 Join job seekers who land interviews with CVify AI — free, with a clean PDF in minutes.
               </p>
               <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-                <Link href="/build" className="rounded-xl bg-white px-6 py-3 font-semibold text-blue-700 shadow-lg transition-all hover:-translate-y-0.5 hover:bg-blue-50">
+                <Link href="/build" className="rounded-full bg-white px-7 py-3.5 font-semibold text-blue-700 shadow-lg transition-all hover:-translate-y-0.5 hover:bg-blue-50">
                   Build my resume →
                 </Link>
-                <a href="#templates" className="rounded-xl border border-white/40 px-6 py-3 font-semibold text-white transition-colors hover:bg-white/10">
+                <a href="#templates" className="rounded-full px-7 py-3.5 font-semibold text-white ring-1 ring-inset ring-white/40 transition-colors hover:bg-white/10">
                   Browse templates
                 </a>
               </div>
@@ -326,11 +326,11 @@ export default function Home() {
 
 function Stat({ icon, value, label }: { icon: ReactNode; value: string; label: string }) {
   return (
-    <div className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm transition-all hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-md">
-      <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+    <div className="rounded-2xl bg-zinc-50 p-6 ring-1 ring-inset ring-zinc-200/80 transition-colors hover:bg-white hover:ring-blue-200">
+      <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-600 text-white">
         {icon}
       </div>
-      <p className="mt-5 text-4xl font-bold tracking-tight text-zinc-900">{value}</p>
+      <p className="mt-5 text-4xl font-bold tracking-[-0.01em] text-zinc-900">{value}</p>
       <p className="mt-1 text-sm font-medium text-zinc-500">{label}</p>
     </div>
   );
@@ -338,7 +338,7 @@ function Stat({ icon, value, label }: { icon: ReactNode; value: string; label: s
 
 function UseCase({ title, text }: { title: string; text: string }) {
   return (
-    <div className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-blue-200 hover:shadow-lg hover:shadow-blue-600/5">
+    <div className="border-t-2 border-zinc-200 pt-5 transition-colors hover:border-blue-500">
       <h3 className="font-semibold text-zinc-900">{title}</h3>
       <p className="mt-2 text-sm leading-relaxed text-zinc-600">{text}</p>
     </div>
@@ -347,21 +347,26 @@ function UseCase({ title, text }: { title: string; text: string }) {
 
 function Tip({ n, title, text }: { n: string; title: string; text: string }) {
   return (
-    <div className="rounded-2xl border border-zinc-200 bg-white p-6 transition-all duration-300 hover:-translate-y-1 hover:border-blue-200 hover:shadow-lg hover:shadow-blue-600/5">
-      <p className="text-sm font-bold text-blue-600">{n}</p>
-      <h3 className="mt-2 font-semibold text-zinc-900">{title}</h3>
-      <p className="mt-2 text-sm leading-relaxed text-zinc-600">{text}</p>
+    <div className="flex gap-5">
+      <span className="text-2xl font-bold tabular-nums text-blue-200">{n}</span>
+      <div>
+        <h3 className="font-semibold text-zinc-900">{title}</h3>
+        <p className="mt-2 text-sm leading-relaxed text-zinc-600">{text}</p>
+      </div>
     </div>
   );
 }
 
 function Step({ n, title, text }: { n: number; title: string; text: string }) {
   return (
-    <div className="rounded-2xl border border-zinc-200 bg-white p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-blue-600/5">
-      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-600 text-sm font-bold text-white shadow-sm">
-        {n}
+    <div className="relative">
+      <div className="flex items-center gap-3">
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-blue-600 text-sm font-bold text-white">
+          {n}
+        </span>
+        <span aria-hidden className="hidden h-px flex-1 bg-gradient-to-r from-blue-200 to-transparent lg:block" />
       </div>
-      <h3 className="mt-4 font-semibold text-zinc-900">{title}</h3>
+      <h3 className="mt-5 font-semibold text-zinc-900">{title}</h3>
       <p className="mt-2 text-sm leading-relaxed text-zinc-600">{text}</p>
     </div>
   );

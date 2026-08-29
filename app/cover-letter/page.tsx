@@ -18,7 +18,7 @@ export default function CoverLetterPage() {
       <main className="flex-1">
         <PageHero
           eyebrow="Cover Letter"
-          title="Free cover letter generator"
+          title="Free Cover Letter Generator"
           subtitle="Paste the job and a little about you — or start from a saved CV — and CVify AI writes a tailored cover letter you can edit and download."
         />
         <CoverLetterClient />

@@ -27,7 +27,7 @@ export default async function BuildChooser({ searchParams }: { searchParams: Pro
             <span className="inline-block rounded-full border border-blue-100 bg-blue-50 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider text-blue-600">
               Get started
             </span>
-            <h1 className="mt-5 text-4xl font-bold tracking-tight sm:text-5xl">
+            <h1 className="mt-5 text-4xl font-bold tracking-[-0.01em] sm:text-5xl">
               How do you want to build your CV?
             </h1>
             <p className="mt-3 text-zinc-600">

@@ -22,7 +22,7 @@ export default function BlogIndexPage() {
       <main className="flex-1">
         <PageHero
           eyebrow="Blogs"
-          title="CV and resume tips, guides and examples"
+          title="CV and Resume Tips, Guides and Examples"
           subtitle="Practical, up-to-date advice to help you write a stronger CV and land more interviews."
         />
         <section className="mx-auto max-w-[1920px] site-px pb-20 pt-10">

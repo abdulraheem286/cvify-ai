@@ -21,7 +21,7 @@ export default function LegalPage() {
       <main className="flex-1">
         <PageHero
           eyebrow="Legal"
-          title="Legal & credits"
+          title="Legal & Credits"
           subtitle="Plain-language terms, privacy, and credits for CVify AI. Last updated July 2026."
         />
 
@@ -124,7 +124,7 @@ export default function LegalPage() {
 function Block({ title, children }: { title: string; children: ReactNode }) {
   return (
     <div>
-      <h2 className="text-xl font-bold tracking-tight text-zinc-900">{title}</h2>
+      <h2 className="text-xl font-bold tracking-[-0.01em] text-zinc-900">{title}</h2>
       <div className="mt-3">{children}</div>
     </div>
   );

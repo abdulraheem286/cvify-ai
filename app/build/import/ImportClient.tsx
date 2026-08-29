@@ -150,7 +150,7 @@ export default function ImportClient() {
                   <IconSparkles className="h-6 w-6" />
                 </span>
                 <div>
-                  <h1 className="text-3xl font-bold tracking-tight">Import your CV</h1>
+                  <h1 className="text-3xl font-bold tracking-[-0.01em]">Import your CV</h1>
                   <p className="text-sm text-zinc-600">
                     Upload a PDF or paste your existing CV — the AI reads it into the editor.
                   </p>

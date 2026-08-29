@@ -20,7 +20,7 @@ export default function TemplatesPage() {
       <main className="flex-1">
         <PageHero
           eyebrow="Templates"
-          title="Free CV & resume templates"
+          title="Free CV & Resume Templates"
           subtitle="Professional, minimal, and creative layouts. Switch styles anytime without losing your content, then recolor and change fonts to make it yours."
         />
         <TemplatesSection cv={sampleCv} showHead={false} />

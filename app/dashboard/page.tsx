@@ -208,7 +208,7 @@ function CvsView() {
       {error && <p className="mt-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}
 
       <div className="mt-10 flex items-center gap-2">
-        <h2 className="text-xl font-bold tracking-tight">Your CVs</h2>
+        <h2 className="text-xl font-bold tracking-[-0.01em]">Your CVs</h2>
         <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-xs font-semibold text-zinc-600">{count}</span>
       </div>
 
@@ -328,7 +328,7 @@ function TemplatesView() {
     <div>
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">My Templates</h1>
+          <h1 className="text-2xl font-bold tracking-[-0.01em]">My Templates</h1>
           <p className="mt-1 text-sm text-zinc-600">Saved layout + colour styles you can reuse on any CV.</p>
         </div>
         <Link
@@ -457,7 +457,7 @@ function ProfileView() {
 
   return (
     <div className="max-w-xl">
-      <h1 className="text-2xl font-bold tracking-tight">Profile</h1>
+      <h1 className="text-2xl font-bold tracking-[-0.01em]">Profile</h1>
       <div className="mt-8 rounded-2xl border border-zinc-200 bg-white p-6">
         <div className="flex items-center gap-4">
           <span className="flex h-16 w-16 items-center justify-center rounded-full bg-blue-600 text-2xl font-bold text-white">

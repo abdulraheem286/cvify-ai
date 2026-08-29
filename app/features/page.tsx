@@ -19,7 +19,7 @@ export default function FeaturesPage() {
       <main className="flex-1">
         <PageHero
           eyebrow="Features"
-          title="Everything you need to land the interview"
+          title="Everything You Need to Land the Interview"
           subtitle="CVify AI handles the hard parts — strong wording, clean structure, and professional design."
         />
         <FeaturesSection showHead={false} />

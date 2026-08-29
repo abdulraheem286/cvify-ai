@@ -7,7 +7,7 @@ export function PageHero({ eyebrow, title, subtitle }: { eyebrow: string; title:
         <span className="inline-block rounded-full border border-blue-100 bg-blue-50 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider text-blue-600">
           {eyebrow}
         </span>
-        <h1 className="mx-auto mt-4 max-w-3xl text-4xl font-bold leading-[1.1] tracking-tight sm:text-5xl">{title}</h1>
+        <h1 className="mx-auto mt-4 max-w-3xl text-4xl font-bold leading-[1.1] tracking-[-0.01em] sm:text-5xl">{title}</h1>
         <p className="mx-auto mt-4 max-w-xl text-lg text-zinc-600">{subtitle}</p>
       </div>
     </section>

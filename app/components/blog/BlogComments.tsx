@@ -89,7 +89,7 @@ export function BlogComments({ slug }: { slug: string }) {
 
   return (
     <section className="mx-auto mt-16 max-w-3xl border-t border-zinc-200 pt-10">
-      <h2 className="text-xl font-bold tracking-tight text-zinc-900">
+      <h2 className="text-xl font-bold tracking-[-0.01em] text-zinc-900">
         Comments
         {loaded && comments.length > 0 && <span className="font-normal text-zinc-400"> ({comments.length})</span>}
       </h2>

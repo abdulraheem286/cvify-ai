@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 export function Block({ title, children }: { title: string; children: ReactNode }) {
   return (
     <div>
-      <h2 className="text-xl font-bold tracking-tight text-zinc-900">{title}</h2>
+      <h2 className="text-xl font-bold tracking-[-0.01em] text-zinc-900">{title}</h2>
       <div className="mt-3">{children}</div>
     </div>
   );

@@ -74,12 +74,12 @@ function LoginInner() {
       <div className="grid w-full max-w-6xl overflow-hidden rounded-3xl border border-zinc-200 bg-white shadow-xl lg:grid-cols-2">
         {/* LEFT — form */}
         <div className="flex min-h-[620px] flex-col px-6 py-8 sm:px-12">
-          <Link href="/" className="text-xl font-bold tracking-tight text-zinc-900">
+          <Link href="/" className="text-xl font-bold tracking-[-0.01em] text-zinc-900">
             CVify <span className="bg-gradient-to-r from-blue-600 to-indigo-500 bg-clip-text text-transparent">AI</span>
           </Link>
 
           <div className="my-auto w-full max-w-sm self-center py-10">
-            <h1 className="text-2xl font-bold tracking-tight text-zinc-900">
+            <h1 className="text-2xl font-bold tracking-[-0.01em] text-zinc-900">
               {mode === "signin" ? "Welcome back" : mode === "signup" ? "Get started now" : "Reset your password"}
             </h1>
             <p className="mt-1.5 text-sm text-zinc-500">

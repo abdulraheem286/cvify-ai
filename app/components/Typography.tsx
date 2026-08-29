@@ -15,7 +15,7 @@ type Props = {
 
 export function Heading({ as: Tag = "h2", className = "", children }: Props) {
   return (
-    <Tag className={`font-display font-bold tracking-tight text-zinc-900 ${className}`}>
+    <Tag className={`font-display font-bold tracking-[-0.01em] text-zinc-900 ${className}`}>
       {children}
     </Tag>
   );
