@@ -7,7 +7,10 @@ import { getFirestore, initializeFirestore, type Firestore } from "firebase/fire
 // domains). Env vars override if set.
 const config = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "AIzaSyDi7lhNK85DKHyaViLX3RP0KFTQrmw25hw",
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || "cvify-ai-286.firebaseapp.com",
+  // Our own domain (proxied to the Firebase handler in next.config.ts) so the
+  // Google sign-in screen says "continue to cvifyai.com". Set this env var to
+  // cvify-ai-286.firebaseapp.com to roll back instantly without a deploy.
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || "www.cvifyai.com",
   projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "cvify-ai-286",
   storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || "cvify-ai-286.firebasestorage.app",
   messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || "1081775926061",
