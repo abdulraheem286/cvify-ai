@@ -6,6 +6,8 @@ import { SiteFooter } from "./components/SiteFooter";
 import { Reveal } from "./components/Reveal";
 import { ScaledPreview } from "./components/ScaledPreview";
 import { SectionHead } from "./components/SectionHead";
+import { HeroShell } from "./components/HeroShell";
+import { SectionShell } from "./components/SectionShell";
 import { FeaturesSection } from "./components/sections/FeaturesSection";
 import { TemplatesSection } from "./components/sections/TemplatesSection";
 import { FaqSection } from "./components/sections/FaqSection";
@@ -55,106 +57,67 @@ export default function Home() {
       <SiteHeader />
 
       <main className="flex-1">
-        {/* Hero — soft gradient card with background illustrations */}
-        <section className="site-px pt-4">
-          <div className="relative isolate overflow-hidden rounded-3xl bg-gradient-to-b from-blue-50 via-indigo-50/50 to-white px-6 pt-14 ring-1 ring-inset ring-blue-100 sm:pt-20">
-            {/* --- background illustrations --- */}
-            <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
-              {/* soft colour washes */}
-              <div className="absolute -left-24 -top-16 h-80 w-80 rounded-full bg-blue-200/45 blur-3xl" />
-              <div className="absolute -right-20 top-24 h-96 w-96 rounded-full bg-indigo-200/40 blur-3xl" />
-              <div className="absolute bottom-0 left-1/2 h-72 w-[42rem] -translate-x-1/2 rounded-full bg-sky-200/30 blur-3xl" />
-
-              {/* dot grid */}
-              <svg className="absolute inset-0 h-full w-full text-blue-300/35" aria-hidden>
-                <defs>
-                  <pattern id="heroDots" width="26" height="26" patternUnits="userSpaceOnUse">
-                    <circle cx="1.5" cy="1.5" r="1.5" fill="currentColor" />
-                  </pattern>
-                </defs>
-                <rect width="100%" height="100%" fill="url(#heroDots)" />
-              </svg>
-
-              {/* line-art accents */}
-              <svg className="absolute left-6 top-28 h-24 w-24 text-blue-400/40 sm:h-32 sm:w-32" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <circle cx="50" cy="50" r="34" />
-                <circle cx="50" cy="50" r="22" strokeDasharray="4 5" />
-              </svg>
-              <svg className="absolute right-8 bottom-44 hidden h-28 w-28 text-indigo-400/35 lg:block" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <rect x="18" y="18" width="64" height="64" rx="14" />
-                <path d="M32 50h36M32 38h36M32 62h22" strokeLinecap="round" />
-              </svg>
-
-              {/* floating badges */}
-              <span className="absolute left-[6%] top-[38%] hidden rotate-[-8deg] rounded-xl bg-white/90 px-3 py-2 text-xs font-semibold text-blue-700 shadow-lg shadow-blue-900/5 ring-1 ring-blue-100 backdrop-blur lg:block">
-                ✨ AI-written bullets
+        {/* Hero */}
+        <HeroShell className="pt-14 sm:pt-20">
+          <Reveal stagger className="mx-auto max-w-3xl text-center">
+            <span className="inline-flex items-center gap-2 rounded-full bg-white/80 px-3.5 py-1.5 text-xs font-semibold text-blue-700 shadow-sm ring-1 ring-inset ring-blue-200 backdrop-blur">
+              <span className="relative flex h-1.5 w-1.5">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-blue-400 opacity-75" />
+                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-blue-500" />
               </span>
-              <span className="absolute right-[7%] top-[30%] hidden rotate-[7deg] rounded-xl bg-white/90 px-3 py-2 text-xs font-semibold text-blue-700 shadow-lg shadow-blue-900/5 ring-1 ring-blue-100 backdrop-blur lg:block">
-                ✓ ATS-ready PDF
-              </span>
+              Free AI resume builder
+            </span>
+            <h1 className="mx-auto mt-5 max-w-3xl text-4xl font-bold leading-[1.08] tracking-[-0.01em] text-zinc-900 sm:text-5xl lg:text-6xl">
+              Turn Rough Notes Into a <span className="text-blue-600">Job-Ready CV</span>
+            </h1>
+            <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-zinc-600 sm:text-lg">
+              CVify AI turns a few lines about your experience into clear, achievement-focused bullet
+              points and a clean, ATS-ready PDF — free, in minutes.
+            </p>
+            <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+              <Link
+                href="/build"
+                className="rounded-full bg-blue-600 px-7 py-3.5 text-base font-semibold text-white shadow-lg shadow-blue-600/25 transition-all hover:-translate-y-0.5 hover:bg-blue-700"
+              >
+                Create my CV — it&rsquo;s free
+              </Link>
+              <Link
+                href="/templates"
+                className="rounded-full bg-white px-7 py-3.5 text-base font-semibold text-zinc-700 shadow-sm ring-1 ring-inset ring-zinc-300 transition-colors hover:bg-zinc-50"
+              >
+                Browse templates
+              </Link>
             </div>
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-zinc-500">
+              <TrustItem>Free forever</TrustItem>
+              <TrustItem>No credit card</TrustItem>
+              <TrustItem>ATS-ready PDF</TrustItem>
+            </div>
+          </Reveal>
 
-            {/* --- content --- */}
-            <Reveal stagger className="relative z-10 mx-auto max-w-3xl text-center">
-              <span className="inline-flex items-center gap-2 rounded-full bg-white/80 px-3.5 py-1.5 text-xs font-semibold text-blue-700 shadow-sm ring-1 ring-inset ring-blue-200 backdrop-blur">
-                <span className="relative flex h-1.5 w-1.5">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-blue-400 opacity-75" />
-                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-blue-500" />
-                </span>
-                Free AI resume builder
-              </span>
-              <h1 className="mx-auto mt-5 max-w-3xl text-4xl font-bold leading-[1.08] tracking-[-0.01em] text-zinc-900 sm:text-5xl lg:text-6xl">
-                Turn Rough Notes Into a <span className="text-blue-600">Job-Ready CV</span>
-              </h1>
-              <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-zinc-600 sm:text-lg">
-                CVify AI turns a few lines about your experience into clear, achievement-focused bullet
-                points and a clean, ATS-ready PDF — free, in minutes.
-              </p>
-              <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-                <Link
-                  href="/build"
-                  className="rounded-full bg-blue-600 px-7 py-3.5 text-base font-semibold text-white shadow-lg shadow-blue-600/25 transition-all hover:-translate-y-0.5 hover:bg-blue-700"
-                >
-                  Create my CV — it&rsquo;s free
-                </Link>
-                <Link
-                  href="/templates"
-                  className="rounded-full bg-white px-7 py-3.5 text-base font-semibold text-zinc-700 shadow-sm ring-1 ring-inset ring-zinc-300 transition-colors hover:bg-zinc-50"
-                >
-                  Browse templates
-                </Link>
-              </div>
-              <div className="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-zinc-500">
-                <TrustItem>Free forever</TrustItem>
-                <TrustItem>No credit card</TrustItem>
-                <TrustItem>ATS-ready PDF</TrustItem>
-              </div>
-            </Reveal>
-
-            {/* --- floating CV previews --- */}
-            <div className="relative z-10 mx-auto mt-14 flex h-[240px] max-w-5xl items-start justify-center gap-5 sm:h-[300px] lg:h-[340px]">
-              <div className="hidden w-[27%] translate-y-8 overflow-hidden rounded-t-xl bg-white shadow-2xl shadow-blue-900/15 ring-1 ring-zinc-200/70 lg:block">
-                <ScaledPreview maxHeight={420}>
-                  <ExecutiveTemplate cv={sampleCv} domId="hero-left" />
-                </ScaledPreview>
-              </div>
-              <div className="w-[74%] overflow-hidden rounded-t-xl bg-white shadow-2xl shadow-blue-900/20 ring-1 ring-zinc-200/70 sm:w-[52%] lg:w-[36%]">
-                <ScaledPreview maxHeight={480}>
-                  <ModernTemplate cv={sampleCv} domId="hero-preview" />
-                </ScaledPreview>
-              </div>
-              <div className="hidden w-[27%] translate-y-8 overflow-hidden rounded-t-xl bg-white shadow-2xl shadow-blue-900/15 ring-1 ring-zinc-200/70 lg:block">
-                <ScaledPreview maxHeight={420}>
-                  <MinimalTemplate cv={sampleCv} domId="hero-right" />
-                </ScaledPreview>
-              </div>
+          {/* Floating CV previews, clipped by the card */}
+          <div className="mx-auto mt-14 flex h-[240px] max-w-5xl items-start justify-center gap-5 sm:h-[300px] lg:h-[340px]">
+            <div className="hidden w-[27%] translate-y-8 overflow-hidden rounded-t-xl bg-white shadow-2xl shadow-blue-900/15 ring-1 ring-zinc-200/70 lg:block">
+              <ScaledPreview maxHeight={420}>
+                <ExecutiveTemplate cv={sampleCv} domId="hero-left" />
+              </ScaledPreview>
+            </div>
+            <div className="w-[74%] overflow-hidden rounded-t-xl bg-white shadow-2xl shadow-blue-900/20 ring-1 ring-zinc-200/70 sm:w-[52%] lg:w-[36%]">
+              <ScaledPreview maxHeight={480}>
+                <ModernTemplate cv={sampleCv} domId="hero-preview" />
+              </ScaledPreview>
+            </div>
+            <div className="hidden w-[27%] translate-y-8 overflow-hidden rounded-t-xl bg-white shadow-2xl shadow-blue-900/15 ring-1 ring-zinc-200/70 lg:block">
+              <ScaledPreview maxHeight={420}>
+                <MinimalTemplate cv={sampleCv} domId="hero-right" />
+              </ScaledPreview>
             </div>
           </div>
-        </section>
+        </HeroShell>
 
         {/* Highlights */}
-        <section className="bg-white">
-          <div className="mx-auto max-w-[1920px] site-px py-20">
+        <section className="site-px py-3">
+          <div className="mx-auto max-w-[1500px] rounded-3xl px-6 py-16 ring-1 ring-inset sm:px-10 sm:py-20 bg-zinc-50/80 ring-zinc-200/70">
             <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
               <h2 className="max-w-xl text-3xl font-bold leading-tight tracking-[-0.01em] sm:text-4xl">
                 Everything You Need to Apply, <span className="text-blue-600">Completely Free</span>
@@ -182,8 +145,8 @@ export default function Home() {
         <TemplatesSection cv={sampleCv} />
 
         {/* How it works */}
-        <section id="how" className="border-t border-zinc-200 bg-white">
-          <div className="mx-auto max-w-[1920px] site-px py-20">
+        <section id="how" className="site-px py-3">
+          <div className="mx-auto max-w-[1500px] rounded-3xl px-6 py-16 ring-1 ring-inset sm:px-10 sm:py-20 bg-gradient-to-b from-blue-50/60 to-white ring-blue-100">
             <SectionHead split eyebrow="Process" title="Four Simple Steps" subtitle="From a blank page to a polished resume in minutes." />
             <Reveal stagger className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
               <Step n={1} title="Add your info" text="Paste rough notes or share a few details about your work history." />
@@ -195,8 +158,8 @@ export default function Home() {
         </section>
 
         {/* Feature row 1 — AI draft */}
-        <section className="bg-white">
-          <div className="mx-auto grid max-w-[1920px] items-center gap-12 site-px py-20 lg:grid-cols-2 lg:gap-20">
+        <section className="site-px py-3">
+          <div className="mx-auto grid items-center gap-12 lg:grid-cols-2 lg:gap-20 max-w-[1500px] rounded-3xl px-6 py-16 ring-1 ring-inset sm:px-10 sm:py-20 bg-zinc-50/80 ring-zinc-200/70">
             <div className="max-w-xl">
               <span className="inline-block rounded-full border border-blue-100 bg-blue-50 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider text-blue-600">AI draft</span>
               <h2 className="mt-4 text-3xl font-bold leading-[1.15] tracking-[-0.01em] sm:text-4xl">
@@ -226,8 +189,8 @@ export default function Home() {
         </section>
 
         {/* Feature row 2 — edit & switch */}
-        <section className="bg-white">
-          <div className="mx-auto grid max-w-[1920px] items-center gap-12 site-px pb-20 lg:grid-cols-2 lg:gap-20">
+        <section className="site-px py-3">
+          <div className="mx-auto grid items-center gap-12 lg:grid-cols-2 lg:gap-20 max-w-[1500px] rounded-3xl px-6 py-16 ring-1 ring-inset sm:px-10 sm:py-20 bg-zinc-50/80 ring-zinc-200/70">
             <div className="order-2 rounded-3xl bg-gradient-to-br from-indigo-50 to-sky-50/60 p-5 ring-1 ring-inset ring-indigo-100 sm:p-8 lg:order-1">
               <div className="overflow-hidden rounded-xl bg-white shadow-xl shadow-blue-900/10 ring-1 ring-zinc-200/70">
                 <ScaledPreview maxHeight={470} capClassName="max-h-[70vh]">
@@ -258,8 +221,8 @@ export default function Home() {
         </section>
 
         {/* Who it's for */}
-        <section className="border-t border-zinc-200 bg-white">
-          <div className="mx-auto max-w-[1920px] site-px py-20">
+        <section className="site-px py-3">
+          <div className="mx-auto max-w-[1500px] rounded-3xl px-6 py-16 ring-1 ring-inset sm:px-10 sm:py-20 bg-gradient-to-b from-blue-50/60 to-white ring-blue-100">
             <SectionHead
               split
               eyebrow="Who it's for"
@@ -276,8 +239,8 @@ export default function Home() {
         </section>
 
         {/* Resume writing tips */}
-        <section id="tips" className="border-t border-zinc-200 bg-zinc-50">
-          <div className="mx-auto max-w-[1920px] site-px py-20">
+        <section id="tips" className="site-px py-3">
+          <div className="mx-auto max-w-[1500px] rounded-3xl px-6 py-16 ring-1 ring-inset sm:px-10 sm:py-20 bg-zinc-50/80 ring-zinc-200/70">
             <SectionHead
               split
               eyebrow="Resume tips"

@@ -8,8 +8,8 @@ import { TemplateShowcase } from "../TemplateShowcase";
 // supplies the heading instead.
 export function TemplatesSection({ cv, showHead = true }: { cv: CVResult; showHead?: boolean }) {
   return (
-    <section id="templates" className="border-y border-zinc-200 bg-zinc-50">
-      <div className={`mx-auto max-w-[1920px] site-px pb-20 ${showHead ? "pt-20" : "pt-10"}`}>
+    <section id="templates" className="site-px py-3">
+      <div className={`mx-auto max-w-[1500px] rounded-3xl px-6 py-16 ring-1 ring-inset sm:px-10 sm:py-20 bg-gradient-to-b from-blue-50/60 to-white ring-blue-100`}>
         {showHead && (
           <SectionHead
             split

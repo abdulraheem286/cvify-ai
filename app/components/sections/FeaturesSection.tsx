@@ -24,8 +24,8 @@ const features: { icon: ReactNode; title: string; text: string }[] = [
 // supplies the heading instead.
 export function FeaturesSection({ showHead = true }: { showHead?: boolean }) {
   return (
-    <section id="features" className="bg-zinc-50">
-      <div className={`mx-auto max-w-[1920px] site-px pb-20 ${showHead ? "pt-20" : "pt-10"}`}>
+    <section id="features" className="site-px py-3">
+      <div className={`mx-auto max-w-[1500px] rounded-3xl px-6 py-16 ring-1 ring-inset sm:px-10 sm:py-20 bg-zinc-50/80 ring-zinc-200/70`}>
         {showHead && (
           <SectionHead
             split
