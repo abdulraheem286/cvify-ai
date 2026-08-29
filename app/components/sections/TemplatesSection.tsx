@@ -9,9 +9,9 @@ import { TemplateShowcase } from "../TemplateShowcase";
 // supplies the heading instead.
 export function TemplatesSection({ cv, showHead = true }: { cv: CVResult; showHead?: boolean }) {
   return (
-    <section id="templates" className="relative overflow-hidden bg-gradient-to-b from-blue-50/60 via-white to-white">
+    <section id="templates" className="relative overflow-hidden border-y border-blue-100/70 bg-gradient-to-b from-blue-50 via-indigo-50/40 to-white">
       <SectionDecor variant="left" />
-      <div className={`relative mx-auto max-w-[1920px] site-px pb-20 ${showHead ? "pt-20" : "pt-10"}`}>
+      <div className={`relative mx-auto max-w-[1920px] site-px pb-24 ${showHead ? "pt-24" : "pt-10"}`}>
         {showHead && (
           <SectionHead
             split

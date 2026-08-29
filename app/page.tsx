@@ -7,7 +7,6 @@ import { Reveal } from "./components/Reveal";
 import { ScaledPreview } from "./components/ScaledPreview";
 import { SectionHead } from "./components/SectionHead";
 import { HeroShell } from "./components/HeroShell";
-import { SectionDecor } from "./components/SectionDecor";
 import { FeaturesSection } from "./components/sections/FeaturesSection";
 import { TemplatesSection } from "./components/sections/TemplatesSection";
 import { FaqSection } from "./components/sections/FaqSection";
@@ -116,9 +115,8 @@ export default function Home() {
         </HeroShell>
 
         {/* Highlights */}
-        <section className="relative overflow-hidden bg-white">
-          <SectionDecor variant="left" />
-          <div className="relative mx-auto max-w-[1920px] site-px py-20">
+        <section className="bg-white">
+          <div className="relative mx-auto max-w-[1920px] site-px py-24">
             <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
               <h2 className="max-w-xl text-3xl font-bold leading-tight tracking-[-0.01em] sm:text-4xl">
                 Everything You Need to Apply, <span className="text-blue-600">Completely Free</span>
@@ -146,9 +144,8 @@ export default function Home() {
         <TemplatesSection cv={sampleCv} />
 
         {/* How it works */}
-        <section id="how" className="relative overflow-hidden bg-gradient-to-b from-blue-50/70 via-white to-white">
-          <SectionDecor variant="center" />
-          <div className="relative mx-auto max-w-[1920px] site-px py-20">
+        <section id="how" className="bg-white">
+          <div className="relative mx-auto max-w-[1920px] site-px py-24">
             <SectionHead split eyebrow="Process" title="Four Simple Steps" subtitle="From a blank page to a polished resume in minutes." />
             <Reveal stagger className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
               <Step n={1} title="Add your info" text="Paste rough notes or share a few details about your work history." />
@@ -160,8 +157,8 @@ export default function Home() {
         </section>
 
         {/* Feature row 1 — AI draft */}
-        <section className="relative overflow-hidden bg-white">
-          <div className="relative mx-auto grid items-center gap-12 lg:grid-cols-2 lg:gap-20 max-w-[1920px] site-px py-20">
+        <section className="bg-white">
+          <div className="relative mx-auto grid items-center gap-12 lg:grid-cols-2 lg:gap-20 max-w-[1920px] site-px py-24">
             <div className="max-w-xl">
               <span className="inline-block rounded-full border border-blue-100 bg-blue-50 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider text-blue-600">AI draft</span>
               <h2 className="mt-4 text-3xl font-bold leading-[1.15] tracking-[-0.01em] sm:text-4xl">
@@ -191,8 +188,8 @@ export default function Home() {
         </section>
 
         {/* Feature row 2 — edit & switch */}
-        <section className="relative overflow-hidden bg-gradient-to-b from-zinc-50 to-white">
-          <div className="relative mx-auto grid items-center gap-12 lg:grid-cols-2 lg:gap-20 max-w-[1920px] site-px py-20">
+        <section className="bg-white">
+          <div className="relative mx-auto grid items-center gap-12 lg:grid-cols-2 lg:gap-20 max-w-[1920px] site-px py-24">
             <div className="order-2 rounded-3xl bg-gradient-to-br from-indigo-50 to-sky-50/60 p-5 ring-1 ring-inset ring-indigo-100 sm:p-8 lg:order-1">
               <div className="overflow-hidden rounded-xl bg-white shadow-xl shadow-blue-900/10 ring-1 ring-zinc-200/70">
                 <ScaledPreview maxHeight={470} capClassName="max-h-[70vh]">
@@ -223,9 +220,8 @@ export default function Home() {
         </section>
 
         {/* Who it's for */}
-        <section className="relative overflow-hidden bg-gradient-to-b from-indigo-50/45 via-white to-white">
-          <SectionDecor variant="right" />
-          <div className="relative mx-auto max-w-[1920px] site-px py-20">
+        <section className="bg-white">
+          <div className="relative mx-auto max-w-[1920px] site-px py-24">
             <SectionHead
               split
               eyebrow="Who it's for"
@@ -242,8 +238,8 @@ export default function Home() {
         </section>
 
         {/* Resume writing tips */}
-        <section id="tips" className="relative overflow-hidden bg-white">
-          <div className="relative mx-auto max-w-[1920px] site-px py-20">
+        <section id="tips" className="bg-zinc-50">
+          <div className="relative mx-auto max-w-[1920px] site-px py-24">
             <SectionHead
               split
               eyebrow="Resume tips"

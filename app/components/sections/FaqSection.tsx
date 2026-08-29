@@ -7,8 +7,8 @@ import { FaqList } from "./FaqList";
 // two-column grid) and stays 1 on the homepage.
 export function FaqSection({ showHead = true, columns = 1 }: { showHead?: boolean; columns?: 1 | 2 }) {
   return (
-    <section id="faq" className="relative overflow-hidden bg-white">
-      <div className={`relative mx-auto site-px pb-20 ${showHead ? "pt-20" : "pt-10"} ${columns === 2 ? "max-w-6xl" : "max-w-3xl"}`}>
+    <section id="faq" className="bg-white">
+      <div className={`relative mx-auto site-px pb-24 ${showHead ? "pt-24" : "pt-10"} ${columns === 2 ? "max-w-6xl" : "max-w-3xl"}`}>
         {showHead && (
           <SectionHead eyebrow="FAQ" title="Frequently Asked Questions" subtitle="Answers to questions about building, optimizing, and exporting your resume." />
         )}
