@@ -11,6 +11,8 @@ import { TemplatesSection } from "./components/sections/TemplatesSection";
 import { FaqSection } from "./components/sections/FaqSection";
 import { ModernTemplate } from "./templates/ModernTemplate";
 import { SidebarTemplate } from "./templates/SidebarTemplate";
+import { MinimalTemplate } from "./templates/MinimalTemplate";
+import { IconSparkles, IconText, IconTools, IconDownload } from "./components/icons";
 import { faqs } from "./lib/faqs";
 import { SAMPLE_CV as sampleCv } from "./lib/sampleCv";
 
@@ -52,57 +54,86 @@ export default function Home() {
       <SiteHeader />
 
       <main className="flex-1">
-        {/* Hero */}
-        <section className="bg-zinc-50">
-          <div className="mx-auto grid max-w-[1920px] items-center gap-10 site-px py-12 lg:grid-cols-2 lg:py-16">
-            <Reveal stagger>
-              <span className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-white/70 px-3 py-1 text-xs font-semibold text-blue-700 shadow-sm backdrop-blur">
+        {/* Hero — inset brand card with floating CV previews */}
+        <section className="site-px pt-4">
+          <div className="relative mx-auto max-w-[1600px] overflow-hidden rounded-3xl bg-blue-600 px-6 pt-14 sm:pt-20">
+            <Reveal stagger className="relative z-10 mx-auto max-w-3xl text-center">
+              <span className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3.5 py-1.5 text-xs font-semibold text-white ring-1 ring-inset ring-white/25">
                 <span className="relative flex h-1.5 w-1.5">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-blue-400 opacity-75" />
-                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-blue-500" />
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-white opacity-75" />
+                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-white" />
                 </span>
                 Free AI resume builder
               </span>
-              <h1 className="mt-4 max-w-xl text-4xl font-bold leading-[1.1] tracking-tight sm:text-5xl">
-                Turn rough notes into a{" "}
-                <span className="bg-gradient-to-r from-blue-600 to-indigo-500 bg-clip-text text-transparent">job-ready CV</span>
+              <h1 className="mx-auto mt-5 max-w-3xl text-4xl font-bold leading-[1.08] tracking-tight text-white sm:text-5xl lg:text-6xl">
+                Turn rough notes into a job-ready CV
               </h1>
-              <p className="mt-4 max-w-md text-base text-zinc-600">
+              <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-blue-100 sm:text-lg">
                 CVify AI turns a few lines about your experience into clear, achievement-focused bullet
                 points and a clean, ATS-ready PDF — free, in minutes.
               </p>
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                <Link href="/build" className="rounded-xl bg-blue-600 px-6 py-3 text-center text-base font-semibold text-white shadow-lg shadow-blue-600/20 transition-all hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-xl hover:shadow-blue-600/25">
-                  Create my CV free →
+              <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+                <Link
+                  href="/build"
+                  className="rounded-full bg-white px-7 py-3.5 text-base font-semibold text-blue-700 shadow-lg shadow-blue-900/15 transition-all hover:-translate-y-0.5 hover:bg-blue-50"
+                >
+                  Create my CV — it&rsquo;s free
                 </Link>
-                <a href="#templates" className="rounded-xl border border-zinc-300 bg-white px-6 py-3 text-center text-base font-semibold text-zinc-700 transition-colors hover:bg-zinc-50">
+                <Link
+                  href="/templates"
+                  className="rounded-full px-7 py-3.5 text-base font-semibold text-white ring-1 ring-inset ring-white/40 transition-colors hover:bg-white/10"
+                >
                   Browse templates
-                </a>
+                </Link>
               </div>
-              <div className="mt-8 flex flex-wrap gap-x-5 gap-y-2 text-sm text-zinc-500">
+              <div className="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-blue-100">
                 <TrustItem>Free forever</TrustItem>
-                <TrustItem>Clean templates</TrustItem>
+                <TrustItem>No credit card</TrustItem>
                 <TrustItem>ATS-ready PDF</TrustItem>
               </div>
             </Reveal>
 
-            <div className="w-full">
-              <div className="rotate-1 transition-transform duration-300 hover:rotate-0">
-                <ScaledPreview maxHeight={500} capClassName="max-h-[78vh]">
+            {/* Floating previews — clipped by the card so they read as "peeking in" */}
+            <div className="relative mx-auto mt-14 flex h-[240px] max-w-5xl items-start justify-center gap-5 sm:h-[300px] lg:h-[340px]">
+              <div className="hidden w-[27%] translate-y-8 overflow-hidden rounded-t-xl bg-white shadow-2xl shadow-blue-900/25 lg:block">
+                <ScaledPreview maxHeight={420}>
+                  <SidebarTemplate cv={sampleCv} domId="hero-left" />
+                </ScaledPreview>
+              </div>
+              <div className="w-[74%] overflow-hidden rounded-t-xl bg-white shadow-2xl shadow-blue-900/30 sm:w-[52%] lg:w-[36%]">
+                <ScaledPreview maxHeight={480}>
                   <ModernTemplate cv={sampleCv} domId="hero-preview" />
+                </ScaledPreview>
+              </div>
+              <div className="hidden w-[27%] translate-y-8 overflow-hidden rounded-t-xl bg-white shadow-2xl shadow-blue-900/25 lg:block">
+                <ScaledPreview maxHeight={420}>
+                  <MinimalTemplate cv={sampleCv} domId="hero-right" />
                 </ScaledPreview>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Honest highlights */}
-        <section className="border-b border-zinc-200 bg-white">
-          <div className="mx-auto grid max-w-[1920px] gap-5 site-px py-14 sm:grid-cols-2 lg:grid-cols-4">
-            <Stat value="100%" label="Free to use" />
-            <Stat value="∞" label="CVs you can make" />
-            <Stat value="AI" label="Writes & improves it" />
-            <Stat value="ATS" label="Real text PDF" />
+        {/* Highlights */}
+        <section className="bg-white">
+          <div className="mx-auto max-w-[1920px] site-px py-20">
+            <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+              <h2 className="max-w-xl text-3xl font-bold leading-tight tracking-tight sm:text-4xl">
+                Everything you need to apply, <span className="text-blue-600">completely free</span>
+              </h2>
+              <Link
+                href="/build"
+                className="shrink-0 rounded-full bg-blue-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-blue-700"
+              >
+                Start building →
+              </Link>
+            </div>
+            <Reveal stagger className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+              <Stat icon={<IconSparkles />} value="100%" label="Free to use" />
+              <Stat icon={<IconText />} value="∞" label="CVs you can make" />
+              <Stat icon={<IconTools />} value="AI" label="Writes & improves it" />
+              <Stat icon={<IconDownload />} value="ATS" label="Real text PDF" />
+            </Reveal>
           </div>
         </section>
 
@@ -131,7 +162,7 @@ export default function Home() {
             <div className="max-w-xl">
               <span className="inline-block rounded-full border border-blue-100 bg-blue-50 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider text-blue-600">AI draft</span>
               <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
-                A professional first draft in seconds
+                A professional first draft in <span className="text-blue-600">seconds</span>
               </h2>
               <p className="mt-4 text-zinc-600">
                 Paste your old CV or jot down rough notes. CVify AI writes a compelling summary and
@@ -169,7 +200,7 @@ export default function Home() {
             <div className="order-1 max-w-xl lg:order-2 lg:justify-self-end">
               <span className="inline-block rounded-full border border-blue-100 bg-blue-50 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider text-blue-600">Edit live</span>
               <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
-                Edit everything, switch styles instantly
+                Edit everything, switch styles <span className="text-blue-600">instantly</span>
               </h2>
               <p className="mt-4 text-zinc-600">
                 Fine-tune every section in the editor, then flip between templates and recolor or
@@ -252,11 +283,14 @@ export default function Home() {
   );
 }
 
-function Stat({ value, label }: { value: string; label: string }) {
+function Stat({ icon, value, label }: { icon: ReactNode; value: string; label: string }) {
   return (
-    <div className="rounded-2xl border border-zinc-200 bg-white p-8 text-center shadow-sm transition-all hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-md">
-      <p className="text-4xl font-bold text-blue-600 sm:text-5xl">{value}</p>
-      <p className="mt-2 text-base font-medium text-zinc-500">{label}</p>
+    <div className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm transition-all hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-md">
+      <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+        {icon}
+      </div>
+      <p className="mt-5 text-4xl font-bold tracking-tight text-zinc-900">{value}</p>
+      <p className="mt-1 text-sm font-medium text-zinc-500">{label}</p>
     </div>
   );
 }
