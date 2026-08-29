@@ -12,6 +12,7 @@ export function TemplatesSection({ cv, showHead = true }: { cv: CVResult; showHe
       <div className={`mx-auto max-w-[1920px] site-px pb-20 ${showHead ? "pt-20" : "pt-10"}`}>
         {showHead && (
           <SectionHead
+            split
             eyebrow="Templates"
             title="Templates across professional, minimal & creative"
             subtitle="Switch styles anytime without losing your content, then recolor and change fonts to make it yours."

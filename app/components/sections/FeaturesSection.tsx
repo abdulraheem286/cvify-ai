@@ -28,6 +28,7 @@ export function FeaturesSection({ showHead = true }: { showHead?: boolean }) {
       <div className={`mx-auto max-w-[1920px] site-px pb-20 ${showHead ? "pt-20" : "pt-10"}`}>
         {showHead && (
           <SectionHead
+            split
             eyebrow="Features"
             title="The parts that get your CV read"
             subtitle="Strong wording, a clean single-column structure, and an export both software and recruiters can actually read — CVify AI handles the hard parts."
