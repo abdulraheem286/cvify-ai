@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { CVResult } from "../../types";
 import { SectionHead } from "../SectionHead";
+import { SectionDecor } from "../SectionDecor";
 import { TemplateShowcase } from "../TemplateShowcase";
 
 // The Templates showcase section — shared by the homepage and the /templates page.
@@ -8,8 +9,9 @@ import { TemplateShowcase } from "../TemplateShowcase";
 // supplies the heading instead.
 export function TemplatesSection({ cv, showHead = true }: { cv: CVResult; showHead?: boolean }) {
   return (
-    <section id="templates" className="site-px py-3">
-      <div className={`mx-auto max-w-[1500px] rounded-3xl px-6 py-16 ring-1 ring-inset sm:px-10 sm:py-20 bg-gradient-to-b from-blue-50/60 to-white ring-blue-100`}>
+    <section id="templates" className="relative overflow-hidden bg-gradient-to-b from-blue-50/60 via-white to-white">
+      <SectionDecor variant="left" />
+      <div className={`relative mx-auto max-w-[1920px] site-px pb-20 ${showHead ? "pt-20" : "pt-10"}`}>
         {showHead && (
           <SectionHead
             split
